@@ -3,5 +3,5 @@ player_urls_db.py
 team_urls_db.py
 scraping_scripts/Credentials.py
 .DS_Store
-.idea/dl_and_dw.iml
+.idea
 test.py
