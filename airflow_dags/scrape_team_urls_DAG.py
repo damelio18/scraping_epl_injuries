@@ -1,16 +1,24 @@
+# ----------------------------- Load Packages -----------------------------
+# For DAG
 import datetime
 import logging
+from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
 
 # For Scraping
 import requests
 from bs4 import BeautifulSoup
 
-from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
+# For Data Lake Upload
+#from airflow.hooks.postgres_hook import PostgresHook
+#from airflow.operators.postgres_operator import PostgresOperator
+
+# ----------------------------- Define Functions -----------------------------
+
+def start_DAG():
+    logging.info('STARTING THE DAG,OBTAINING EPL TEAM URLS')
 
 def team_urls():
-    logging.info('Hello_TEST')
-
     # Empty lists to add team names and urls
     team_name = []
     team_url = []
@@ -53,17 +61,26 @@ def team_urls():
     print(team_url)
 
 
-
-
+# ----------------------------- Create DAG -----------------------------
 dag = DAG(
     'scrape_team_urls_DAG',
-    schedule_interval='@hourly',
-    start_date=datetime.datetime.now() - datetime.timedelta(days=1))
+    schedule_interval = '@hourly',
+    start_date = datetime.datetime.now() - datetime.timedelta(days=1))
 
-team_urls_task = PythonOperator(
-    task_id="team_urls_task",
-    python_callable=team_urls,
+# ----------------------------- Set Tasks -----------------------------
+
+start_task = PythonOperator(
+    task_id = "start_task",
+    python_callable = start_DAG,
     dag = dag
 )
 
-team_urls_task
+scrape_team_urls = PythonOperator(
+    task_id = "team_urls_task",
+    python_callable = team_urls,
+    dag = dag
+)
+
+# ----------------------------- Trigger Tasks -----------------------------
+
+start_task >> scrape_team_urls
