@@ -31,6 +31,27 @@ def team_urls():
     soup = BeautifulSoup(source.content, 'html.parser')
     print("soupy")
 
+    # Find team urls and names
+    for div in soup.findAll('td', attrs={'class': "hauptlink no-border-links"}):
+        info = div.find_all('a')
+        for a in info:
+
+            # Extract team names
+            substring = '.png'
+            if substring in str(a.contents):
+                pass
+            else:
+                n = 2
+                team_name.append(str(a.contents)[n:-n])
+
+            # Extract team urls
+            if str(a['href']).rsplit("/", 2)[0] == "#":
+                pass
+            else:
+                team_url.append("https://www.transfermarkt.com" + str(a['href']).rsplit("/", 2)[0])
+
+    print(team_url)
+
 
 
 
