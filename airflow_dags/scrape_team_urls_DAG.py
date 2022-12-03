@@ -31,8 +31,6 @@ def team_urls():
 
     # Url to scrape
     url = "https://www.transfermarkt.com/premier-league/startseite/wettbewerb/GB1"
-    print("YES,YES")
-    print(url)
 
     # Download content of url
     source = requests.get(url, headers=headers)
@@ -59,11 +57,10 @@ def team_urls():
             else:
                 team_url.append("https://www.transfermarkt.com" + str(a['href']).rsplit("/", 2)[0])
 
-    #print(team_name)
     return team_name, team_url
 
 
-# Load scraping data to the data lake
+# 3. Load scraping data to the data lake
 def load(ti):
     # get data returned from 'scrape_team_urls_task'
     data = ti.xcom_pull(task_ids = ['scrape_team_urls_task'])
@@ -74,17 +71,22 @@ def load(ti):
     data_team_name = data[0][0]
     data_team_url = data[0][1]
 
-    sql_drop_table = "DROP TABLE Team_URLs;"
-    sql_create_table = "CREATE TABLE IF NOT EXISTS Team_URLs (team_id SERIAL NOT NULL, team_name VARCHAR(255), team_url VARCHAR(255));"
-    sql_add_data_to_table = 'INSERT INTO Team_URLs (team_name, team_url) VALUES (%s, %s)'
-
+    # Data Lake credentials
     pg_hook = PostgresHook(
         postgres_conn_id = 'datalake1_airflow',
         schema = 'datalake1'
     )
 
+    # SQL statements: Drop, create and insert into table
+    sql_drop_table = "DROP TABLE Team_URLs;"
+    sql_create_table = "CREATE TABLE IF NOT EXISTS Team_URLs (team_id SERIAL NOT NULL, team_name VARCHAR(255), team_url VARCHAR(255));"
+    sql_add_data_to_table = 'INSERT INTO Team_URLs (team_name, team_url) VALUES (%s, %s)'
+
+    # Connect to data lake
     pg_conn = pg_hook.get_conn()
     cursor = pg_conn.cursor()
+
+    # Execute SQL statements
     cursor.execute(sql_drop_table)
     cursor.execute(sql_create_table)
 
@@ -94,7 +96,7 @@ def load(ti):
         pg_conn.commit()
 
 
-# Log the end of the DAG
+# 4. Log the end of the DAG
 def finish_DAG():
     logging.info('DAG HAS FINISHED,OBTAINED EPL TEAM URLS')
 
@@ -105,14 +107,14 @@ dag = DAG(
     start_date = datetime.datetime.now() - datetime.timedelta(days=1))
 
 # ----------------------------- Set Tasks -----------------------------
-# Start Task
+# 1. Start Task
 start_task = PythonOperator(
     task_id = "start_task",
     python_callable = start_DAG,
     dag = dag
 )
 
-# Scraping
+# 2. Scraping
 scrape_team_urls_task = PythonOperator(
     task_id = "scrape_team_urls_task",
     python_callable = team_urls,
@@ -120,14 +122,14 @@ scrape_team_urls_task = PythonOperator(
     dag = dag
 )
 
-# Load to data lake
+# 3. Load to data lake
 load_to_data_lake_task = PythonOperator(
     task_id = "load_to_data_lake_task",
     python_callable = load,
     dag = dag
 )
 
-# End Task
+# 4. End Task
 end_task = PythonOperator(
     task_id = "end_task",
     python_callable = finish_DAG,
