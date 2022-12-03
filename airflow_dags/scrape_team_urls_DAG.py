@@ -86,7 +86,7 @@ def load(ti):
 
     pg_conn = pg_hook.get_conn()
     cursor = pg_conn.cursor()
-    cursor.execute(sql_truncate_table)
+    #cursor.execute(sql_truncate_table)
 
      # Add data to table
      for elem in zip(data_team_name, data_team_url):
