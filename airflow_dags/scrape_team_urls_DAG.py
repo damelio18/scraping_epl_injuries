@@ -1,5 +1,8 @@
 import datetime
 import logging
+
+# For Scraping
+import requests
 from bs4 import BeautifulSoup
 
 from airflow import DAG
