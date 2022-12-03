@@ -37,7 +37,6 @@ def team_urls():
 
     # Parse html into BS4 object
     soup = BeautifulSoup(source.content, 'html.parser')
-    print("soupy")
 
     # Find team urls and names
     for div in soup.findAll('td', attrs={'class': "hauptlink no-border-links"}):
@@ -58,6 +57,7 @@ def team_urls():
             else:
                 team_url.append("https://www.transfermarkt.com" + str(a['href']).rsplit("/", 2)[0])
 
+    print(team_name)
     return team_url
 
 
