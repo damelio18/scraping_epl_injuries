@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 # To load to Data Lake
 import psycopg2
 from scraping_scripts.Credentials import data_lake
+
 # ----------------------------- Get Team URLs -----------------------------
 
 # Empty lists to add team names and urls
