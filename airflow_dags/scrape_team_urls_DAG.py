@@ -67,15 +67,15 @@ def load(ti):
         raise ValueError('No value currently stored in XComs')
 
     data_team_name = data[0][0]
-    #data_team_url = data[1]
-    #print(data)
+    data_team_url = data[1]
+
 
     print(data_team_name)
     print("break")
-    #print(data_team_url)
+    print(data_team_url)
 
-    #sql_truncate_table = 'TRUNCATE TABLE Team_URLs'
-    sql_truncate_table = "SELECT * FROM Team_URLs"
+    sql_truncate_table = "TRUNCATE TABLE Team_URLs"
+    #sql_truncate_table = "SELECT * FROM Team_URLs"
     #sql_add_data_to_table = 'INSERT INTO Team_URLs (team_name, team_url) VALUES (%s, %s)'
 
     pg_hook = PostgresHook(
