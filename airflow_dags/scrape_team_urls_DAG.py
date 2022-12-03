@@ -82,6 +82,7 @@ start_task = PythonOperator(
 scrape_team_urls = PythonOperator(
     task_id = "team_urls_task",
     python_callable = team_urls,
+    do_xcom_push = True,
     dag = dag
 )
 
