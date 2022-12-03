@@ -6,6 +6,7 @@ from airflow.operators.python_operator import PythonOperator
 
 def team_urls():
     logging.info('Hello_TEST')
+    print("YES,YES")
 
 
 dag = DAG(
