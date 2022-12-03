@@ -1,12 +1,11 @@
 import datetime
-#import logging
+import logging
 
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 
-
 def team_urls:
-    print("Hello")
+    logging.info('Hello_TEST')
 
 
 dag = DAG(
