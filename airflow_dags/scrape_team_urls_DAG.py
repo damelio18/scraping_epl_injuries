@@ -58,7 +58,8 @@ def team_urls():
             else:
                 team_url.append("https://www.transfermarkt.com" + str(a['href']).rsplit("/", 2)[0])
 
-    print(team_url)
+    #print(team_url)
+    return team_url
 
 
 def finish_DAG():
