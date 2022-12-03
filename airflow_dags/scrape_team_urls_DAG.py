@@ -95,6 +95,8 @@ def load(ti):
         cursor.execute(sql_add_data_to_table, elem)
         pg_conn.commit()
 
+    print("Successfully loaded data to the data lake")
+
 
 # 4. Log the end of the DAG
 def finish_DAG():
