@@ -73,6 +73,7 @@ def load(ti):
     )
     pg_conn = pg_hook.get_conn()
     cursor = pg_conn.cursor()
+    cursor.execute(sql_statement)
 
     return cursor.fetchall()
 
