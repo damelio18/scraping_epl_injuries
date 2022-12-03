@@ -75,8 +75,8 @@ def load(ti):
     data_team_name = data[0][0]
     data_team_url = data[0][1]
 
-    sql_truncate_table = "TRUNCATE TABLE Team_URLs"
-    #sql_truncate_table = "SELECT * FROM Team_URLs"
+    sql_drop_table = "DROP TABLE Team_URLs;"
+    sql_create_table = "CREATE TABLE IF NOT EXISTS Team_URLs (team_id SERIAL NOT NULL, team_name VARCHAR(255), team_url VARCHAR(255));"
     sql_add_data_to_table = 'INSERT INTO Team_URLs (team_name, team_url) VALUES (%s, %s)'
 
     pg_hook = PostgresHook(
@@ -86,7 +86,8 @@ def load(ti):
 
     pg_conn = pg_hook.get_conn()
     cursor = pg_conn.cursor()
-    cursor.execute(sql_truncate_table)
+    cursor.execute(sql_drop_table)
+    cursor.execute(sql_create_table)
 
     # Add data to table
     for elem in zip(data_team_name, data_team_url):
