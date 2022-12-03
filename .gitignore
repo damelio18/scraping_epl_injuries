@@ -1,6 +1,3 @@
-player_injuries_db.py
-player_urls_db.py
-team_urls_db.py
 scraping_scripts/Credentials.py
 .DS_Store
 .idea
