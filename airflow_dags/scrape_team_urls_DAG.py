@@ -74,8 +74,8 @@ def load(ti):
     print("break")
     print(data_team_url)
 
-    sql_truncate_table = "TRUNCATE TABLE Team_URLs"
-    #sql_truncate_table = "SELECT * FROM Team_URLs"
+    #sql_truncate_table = "TRUNCATE TABLE Team_URLs"
+    sql_truncate_table = "SELECT * FROM Team_URLs"
     #sql_add_data_to_table = 'INSERT INTO Team_URLs (team_name, team_url) VALUES (%s, %s)'
 
     pg_hook = PostgresHook(
