@@ -24,6 +24,13 @@ def team_urls():
     print("YES,YES")
     print(url)
 
+    # Download content of url
+    source = requests.get(url, headers=headers)
+
+    # Parse html into BS4 object
+    soup = BeautifulSoup(source.content, 'html.parser')
+    print("soupy")
+
 
 
 
