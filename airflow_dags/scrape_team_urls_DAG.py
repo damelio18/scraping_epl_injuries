@@ -92,4 +92,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> scrape_team_urls >> finish_DAG
+start_task >> scrape_team_urls >> end_task
