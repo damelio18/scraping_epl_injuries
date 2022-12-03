@@ -10,7 +10,19 @@ from airflow.operators.python_operator import PythonOperator
 
 def team_urls():
     logging.info('Hello_TEST')
+
+    # Empty lists to add team names and urls
+    team_name = []
+    team_url = []
+
+    # Headers required to scrape Transfermarkt
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36'}
+
+    # Url to scrape
+    url = "https://www.transfermarkt.com/premier-league/startseite/wettbewerb/GB1"
     print("YES,YES")
+    print(url)
 
 
 
