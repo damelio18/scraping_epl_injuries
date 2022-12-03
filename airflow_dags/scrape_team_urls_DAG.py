@@ -66,8 +66,9 @@ def load(ti):
     if not data:
         raise ValueError('No value currently stored in XComs')
 
-    data_team_name = data[0]
-    data_team_url = data[1]
+    #data_team_name = data[0]
+    #data_team_url = data[1]
+    print(data)
 
     #print(data_team_name)
     print("break")
