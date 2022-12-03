@@ -76,7 +76,7 @@ except psycopg2.Error as e:
 # Create new table
 try:
     #cur.execute(sqlCreateTable)
-    cur.execute("CREATE TABLE IF NOT EXISTS Team_URLs (team_id SERIAL NOT NULL, team_name VARCHAR(255), team_url VARCHAR(255));")
+    cur.execute("CREATE TABLE IF NOT EXISTS Team_URLs (team_id SERIAL NOT NULL, team_name VARCHAR(255), team_url VARCHAR(255), upload_time timestamp DEFAULT CURRENT_TIMESTAMP);")
     print("Table created")
 
 except psycopg2.Error as e:
