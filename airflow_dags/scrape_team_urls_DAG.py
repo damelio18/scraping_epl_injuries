@@ -18,8 +18,13 @@ from airflow.hooks.postgres_hook import PostgresHook
 def start_DAG():
     logging.info('STARTING THE DAG,OBTAINING EPL TEAM URLS')
 
-# 2. Create a bs4 object
-def bs4_object():
+
+# 2. Start the scraping
+def team_urls():
+    # Empty lists to add team names and urls
+    team_name = []
+    team_url = []
+
     # Headers required to scrape Transfermarkt
     headers = {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36'}
@@ -34,19 +39,6 @@ def bs4_object():
 
     # Parse html into BS4 object
     soup = BeautifulSoup(source.content, 'html.parser')
-
-    return soup
-
-# 3. Scraping
-def team_urls(ti):
-    # get data returned from 'scrape_team_urls_task'
-    soup = ti.xcom_pull(task_ids=['create_bs4_object_task'])
-    if not soup:
-        raise ValueError('No value currently stored in XComs')
-
-    # Empty lists to add team names and urls
-    team_name = []
-    team_url = []
 
     # Find team urls and names
     for div in soup.findAll('td', attrs={'class': "hauptlink no-border-links"}):
@@ -113,22 +105,14 @@ dag = DAG(
     start_date = datetime.datetime.now() - datetime.timedelta(days=1))
 
 # ----------------------------- Set Tasks -----------------------------
-# 1. Start Task
+# Start Task
 start_task = PythonOperator(
     task_id = "start_task",
     python_callable = start_DAG,
     dag = dag
 )
 
-# 2. Create bs4 object
-create_bs4_object_task = PythonOperator(
-    task_id = "create_bs4_object_task",
-    python_callable = bs4_object,
-    do_xcom_push = True,
-    dag = dag
-)
-
-# 3. Scraping
+# Scraping
 scrape_team_urls_task = PythonOperator(
     task_id = "scrape_team_urls_task",
     python_callable = team_urls,
@@ -136,14 +120,14 @@ scrape_team_urls_task = PythonOperator(
     dag = dag
 )
 
-# 4. Load to data lake
+# Load to data lake
 load_to_data_lake_task = PythonOperator(
     task_id = "load_to_data_lake_task",
     python_callable = load,
     dag = dag
 )
 
-# 5. End Task
+# End Task
 end_task = PythonOperator(
     task_id = "end_task",
     python_callable = finish_DAG,
@@ -152,4 +136,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> create_bs4_object_task >> scrape_team_urls_task >> load_to_data_lake_task >> end_task
+start_task >> scrape_team_urls_task >> load_to_data_lake_task >> end_task
