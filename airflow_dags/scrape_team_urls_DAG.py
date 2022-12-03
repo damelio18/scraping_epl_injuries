@@ -10,7 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 
 # For Data Lake Upload
-#from airflow.hooks.postgres_hook import PostgresHook
+from airflow.hooks.postgres_hook import PostgresHook
 #from airflow.operators.postgres_operator import PostgresOperator
 
 # ----------------------------- Define Functions -----------------------------
@@ -66,7 +66,17 @@ def load(ti):
     if not data:
         raise ValueError('No value currently stored in XComs')
 
-    print(data)
+    sql_statement = "SELECT * FROM Team_URLs"
+    pg_hook = PostgresHook(
+        postgres_conn_id = 'datalake1_airflow',
+        schema = 'datalake1'
+    )
+    pg_conn = pg_hook.get_conn()
+    cursor = pg_conn.cursor()
+
+    return cursor.fetchall()
+
+    #print(data)
 
 def finish_DAG():
     logging.info('DAG HAS FINISHED,OBTAINED EPL TEAM URLS')
