@@ -88,10 +88,10 @@ def load(ti):
     cursor = pg_conn.cursor()
     cursor.execute(sql_truncate_table)
 
-    ## Add data to table
-    # for elem in zip(data_team_name, data_team_url):
-    #     cursor.execute(sql_add_data_to_table, elem)
-    #     pg_conn.commit()
+    # Add data to table
+    for elem in zip(data_team_name, data_team_url):
+        cursor.execute(sql_add_data_to_table, elem)
+        pg_conn.commit()
 
 
     #return cursor.fetchall()
