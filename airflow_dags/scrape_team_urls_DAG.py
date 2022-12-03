@@ -15,9 +15,12 @@ from airflow.hooks.postgres_hook import PostgresHook
 
 # ----------------------------- Define Functions -----------------------------
 
+# Log the start of the DAG
 def start_DAG():
     logging.info('STARTING THE DAG,OBTAINING EPL TEAM URLS')
 
+
+# Start the scraping
 def team_urls():
     # Empty lists to add team names and urls
     team_name = []
@@ -61,11 +64,14 @@ def team_urls():
     return team_name, team_url
 
 
+# Load scraping data to the data lake
 def load(ti):
+    # get data returned from 'scrape_team_urls_task'
     data = ti.xcom_pull(task_ids = ['scrape_team_urls_task'])
     if not data:
         raise ValueError('No value currently stored in XComs')
 
+    # Separate team name and team url
     data_team_name = data[0][0]
     data_team_url = data[0][1]
 
@@ -76,7 +82,7 @@ def load(ti):
 
     #sql_truncate_table = "TRUNCATE TABLE Team_URLs"
     sql_truncate_table = "SELECT * FROM Team_URLs"
-    #sql_add_data_to_table = 'INSERT INTO Team_URLs (team_name, team_url) VALUES (%s, %s)'
+    sql_add_data_to_table = 'INSERT INTO Team_URLs (team_name, team_url) VALUES (%s, %s)'
 
     pg_hook = PostgresHook(
         postgres_conn_id = 'datalake1_airflow',
@@ -97,6 +103,7 @@ def load(ti):
 
     #print(data)
 
+# Log the end of the DAG
 def finish_DAG():
     logging.info('DAG HAS FINISHED,OBTAINED EPL TEAM URLS')
 
@@ -107,13 +114,14 @@ dag = DAG(
     start_date = datetime.datetime.now() - datetime.timedelta(days=1))
 
 # ----------------------------- Set Tasks -----------------------------
-
+# Start Task
 start_task = PythonOperator(
     task_id = "start_task",
     python_callable = start_DAG,
     dag = dag
 )
 
+# Scraping
 scrape_team_urls_task = PythonOperator(
     task_id = "scrape_team_urls_task",
     python_callable = team_urls,
@@ -121,12 +129,14 @@ scrape_team_urls_task = PythonOperator(
     dag = dag
 )
 
+# Load to data lake
 load_to_data_lake_task = PythonOperator(
     task_id = "load_to_data_lake_task",
     python_callable = load,
     dag = dag
 )
 
+# End Task
 end_task = PythonOperator(
     task_id = "end_task",
     python_callable = finish_DAG,
