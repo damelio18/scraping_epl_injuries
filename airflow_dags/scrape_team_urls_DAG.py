@@ -61,6 +61,9 @@ def team_urls():
     print(team_url)
 
 
+def finish_DAG():
+    logging.info('DAG HAS FINISHED,OBTAINED EPL TEAM URLS')
+
 # ----------------------------- Create DAG -----------------------------
 dag = DAG(
     'scrape_team_urls_DAG',
@@ -81,6 +84,12 @@ scrape_team_urls = PythonOperator(
     dag = dag
 )
 
+end_task = PythonOperator(
+    task_id = "end_task",
+    python_callable = finish_DAG,
+    dag = dag
+)
+
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> scrape_team_urls
+start_task >> scrape_team_urls >> finish_DAG
