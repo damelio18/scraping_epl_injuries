@@ -57,8 +57,8 @@ def team_urls():
             else:
                 team_url.append("https://www.transfermarkt.com" + str(a['href']).rsplit("/", 2)[0])
 
-    print(team_name)
-    return team_url
+    #print(team_name)
+    return team_name, team_url
 
 
 def load(ti):
@@ -66,14 +66,23 @@ def load(ti):
     if not data:
         raise ValueError('No value currently stored in XComs')
 
-    sql_statement = "SELECT * FROM Team_URLs"
+    sql_truncate_table = 'TRUNCATE TABLE Team_URLs'
+    #sql_add_data_to_table = 'INSERT INTO Team_URLs (team_name, team_url) VALUES (%s, %s)'
+
     pg_hook = PostgresHook(
         postgres_conn_id = 'datalake1_airflow',
         schema = 'datalake1'
     )
+
     pg_conn = pg_hook.get_conn()
     cursor = pg_conn.cursor()
-    cursor.execute(sql_statement)
+    cursor.execute(sql_truncate_table)
+
+    # # Add data to table
+    # for elem in zip(team_name, team_url):
+    #     cursor.execute(sql_add_data_to_table, elem)
+    #     pg_conn.commit()
+
 
     return cursor.fetchall()
 
