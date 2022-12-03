@@ -58,9 +58,15 @@ def team_urls():
             else:
                 team_url.append("https://www.transfermarkt.com" + str(a['href']).rsplit("/", 2)[0])
 
-    #print(team_url)
     return team_url
 
+
+def load(ti):
+    data = ti.xcom_pull(task_ids = ['scrape_team_urls_task'])
+    if not data:
+        raise ValueError('No value currently stored in XComs')
+
+    print(data)
 
 def finish_DAG():
     logging.info('DAG HAS FINISHED,OBTAINED EPL TEAM URLS')
@@ -79,10 +85,16 @@ start_task = PythonOperator(
     dag = dag
 )
 
-scrape_team_urls = PythonOperator(
-    task_id = "team_urls_task",
+scrape_team_urls_task = PythonOperator(
+    task_id = "scrape_team_urls_task",
     python_callable = team_urls,
     do_xcom_push = True,
+    dag = dag
+)
+
+load_to_data_lake_task = PythonOperator(
+    task_id = "load_to_data_lake_task",
+    python_callable = load,
     dag = dag
 )
 
@@ -94,4 +106,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> scrape_team_urls >> end_task
+start_task >> scrape_team_urls_task >> load_to_data_lake_task >> end_task
