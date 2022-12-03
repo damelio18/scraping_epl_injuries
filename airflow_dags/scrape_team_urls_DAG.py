@@ -152,4 +152,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> scrape_team_urls_task >> load_to_data_lake_task >> end_task
+start_task >> create_bs4_object_task >> scrape_team_urls_task >> load_to_data_lake_task >> end_task
