@@ -1,5 +1,5 @@
 import datetime
-#import logging
+import logging
 
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
