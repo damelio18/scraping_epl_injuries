@@ -4,7 +4,7 @@ import logging
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 
-def team_urls:
+def teamurls:
     logging.info('Hello_TEST')
 
 
@@ -15,7 +15,7 @@ dag = DAG(
 
 team_urls_task = PythonOperator(
     task_id="team_urls_task",
-    python_callable=team_urls,
+    python_callable=teamurls,
     dag = dag
 )
 
