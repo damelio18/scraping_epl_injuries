@@ -1,5 +1,6 @@
 import datetime
 import logging
+from bs4 import BeautifulSoup
 
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
@@ -7,6 +8,8 @@ from airflow.operators.python_operator import PythonOperator
 def team_urls():
     logging.info('Hello_TEST')
     print("YES,YES")
+
+
 
 
 dag = DAG(
