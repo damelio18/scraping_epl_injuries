@@ -67,11 +67,11 @@ def load(ti):
         raise ValueError('No value currently stored in XComs')
 
     data_team_name = data[0]
-    #data_team_url = data[1]
+    data_team_url = data[1]
 
-    print(data_team_name)
+    #print(data_team_name)
     print("break")
-    print(data_team_url)
+    #print(data_team_url)
 
     #sql_truncate_table = 'TRUNCATE TABLE Team_URLs'
     sql_truncate_table = "SELECT * FROM Team_URLs"
