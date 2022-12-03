@@ -76,8 +76,8 @@ def load(ti):
     data_team_url = data[0][1]
 
     #sql_truncate_table = "TRUNCATE TABLE Team_URLs"
-    #sql_truncate_table = "SELECT * FROM Team_URLs"
-    sql_add_data_to_table = 'INSERT INTO Team_URLs (team_name, team_url) VALUES (%s, %s)'
+    sql_truncate_table = "SELECT * FROM Team_URLs"
+    #sql_add_data_to_table = 'INSERT INTO Team_URLs (team_name, team_url) VALUES (%s, %s)'
 
     pg_hook = PostgresHook(
         postgres_conn_id = 'datalake1_airflow',
@@ -86,12 +86,12 @@ def load(ti):
 
     pg_conn = pg_hook.get_conn()
     cursor = pg_conn.cursor()
-    #cursor.execute(sql_truncate_table)
+    cursor.execute(sql_truncate_table)
 
-     # Add data to table
-     for elem in zip(data_team_name, data_team_url):
-         cursor.execute(sql_add_data_to_table, elem)
-         pg_conn.commit()
+    ## Add data to table
+    # for elem in zip(data_team_name, data_team_url):
+    #     cursor.execute(sql_add_data_to_table, elem)
+    #     pg_conn.commit()
 
 
     return cursor.fetchall()
