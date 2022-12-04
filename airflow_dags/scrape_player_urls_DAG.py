@@ -145,7 +145,7 @@ default_args = {
 }
 
 dag = DAG('scrape_player_urls_DAG',
-          schedule_interval = '10 13 * * *',
+          schedule_interval = '00 05 * * *',
           catchup = False,
           default_args = default_args)
 

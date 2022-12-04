@@ -208,7 +208,7 @@ default_args = {
 }
 
 dag = DAG('scrape_player_injuries_DAG',
-          schedule_interval = '10 12 * * *',
+          schedule_interval = '0 06 * * *',
           catchup = False,
           default_args = default_args)
 
