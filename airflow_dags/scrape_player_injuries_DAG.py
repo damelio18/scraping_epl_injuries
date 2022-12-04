@@ -13,8 +13,8 @@ from bs4 import BeautifulSoup
 from airflow.hooks.postgres_hook import PostgresHook
 
 # Import Functions for Scraping
-from Functions.function_player_bios import player_bio
-from Functions.function_player_stats import table_data
+#from Functions.function_player_bios import player_bio
+#from Functions.function_player_stats import table_data
 
 # ----------------------------- Define Functions -----------------------------
 
