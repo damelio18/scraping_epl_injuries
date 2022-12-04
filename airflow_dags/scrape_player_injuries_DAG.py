@@ -192,10 +192,9 @@ def load(ti):
     cursor.execute(sql_drop_table)
     cursor.execute(sql_create_table)
 
-    pg_conn.commit()
-    #
     # # Insert data into Data Lake
-    # cursor.executemany(sql_add_data_to_table, injury_data)
+    cursor.executemany(sql_add_data_to_table, injury_data)
+    pg_conn.commit()
 
     # #print(cur.rowcount, "Records inserted successfully into table")table
 
