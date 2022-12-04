@@ -105,7 +105,7 @@ def finish_DAG():
 # ----------------------------- Create DAG -----------------------------
 default_args = {
     'owner': 'Danny',
-    'start_date': datetime.datetime(2022,12,3),
+    'start_date': datetime.datetime(2022,12,3)
 }
 
 dag = DAG('scrape_team_urls_DAG',
