@@ -10,6 +10,9 @@ import requests
 from bs4 import BeautifulSoup
 #import function_player_bios
 #import function_player_stats
+# Functions for Scraping
+from Functions.function_player_bios import player_bio
+from Functions.function_player_stats import table_data
 
 # Connecting to the Data Lake
 from airflow.hooks.postgres_hook import PostgresHook
