@@ -159,7 +159,10 @@ def load(ti):
     if not data:
         raise ValueError('No value currently stored in XComs')
 
-    print(data)
+    # Extract injury data from nested list
+    injury_data = data[0]
+
+    print(injury_data)
 
 
 
