@@ -184,7 +184,7 @@ def load(ti):
                                                         injury, date_from, date_until, days, games_missed) 
                             VALUES (%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s) """
 
-    # # Connect to data lake
+    # Connect to data lake
     pg_conn = pg_hook.get_conn()
     cursor = pg_conn.cursor()
 
@@ -197,7 +197,9 @@ def load(ti):
     pg_conn.commit()
     print(cursor.rowcount, "Records inserted successfully into table")
 
-
+# 5. Log the end of the DAG
+def finish_DAG():
+    logging.info('DAG HAS FINISHED,OBTAINED EPL PLAYER INJURIES')
 
 # ----------------------------- Create DAG -----------------------------
 dag = DAG(
@@ -236,7 +238,13 @@ load_to_data_lake_task = PythonOperator(
     dag = dag
 )
 
+# 5. End Task
+end_task = PythonOperator(
+    task_id = "end_task",
+    python_callable = finish_DAG,
+    dag = dag
+)
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> get_player_urls_task >> scrape_player_injuries_task >> load_to_data_lake_task
+start_task >> get_player_urls_task >> scrape_player_injuries_task >> load_to_data_lake_task >> end_task
