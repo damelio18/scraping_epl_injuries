@@ -103,22 +103,15 @@ def finish_DAG():
     logging.info('DAG HAS FINISHED,OBTAINED EPL TEAM URLS')
 
 # ----------------------------- Create DAG -----------------------------
-#dag = DAG(
-#    'scrape_team_urls_DAG',
-#   schedule_interval = "16 14 * * *",
-#    start_date = datetime.datetime(2022,12,3))
-
 default_args = {
     'owner': 'Danny',
     'start_date': datetime.datetime(2022,12,3),
-    #'schedule_interval': "45 * * * *",
 }
 
 dag = DAG('scrape_team_urls_DAG',
           schedule_interval = '45 * * * *',
           catchup = False,
           default_args = default_args)
-
 
 # ----------------------------- Set Tasks -----------------------------
 # 1. Start Task
