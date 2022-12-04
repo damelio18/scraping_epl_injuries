@@ -74,7 +74,7 @@ start_task = PythonOperator(
 # 2. Retrieve player urls from data lake
 get_player_urls_task = PythonOperator(
     task_id = "get_player_urls_task",
-    python_callable = team_urls,
+    python_callable = player_urls,
     do_xcom_push = True,
     dag = dag
 )
