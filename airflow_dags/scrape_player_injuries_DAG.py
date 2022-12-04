@@ -8,7 +8,7 @@ from airflow.operators.python_operator import PythonOperator
 # For Scraping
 #import function_player_bios
 #import function_player_stats
-# Functions for Scraping
+# Functions for Scraping#
 from scraping_epl_injuries.Functions.function_player_bios import player_bio
 from scraping_epl_injuries.Functions.function_player_stats import table_data
 
