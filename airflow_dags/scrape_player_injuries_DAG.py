@@ -170,22 +170,27 @@ def load(ti):
 
     # SQL statements: Drop, create and insert into table
     sql_drop_table = "DROP TABLE historical_injuries;"
-    sql_create_table = "CREATE TABLE IF NOT EXISTS historical_injuries (injury_id SERIAL NOT NULL, transfermarkt_id VARCHAR(255), player VARCHAR(255),\
-                    dob VARCHAR(255), height VARCHAR(255), nationality VARCHAR(255), int_caps VARCHAR(255),\
-                    int_goals VARCHAR(255), current_club VARCHAR(255), shirt_number VARCHAR(255), season VARCHAR(255), injury VARCHAR(255),\
-                    date_from VARCHAR(255), date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255), upload_time timestamp DEFAULT CURRENT_TIMESTAMP);"
+
+    sql_create_table = "CREATE TABLE IF NOT EXISTS historical_injuries (injury_id SERIAL NOT NULL, " \
+                       "transfermarkt_id VARCHAR(255), player VARCHAR(255), dob VARCHAR(255), " \
+                       "height VARCHAR(255), nationality VARCHAR(255), int_caps VARCHAR(255)," \
+                       "int_goals VARCHAR(255), current_club VARCHAR(255), shirt_number VARCHAR(255), " \
+                       "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
+                       "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255), " \
+                       "upload_time timestamp DEFAULT CURRENT_TIMESTAMP);"
+
     sql_add_data_to_table = 'INSERT INTO historical_injuries (transfermarkt_id, player, dob, height, nationality, \n' \
                             'int_caps, int_goals, current_club, shirt_number, season, \n' \
                             'injury, date_from, date_until, days, games_missed)' \
                             'VALUES( % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s)'
 
     # # Connect to data lake
-    # pg_conn = pg_hook.get_conn()
-    # cursor = pg_conn.cursor()
-    #
-    # # Execute SQL statements
-    # cursor.execute(sql_drop_table)
-    # cursor.execute(sql_create_table)
+    pg_conn = pg_hook.get_conn()
+    cursor = pg_conn.cursor()
+
+    # Execute SQL statements
+    cursor.execute(sql_drop_table)
+    cursor.execute(sql_create_table)
     #
     # # Insert data into Data Lake
     # cursor.executemany(sql_add_data_to_table, injury_data)
