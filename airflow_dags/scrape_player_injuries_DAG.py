@@ -8,8 +8,8 @@ from airflow.operators.python_operator import PythonOperator
 # For Scraping
 import requests
 from bs4 import BeautifulSoup
-import function_player_bios
-import function_player_stats
+#import function_player_bios
+#import function_player_stats
 
 # Connecting to the Data Lake
 from airflow.hooks.postgres_hook import PostgresHook
