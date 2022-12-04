@@ -182,7 +182,7 @@ def load(ti):
     sql_add_data_to_table = """INSERT INTO historical_injuries (transfermarkt_id, player, dob, height, nationality, \n
                                                         int_caps, int_goals, current_club, shirt_number, season, \n
                                                         injury, date_from, date_until, days, games_missed) 
-                           VALUES (%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s) """
+                            VALUES (%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s) """
 
     # # Connect to data lake
     pg_conn = pg_hook.get_conn()
