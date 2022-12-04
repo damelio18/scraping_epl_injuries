@@ -106,7 +106,37 @@ def load(ti):
     data_player_name = data[0][0]
     data_player_url = data[0][1]
 
-    print(data_player_name)
+    # Data Lake credentials
+    pg_hook = PostgresHook(
+        postgres_conn_id='datalake1_airflow',
+        schema='datalake1'
+    )
+
+    # SQL statements: Drop, create and insert into table
+    sql_drop_table = "DROP TABLE player_URLs;"
+    sql_create_table = "CREATE TABLE IF NOT EXISTS player_urls (player_url_id SERIAL NOT NULL, player_name VARCHAR(255), player_url VARCHAR(255), upload_time timestamp DEFAULT CURRENT_TIMESTAMP);"
+    sql_add_data_to_table = 'INSERT INTO player_urls (player_name, player_url) VALUES (%s, %s)'
+
+    # Connect to data lake
+    pg_conn = pg_hook.get_conn()
+    cursor = pg_conn.cursor()
+
+    # Execute SQL statements
+    cursor.execute(sql_drop_table)
+    cursor.execute(sql_create_table)
+
+    # Add data to table
+    for elem in zip(data_player_name, data_player_url):
+        cursor.execute(sql_add_data_to_table, elem)
+        pg_conn.commit()
+
+    print("Successfully loaded data to the data lake")
+
+
+
+
+
+
 
 
 
