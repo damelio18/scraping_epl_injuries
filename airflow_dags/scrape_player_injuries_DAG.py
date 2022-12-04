@@ -152,6 +152,15 @@ def scrape_injuries(ti):
     return stats_joined
 
 
+# 4. Load scraping data to the data lake
+def load(ti):
+    # get data returned from 'scrape_player_injuries_task'
+    data = ti.xcom_pull(task_ids=['scrape_player_injuries_task'])
+    if not data:
+        raise ValueError('No value currently stored in XComs')
+
+    print(data)
+
 
 
 # ----------------------------- Create DAG -----------------------------
@@ -180,11 +189,18 @@ get_player_urls_task = PythonOperator(
 scrape_player_injuries_task = PythonOperator(
     task_id = "scrape_player_injuries_task",
     python_callable = scrape_injuries,
-    #do_xcom_push = True,
+    do_xcom_push = True,
+    dag = dag
+)
+
+# 4. Load to data lake
+load_to_data_lake_task = PythonOperator(
+    task_id = "load_to_data_lake_task",
+    python_callable = load,
     dag = dag
 )
 
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> get_player_urls_task >> scrape_player_injuries_task
+start_task >> get_player_urls_task >> scrape_player_injuries_task >> load_to_data_lake_task
