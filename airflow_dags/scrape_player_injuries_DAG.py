@@ -179,10 +179,10 @@ def load(ti):
                        "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255), " \
                        "upload_time timestamp DEFAULT CURRENT_TIMESTAMP);"
 
-    sql_add_data_to_table = "INSERT INTO historical_injuries (transfermarkt_id, player, dob, height, nationality," \
-                            "int_caps, int_goals, current_club, shirt_number, season, injury, date_from, " \
-                            "date_until, days, games_missed)" \
-                            "VALUES( % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s, % s)"
+    sql_add_data_to_table = """INSERT INTO historical_injuries (transfermarkt_id, player, dob, height, nationality, \n
+                                                        int_caps, int_goals, current_club, shirt_number, season, \n
+                                                        injury, date_from, date_until, days, games_missed) 
+                           VALUES (%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s) """
 
     # # Connect to data lake
     pg_conn = pg_hook.get_conn()
