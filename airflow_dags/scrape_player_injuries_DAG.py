@@ -56,7 +56,97 @@ def scrape_injuries(ti):
 
     # Extract player urls from nested list
     player_urls_xcom = player_urls_xcom[0]
-    print(player_urls_xcom[:3])
+
+    # Empty lists to insert player data
+    ## NB stats1 is for player with one injury page and stats2 for players with multiple injury pages
+    stats1 = []
+    stats2 = []
+
+    # Counter for progress of scraping
+    counter = 0
+
+    # Headers required to scrape Transfermarkt
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36'}
+
+    # Loop through each player url
+    for url in player_urls_xcom[:2]:
+
+        # ----------------------------- Obtain html data -----------------------------
+        # Get content of url
+        source = requests.get(url, headers=headers)
+
+        # Parse html into BS4 object
+        soup = BeautifulSoup(source.content, 'html.parser')
+
+        # Search for number of injury pages
+        test_pages = soup.find_all('ul', attrs={'class': "tm-pagination"})
+
+        # ----------------------------- Scrape players with x1 injury page -----------------------------
+        # If player has one injury page
+        if len(test_pages) == 0:
+
+            # Get player biography
+            player_bios = player_bio(soup)
+
+            # Add injury history to player_biography
+            player_injury_history = table_data(soup, player_bios)
+
+            # Table data
+            dataframe_stats_1 = player_injury_history[0]
+
+            # Table headers
+            dataframe_headers = player_injury_history[1]
+
+            # Extend table data with previous players in the loop
+            stats1.extend(dataframe_stats_1)
+
+        # ----------------------------- Scrape players with multiple injury pages -----------------------------
+
+        # If player has multiple injury pages
+        else:
+            # Get url's for each injury table
+            for div in test_pages:
+                info = div.find_all('a')
+                num_pages = len(info) - 2
+
+                # Iterate through the different injury pages
+                while num_pages > 0:
+                    # Create new urls for each injury page
+                    new_url = str(url) + "/page/" + str(num_pages)
+
+                    # Get content of url
+                    source = requests.get(new_url, headers=headers)
+
+                    # Parse html into BS4 object
+                    soup = BeautifulSoup(source.content, 'html.parser')
+
+                    # Get player biography
+                    player_bios = player_bio(soup)
+
+                    # Add injury history to player_biography
+                    player_injury_history = table_data(soup, player_bios)
+
+                    # Table data
+                    dataframe_stats_2 = player_injury_history[0]
+
+                    # Table headers
+                    dataframe_headers = player_injury_history[1]
+
+                    # Extend table data with previous players in the loop
+                    stats2.extend(dataframe_stats_2)
+
+                    # Scrape next injury page for player
+                    num_pages = num_pages - 1
+
+        # Print progress of scraping
+        counter += 1
+        if (counter % 50) == 0:
+            print(str(counter) + " Players Scraped")
+
+    print("Successfully Scraped: " + str(counter) + " Players")
+
+    return stats1
 
 
 # ----------------------------- Create DAG -----------------------------
