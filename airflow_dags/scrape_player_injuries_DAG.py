@@ -202,10 +202,15 @@ def finish_DAG():
     logging.info('DAG HAS FINISHED,OBTAINED EPL PLAYER INJURIES')
 
 # ----------------------------- Create DAG -----------------------------
-dag = DAG(
-    'scrape_player_injuries_DAG',
-    schedule_interval = '@daily',
-    start_date = datetime.datetime.now() - datetime.timedelta(days=1))
+default_args = {
+    'owner': 'Danny',
+    'start_date': datetime.datetime(2022,12,3),
+}
+
+dag = DAG('scrape_player_injuries_DAG',
+          schedule_interval = '0 12 * * *',
+          catchup = False,
+          default_args = default_args)
 
 # ----------------------------- Set Tasks -----------------------------
 # 1. Start Task
