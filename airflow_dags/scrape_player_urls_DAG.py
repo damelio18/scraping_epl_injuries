@@ -49,6 +49,7 @@ def team_urls():
 def player_urls(ti):
     # get data returned from 'scrape_team_urls_task'
     data = ti.xcom_pull(task_ids = ['get_team_urls_task'])
+    data = data[0][0]
 
     print("NOW")
     print(data)
