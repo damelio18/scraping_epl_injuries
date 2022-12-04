@@ -16,7 +16,7 @@ from airflow.hooks.postgres_hook import PostgresHook
 
 # 1. Log the start of the DAG
 def start_DAG():
-    logging.info('STARTING THE DAG,OBTAINING EPL PLAYER URLS')
+    logging.info('STARTING THE DAG,OBTAINING EPL PLAYER INJURIES')
 
 # 2. Get player URLS
 def player_urls():
