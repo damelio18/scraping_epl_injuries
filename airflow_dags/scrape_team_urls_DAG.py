@@ -109,9 +109,9 @@ def finish_DAG():
 #    start_date = datetime.datetime(2022,12,3))
 
 default_args = {
-    'owner': 'XYZ',
-    'start_date': datetime.datetime(2022,12,3),
-    'schedule_interval': "35 14 * * *",
+    'owner': 'Danny',
+    'start_date': datetime.datetime(2022,12,4,10,0),
+    'schedule_interval': "45 * * * *",
 }
 
 dag = DAG('scrape_team_urls_DAG', catchup=False, default_args=default_args)
