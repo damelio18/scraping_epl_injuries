@@ -70,7 +70,7 @@ def scrape_injuries(ti):
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36'}
 
     # Loop through each player url
-    for url in player_urls_xcom[:26]:
+    for url in player_urls_xcom:
 
         # ----------------------------- Obtain html data -----------------------------
         # Get content of url
