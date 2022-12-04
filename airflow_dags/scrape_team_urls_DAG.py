@@ -105,8 +105,8 @@ def finish_DAG():
 # ----------------------------- Create DAG -----------------------------
 dag = DAG(
     'scrape_team_urls_DAG',
-    schedule_interval = "20 14 * * *",
-    start_date = datetime.datetime(2022,12,4,14,15))
+    schedule_interval = "22 12 * * *",
+    start_date = datetime.datetime(2022,12,4,12,21))
 
 # ----------------------------- Set Tasks -----------------------------
 # 1. Start Task
