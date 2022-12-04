@@ -45,20 +45,68 @@ def team_urls():
 
     return team_urls
 
-# 3. Scraping
+# 3. Start the scraping
 def player_urls(ti):
     # get data returned from 'get_team_urls_task'
-    data = ti.xcom_pull(task_ids = ['get_team_urls_task'])
-    data = data[0]
+    team_urls_xcom = ti.xcom_pull(task_ids = ['get_team_urls_task'])
+    if not team_urls_xcom:
+        raise ValueError('No value currently stored in XComs')
 
-    print(data)
-    return data[0]
+    # Extract team urls from nested list
+    team_urls_xcom = team_urls_xcom[0]
+
+    # Empty lists to add player names and urls
+    player_name = []
+    player_url = []
+    player_counter = 0
+
+    # Headers required to scrape Transfermarkt
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36'}
+
+    for i in team_urls_xcom[:2]:
+        # Download content of url
+        source = requests.get(i, headers=headers)
+
+        # Parse html into BS4 object
+        soup = BeautifulSoup(source.content, 'html.parser')
+
+        # Find and extract team urls
+        for div in soup.find_all('span', attrs={'class': "show-for-small"}):
+            info = div.find_all('a')
+            for a in info:
+                # Get player name
+                n = 2
+                player_name.append(str(a.contents)[n:-n])
+
+                # Get player url and change to injury section
+                s = str(a['href'].rsplit("/", 3)[0])
+                t = "/verletzungen/"
+                u = str(a['href'].split("/", 3)[3])
+                player_url.append("https://www.transfermarkt.com" + s + t + u)
+
+            player_counter += 1
+            if (player_counter % 50) == 0:
+                print(str(player_counter) + " Player URLs Scraped")
+
+    print("Scraping Completed: " + str(len(player_url)) + " Player URLs obtained")
+
+
+    #print(team_urls_xcom)
+    return player_name, player_url
 
 # 4. Load scraping data to the data lake
 def load(ti):
     # get data returned from 'scrape_player_urls_task'
     data = ti.xcom_pull(task_ids=['scrape_player_urls_task'])
-    print(data)
+    if not data:
+        raise ValueError('No value currently stored in XComs')
+
+    # Separate team name and team url
+    data_player_name = data[0][0]
+    data_player_url = data[0][1]
+
+    print(data_player_name)
 
 
 
