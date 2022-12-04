@@ -133,12 +133,9 @@ def load(ti):
     print("Successfully loaded data to the data lake")
 
 
-
-
-
-
-
-
+# 5. Log the end of the DAG
+def finish_DAG():
+    logging.info('DAG HAS FINISHED,OBTAINED EPL TEAM URLS')
 
 
 # ----------------------------- Create DAG -----------------------------
@@ -178,7 +175,13 @@ load_to_data_lake_task = PythonOperator(
     dag = dag
 )
 
+# 5. End Task
+end_task = PythonOperator(
+    task_id = "end_task",
+    python_callable = finish_DAG,
+    dag = dag
+)
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> get_team_urls_task >> scrape_player_urls_task >> load_to_data_lake_task
+start_task >> get_team_urls_task >> scrape_player_urls_task >> load_to_data_lake_task >> end_task
