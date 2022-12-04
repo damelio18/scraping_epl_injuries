@@ -111,7 +111,7 @@ def finish_DAG():
 default_args = {
     'owner': 'XYZ',
     'start_date': datetime.datetime(2022,12,3),
-    'schedule_interval': '@hourly',
+    'schedule_interval': "35 14 * * *",
 }
 
 dag = DAG('scrape_team_urls_DAG', catchup=False, default_args=default_args)
