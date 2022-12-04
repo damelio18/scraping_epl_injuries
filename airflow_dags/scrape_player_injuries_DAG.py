@@ -5,14 +5,11 @@ import logging
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 
-# For Scraping
-#import function_player_bios
-#import function_player_stats
-# Functions for Scraping#
+# Functions for Scraping
+import requests
+from bs4 import BeautifulSoup
 from scraping_epl_injuries.airflow_dags.Functions.function_player_bios import player_bio
 from scraping_epl_injuries.airflow_dags.Functions.function_player_stats import table_data
-
-
 
 # Connecting to the Data Lake
 from airflow.hooks.postgres_hook import PostgresHook
