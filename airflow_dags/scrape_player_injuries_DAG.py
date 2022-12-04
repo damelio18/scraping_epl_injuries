@@ -146,7 +146,12 @@ def scrape_injuries(ti):
 
     print("Successfully Scraped: " + str(counter) + " Players")
 
-    return stats1
+    # Join injury and bio data for all players
+    stats_joined = stats1 + stats2
+
+    return stats_joined
+
+
 
 
 # ----------------------------- Create DAG -----------------------------
