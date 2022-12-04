@@ -110,7 +110,7 @@ def finish_DAG():
 
 default_args = {
     'owner': 'Danny',
-    'start_date': datetime.datetime(2022,12,4,10,0),
+    'start_date': datetime.datetime(2022,12,4),
     'schedule_interval': "45 * * * *",
 }
 
