@@ -40,7 +40,7 @@ def team_urls():
     cursor.execute(sql_statement)
 
     # Extract team URLs from Data Lake
-    for row in cur.fetchall():
+    for row in cursor.fetchall():
         team_urls.append(row[0])
 
     return team_urls
