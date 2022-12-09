@@ -1,8 +1,8 @@
 # ----------------------------- Function to clean date format -----------------------------
 
 def clean_date(x, y):
-    '''
 
+    '''
     Argument:
     x = DataFrame object
     y = Name of column in DataFrame with date in string format 'mmm dd, yyyy'
