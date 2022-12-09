@@ -22,7 +22,7 @@ default_args = {
     'start_date': datetime.datetime(2022,12,2)
 }
 
-dag = DAG('scrape_player_injuries_DAG',
+dag = DAG('transform_player_injuries_DAG',
           schedule_interval = '0 06 * * *',
           catchup = False,
           default_args = default_args)
