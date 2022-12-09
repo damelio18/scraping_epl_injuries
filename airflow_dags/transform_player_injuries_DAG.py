@@ -7,7 +7,7 @@ from airflow.operators.python_operator import PythonOperator
 #from scraping_epl_injuries.airflow_dags.Functions.function_clean_date import clean_date
 
 # Connecting to the Data Lake
-#from airflow.hooks.postgres_hook import PostgresHook
+from airflow.hooks.postgres_hook import PostgresHook
 
 # ----------------------------- Define Functions -----------------------------
 
