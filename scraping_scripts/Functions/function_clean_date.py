@@ -1,4 +1,5 @@
 # ----------------------------- Function to clean date format -----------------------------
+import pandas as pd
 
 def clean_date(x, y):
 
@@ -35,4 +36,8 @@ def clean_date(x, y):
     # Create dob
     df[df_col] = pd.to_datetime(dict(year = df[col_year], month=df[col_mon], day=df[col_day]))
 
+    #Remove time from format
+    df[df_col] = pd.to_datetime(df[df_col]).dt.date
+
     return df
+
