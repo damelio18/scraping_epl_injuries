@@ -2,9 +2,11 @@
 # For Scraping
 import requests
 from bs4 import BeautifulSoup
+
 # Functions for Scraping
-from Functions.function_player_bios import player_bio
-from Functions.function_player_stats import table_data
+from scraping_scripts.Functions.function_player_bios import player_bio
+from scraping_scripts.Functions.function_player_stats import table_data
+
 # To load to Data Lake
 import psycopg2
 from scraping_scripts.Credentials import data_lake
