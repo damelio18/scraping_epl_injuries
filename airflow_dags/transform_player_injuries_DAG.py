@@ -28,19 +28,21 @@ def load_injuries():
     )
 
     # SQL Statement
-    sql_statement = "SELECT * FROM historical_injuries;"
+    sql_statement = "SELECT * FROM team_urls;"
 
     # Connect to data lake
     pg_conn = pg_hook.get_conn()
     cursor = pg_conn.cursor()
 
     # Execute SQL statements
-    cursor.execute(sql_statement)
+    #cursor.execute(sql_statement)
+    print("111")
 
     # Fetch all data from table
     #tuples_list = cur.fetchall()
-    for row in cursor.fetchall():
-        injuries.append(row[0])
+    df = pd.read_sql(sql_statement, cursor)
+
+    print("222")
 
     # Column names for the DataFrame
     column_names = ['injury_id', 'transfermarkt_id', 'player', 'dob', 'height',
@@ -50,8 +52,9 @@ def load_injuries():
 
     # Create DataFrame
     #injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
+    print("333")
 
-    return injuries
+    return df
 
 
 # ----------------------------- Create DAG -----------------------------
