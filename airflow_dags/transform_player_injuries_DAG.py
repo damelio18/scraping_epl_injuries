@@ -63,7 +63,7 @@ def load_injuries():
     injuries_df_1.to_json()
     print("333")
 
-    return injuries_df_1
+    return column_names
 
 # .... Log the end of the DAG
 def finish_DAG():
