@@ -18,11 +18,11 @@ from airflow.hooks.postgres_hook import PostgresHook
 def start_DAG():
     logging.info('STARTING THE DAG,OBTAINING EPL PLAYER INJURIES')
 
-# 2. Get player URLS
-def load_injuries():
-
+# 2. Load injuries data
+def get_injuries():
+    # ----------------------------- Get Injuries -----------------------------
     # Data Lake credentials
-    pg_hook = PostgresHook(
+    dl_pg_hook = PostgresHook(
         postgres_conn_id='datalake1_airflow',
         schema='datalake1'
     )
@@ -31,36 +31,39 @@ def load_injuries():
     sql_statement = "SELECT team_url, team_name FROM team_urls;"
 
     # Connect to data lake
-    pg_conn = pg_hook.get_conn()
-    cursor = pg_conn.cursor()
+    dl_pg_conn = dl_pg_hook.get_conn()
+    dl_cursor = dl_pg_conn.cursor()
 
     # Execute SQL statements
-    cursor.execute(sql_statement)
+    dl_cursor.execute(sql_statement)
 
     # Fetch all data from table
-    tuples_list = cursor.fetchall()
-    column_names = ['one','two']
+    tuples_list = dl_cursor.fetchall()
 
+    # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
+    column_names = ['one', 'two']
     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
 
+    # ----------------------------- Transformation -----------------------------
     # Test reformat
     injuries_df_1['two'] = injuries_df_1['two'].replace('Chelsea FC', "blabla")
 
     # Revert DataFrame to list
     injuries_df_2 = injuries_df_1.values.tolist()
 
+    # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statements: Create staging table and insert into staging table
     sql_create_table = "CREATE TABLE IF NOT EXISTS test_stage (one VARCHAR(255), two VARCHAR(255));"
     sql_add_data_to_table = """INSERT INTO test_stage (one, two)
                                VALUES (%s, %s) """
     # Create table
-    cursor.execute(sql_create_table)
+    dl_cursor.execute(sql_create_table)
 
     # Insert data into staging table
-    cursor.executemany(sql_add_data_to_table, injuries_df_2)
-    pg_conn.commit()
-    print(cursor.rowcount, "Records inserted successfully into table")
+    dl_cursor.executemany(sql_add_data_to_table, injuries_df_2)
+    dl_pg_conn.commit()
+    print(dl_cursor.rowcount, "Records inserted successfully into table")
 
     return injuries_df_2
 
@@ -90,7 +93,7 @@ start_task = PythonOperator(
 # 2. Retrieve player urls from data lake
 get_injuries_task = PythonOperator(
     task_id = "get_injuries_task",
-    python_callable = load_injuries,
+    python_callable = get_injuries,
     dag = dag
 )
 
