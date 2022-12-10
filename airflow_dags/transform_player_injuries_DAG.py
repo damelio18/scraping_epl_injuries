@@ -4,6 +4,9 @@ import datetime
 import logging
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
+
+# For Transformation
+import pandas as pd
 #from scraping_epl_injuries.airflow_dags.Functions.function_clean_date import clean_date
 
 # Connecting to the Data Lake
