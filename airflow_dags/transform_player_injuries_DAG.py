@@ -48,19 +48,18 @@ def load_injuries():
     # Create DataFrame
     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
     print("333")
+    injuries_df_2 = injuries_df_1.values.tolist()
 
     sql_create_table = "CREATE TABLE IF NOT EXISTS test_stage (one VARCHAR(255), two VARCHAR(255));"
     cursor.execute(sql_create_table)
 
     print("444")
-    #cursor.copy_from(injuries_df_1, test_stage, null='', sep=',', columns=column_names)
-    #injuries_df_1.to_sql('test_stage', cursor)
 
     pg_conn.commit()
     postgres_sql_upload.insert_rows('test_stage', injuries_df_1)
     tt = "SQL UPLOAD COMPLETE"
 
-    return tt
+    return injuries_df_2
 
 # .... Log the end of the DAG
 def finish_DAG():
