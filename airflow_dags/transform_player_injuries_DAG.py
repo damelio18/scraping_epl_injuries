@@ -28,15 +28,16 @@ def load_injuries():
     )
 
     # SQL Statement
-    query = "SELECT CONVERT(upload_time,char) FROM team_urls"
-    sql_statement = "SELECT * FROM team_urls;"
+    #query = "SELECT CONVERT(upload_time,char) FROM team_urls"
+    #query = "SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD') FROM dual;"
+    sql_statement = "SELECT team_url, team_name FROM team_urls;"
 
     # Connect to data lake
     pg_conn = pg_hook.get_conn()
     cursor = pg_conn.cursor()
 
     # Execute SQL statements
-    cursor.execute(query)
+    #cursor.execute(query)
     cursor.execute(sql_statement)
     print("111")
 
