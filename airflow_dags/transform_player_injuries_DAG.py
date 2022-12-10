@@ -48,16 +48,18 @@ def load_injuries():
     print("222")
 
     # Column names for the DataFrame
-    column_names = ['injury_id', 'transfermarkt_id', 'player', 'dob', 'height',
-                    'nationality', 'int_caps', 'int_goals', 'current_club',
-                    'shirt_number', 'season', 'injury', 'date_from', 'date_until',
-                    'days', 'games_missed', 'scrape_time']
+    #column_names = ['injury_id', 'transfermarkt_id', 'player', 'dob', 'height',
+    #                'nationality', 'int_caps', 'int_goals', 'current_club',
+    #                'shirt_number', 'season', 'injury', 'date_from', 'date_until',
+    #                'days', 'games_missed', 'scrape_time']
+
+    column_names = ['1','2']
 
     # Create DataFrame
-    #injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
+    injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
     print("333")
 
-    return tuples_list[0]
+    return tuples_list
 
 # .... Log the end of the DAG
 def finish_DAG():
