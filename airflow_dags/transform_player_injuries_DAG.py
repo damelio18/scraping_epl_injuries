@@ -31,8 +31,6 @@ def load_injuries():
     )
 
     # SQL Statement
-    #query = "SELECT CONVERT(upload_time,char) FROM team_urls"
-    #query = "SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD') FROM dual;"
     sql_statement = "SELECT team_url, team_name FROM team_urls;"
 
     # Connect to data lake
@@ -40,13 +38,12 @@ def load_injuries():
     cursor = pg_conn.cursor()
 
     # Execute SQL statements
-    #cursor.execute(query)
     cursor.execute(sql_statement)
     print("111")
 
     # Fetch all data from table
-    tuples_list = cursor.fetchall()
-    #df = pd.read_sql(cursor)
+    #tuples_list = cursor.fetchall()
+    df = pd.read_sql(cursor)
 
     print("222")
 
@@ -56,11 +53,10 @@ def load_injuries():
     #                'shirt_number', 'season', 'injury', 'date_from', 'date_until',
     #                'days', 'games_missed', 'scrape_time']
 
-    column_names = ['1','2']
+    #column_names = ['1','2']
 
     # Create DataFrame
-    injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
-    #injuries_df_1.to_json()
+    #injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
     print("333")
 
     return column_names
