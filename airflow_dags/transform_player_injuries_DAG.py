@@ -7,6 +7,7 @@ from airflow.operators.python_operator import PythonOperator
 
 # For Transformation
 import pandas as pd
+import numpy as np
 #from scraping_epl_injuries.airflow_dags.Functions.function_clean_date import clean_date
 
 # Connecting to the Data Lake
@@ -51,11 +52,20 @@ def get_injuries():
     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
 
     # ----------------------------- Transformation -----------------------------
+    #Save new instance of DataFrame
+    injuries_df_2 = injuries_df_1
+
     # Test reformat
-    injuries_df_1['height'] = injuries_df_1['height'].replace('188', "blabla")
+    injuries_df_2['height'] = injuries_df_2['height'].replace('188', "blabla")
+
+    # Replace the empty strings and '-'
+    #injuries_df_2 = injuries_df_2.replace(['NA'], np.nan)
+    injuries_df_2['date_until'] = injuries_df_2['date_until'].replace(['-'], np.nan)
+    #injuries_df_2['games_missed'] = injuries_df_2['games_missed'].replace(['?', '-'], "0").astype('float')
+    #injuries_df_2[['int_caps', 'int_goals']] = injuries_df_2[['int_caps', 'int_goals']].fillna('0')
 
     # Revert DataFrame to list
-    injuries_df_2 = injuries_df_1.values.tolist()
+    injuries_df_2 = injuries_df_2.values.tolist()
 
     injuries_df_2 = injuries_df_2[:25]
 
