@@ -28,7 +28,9 @@ def get_injuries():
     )
 
     # SQL Statement
-    sql_statement = "SELECT player, dob, height, nationality, int_caps, int_goals, current_club, season, injury, date_from, date_until, days, games_missed FROM historical_injuries;"
+    sql_statement = "SELECT player, dob, height, nationality, int_caps," \
+                    "int_goals, current_club, season, injury, date_from," \
+                    "date_until, days, games_missed FROM historical_injuries;"
 
     # Connect to data lake
     dl_pg_conn = dl_pg_hook.get_conn()
@@ -58,22 +60,21 @@ def get_injuries():
     injuries_df_2 = injuries_df_2[:25]
 
     # ----------------------------- Load to Staging Table -----------------------------
-    # SQL Statements: Create staging table and insert into staging table
-
+    # SQL Statements: Create, truncate and insert into staging table
     sql_create_table = "CREATE TABLE IF NOT EXISTS injuries_stage (player VARCHAR(255), dob VARCHAR(255), " \
                        "height VARCHAR(255), nationality VARCHAR(255), int_caps VARCHAR(255)," \
-                       "int_goals VARCHAR(255), current_club VARCHAR(255)," \
-                       "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
-                       "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
+                       "int_goals VARCHAR(255), current_club VARCHAR(255),season VARCHAR(255)," \
+                       " injury VARCHAR(255),date_from VARCHAR(255), date_until VARCHAR(255), " \
+                       " days VARCHAR(255), games_missed VARCHAR(255));"
 
     sql_truncate_table = "TRUNCATE TABLE injuries_stage"
 
     sql_add_data_to_table = """INSERT INTO injuries_stage (player, dob, height, nationality, \n
                                                             int_caps, int_goals, current_club, season, \n
                                                             injury, date_from, date_until, days, games_missed) 
-                                VALUES ( %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s) """
+                               VALUES ( %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s) """
 
-    # Create table and truncate table
+    # Create and truncate staging table
     dl_cursor.execute(sql_create_table)
     dl_cursor.execute(sql_truncate_table)
 
