@@ -36,36 +36,24 @@ def load_injuries():
 
     # Execute SQL statements
     cursor.execute(sql_statement)
-    print("111")
 
     # Fetch all data from table
     tuples_list = cursor.fetchall()
-
-    print("222")
-
     column_names = ['one','two']
 
     # Create DataFrame
     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
-    print("333")
     injuries_df_2 = injuries_df_1.values.tolist()
-    #injuries_df_2 = injuries_df_2[0]
 
-    sql_create_table = "CREATE TABLE IF NOT EXISTS test_stage (one VARCHAR(255), two VARCHAR(255));"
+    sql_create_table = "CREATE TABLE IF NOT EXISTS test_stager (one VARCHAR(255), two VARCHAR(255));"
     sql_add_data_to_table = """INSERT INTO test_stage (one, two) 
-                                VALUES (%s, %s) """
+                               VALUES (%s, %s) """
     cursor.execute(sql_create_table)
 
     # Insert data into Data Lake
     cursor.executemany(sql_add_data_to_table, injuries_df_2)
-    #print(cursor.rowcount, "Records inserted successfully into table")
-
-
-    print("444")
-
     pg_conn.commit()
-
-    tt = "SQL UPLOAD COMPLETE"
+    print(cursor.rowcount, "Records inserted successfully into table")
 
     return injuries_df_2
 
