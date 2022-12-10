@@ -57,7 +57,7 @@ def load_injuries():
     #injuries_df_1.to_sql('test_stage', cursor)
 
     pg_conn.commit()
-
+    postgres_sql_upload.insert_rows('test_stage', injuries_df_1)
     tt = "SQL UPLOAD COMPLETE"
 
     return tt
