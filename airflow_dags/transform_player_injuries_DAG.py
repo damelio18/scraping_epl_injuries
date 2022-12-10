@@ -49,10 +49,17 @@ def load_injuries():
     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
     print("333")
     injuries_df_2 = injuries_df_1.values.tolist()
-    injuries_df_2 = injuries_df_2[0]
+    #injuries_df_2 = injuries_df_2[0]
 
     sql_create_table = "CREATE TABLE IF NOT EXISTS test_stage (one VARCHAR(255), two VARCHAR(255));"
+    sql_add_data_to_table = """INSERT INTO test_stage (one, two) 
+                                VALUES (%s, %s) """
     cursor.execute(sql_create_table)
+
+    # Insert data into Data Lake
+    cursor.executemany(sql_add_data_to_table, injury_data)
+    #print(cursor.rowcount, "Records inserted successfully into table")
+
 
     print("444")
 
