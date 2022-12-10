@@ -51,7 +51,7 @@ def load_injuries():
 
     sql_create_table = "CREATE TABLE IF NOT EXISTS test_STAGE (one VARCHAR(255), two VARCHAR(255));"
     cursor.execute(sql_create_table)
-
+    pg_conn.commit()
 
     tt = "SQL UPLOAD COMPLETE"
 
