@@ -54,8 +54,11 @@ def load_injuries():
     #injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
     print("333")
 
-    return tuples_list
+    return tuples_list[0]
 
+# .... Log the end of the DAG
+def finish_DAG():
+    logging.info('DAG HAS FINISHED,OBTAINED EPL PLAYER INJURIES')
 
 # ----------------------------- Create DAG -----------------------------
 default_args = {
@@ -83,6 +86,13 @@ get_injuries_task = PythonOperator(
     dag = dag
 )
 
+# .... End Task
+end_task = PythonOperator(
+    task_id = "end_task",
+    python_callable = finish_DAG,
+    dag = dag
+)
+
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> get_injuries_task
+start_task >> get_injuries_task >> end_task
