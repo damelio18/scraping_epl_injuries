@@ -39,7 +39,7 @@ def load_injuries():
     print("111")
 
     # Fetch all data from table
-    tuples_list = cur.fetchall()
+    tuples_list = cursor.fetchall()
     #df = pd.read_sql(cursor)
 
     print("222")
