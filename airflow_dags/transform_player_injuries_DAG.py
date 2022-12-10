@@ -61,7 +61,7 @@ def get_injuries():
     # Replace the empty strings and '-'
     #injuries_df_2 = injuries_df_2.replace(['NA'], np.nan)
     injuries_df_2['date_until'] = injuries_df_2['date_until'].replace(['-'], np.nan)
-    #injuries_df_2['games_missed'] = injuries_df_2['games_missed'].replace(['?', '-'], "0").astype('float')
+    injuries_df_2['games_missed'] = injuries_df_2['games_missed'].replace(['?', '-'], "0").astype('float')
     #injuries_df_2[['int_caps', 'int_goals']] = injuries_df_2[['int_caps', 'int_goals']].fillna('0')
 
     # Revert DataFrame to list
