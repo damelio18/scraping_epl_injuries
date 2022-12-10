@@ -28,6 +28,7 @@ def load_injuries():
     )
 
     # SQL Statement
+    query = "SELECT CONVERT(upload_time,char) FROM team_urls"
     sql_statement = "SELECT * FROM team_urls;"
 
     # Connect to data lake
@@ -35,11 +36,12 @@ def load_injuries():
     cursor = pg_conn.cursor()
 
     # Execute SQL statements
+    cursor.execute(query)
     cursor.execute(sql_statement)
     print("111")
 
     # Fetch all data from table
-    tuples_list = str(cursor.fetchall())
+    tuples_list = cursor.fetchall()
     #df = pd.read_sql(cursor)
 
     print("222")
