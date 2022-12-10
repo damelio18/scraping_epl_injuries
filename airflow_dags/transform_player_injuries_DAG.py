@@ -21,9 +21,6 @@ def start_DAG():
 # 2. Get player URLS
 def load_injuries():
 
-    # Empty list for injuries
-    injuries = []
-
     # Data Lake credentials
     pg_hook = PostgresHook(
         postgres_conn_id='datalake1_airflow',
@@ -43,23 +40,22 @@ def load_injuries():
 
     # Fetch all data from table
     tuples_list = cursor.fetchall()
-    #df = pd.read_sql(sql_statement, pg_conn)
 
     print("222")
 
-    # Column names for the DataFrame
-    #column_names = ['injury_id', 'transfermarkt_id', 'player', 'dob', 'height',
-    #                'nationality', 'int_caps', 'int_goals', 'current_club',
-    #                'shirt_number', 'season', 'injury', 'date_from', 'date_until',
-    #                'days', 'games_missed', 'scrape_time']
-
-    column_names = ['1','2']
+    #column_names = ['one','two']
 
     # Create DataFrame
-    injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
+    #injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
     print("333")
 
-    return injuries_df_1
+    sql_create_table = "CREATE TABLE IF NOT EXISTS test_STAGE (one VARCHAR(255), two VARCHAR(255));"
+    cursor.execute(sql_create_table)
+
+
+    tt = "SQL UPLOAD COMPLETE"
+
+    return tt
 
 # .... Log the end of the DAG
 def finish_DAG():
