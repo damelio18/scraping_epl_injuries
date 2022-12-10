@@ -18,6 +18,9 @@ def start_DAG():
 # 2. Get player URLS
 def load_injuries():
 
+    # Empty list for injuries
+    injuries = []
+
     # Data Lake credentials
     pg_hook = PostgresHook(
         postgres_conn_id='datalake1_airflow',
@@ -35,7 +38,9 @@ def load_injuries():
     cursor.execute(sql_statement)
 
     # Fetch all data from table
-    tuples_list = cur.fetchall()
+    #tuples_list = cur.fetchall()
+    for row in cursor.fetchall():
+        injuries.append(row[0])
 
     # Column names for the DataFrame
     column_names = ['injury_id', 'transfermarkt_id', 'player', 'dob', 'height',
@@ -46,7 +51,7 @@ def load_injuries():
     # Create DataFrame
     #injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
 
-    return tuples_list
+    return injuries
 
 
 # ----------------------------- Create DAG -----------------------------
