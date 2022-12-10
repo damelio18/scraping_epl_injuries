@@ -20,7 +20,7 @@ def start_DAG():
 
 # 2. Load injuries data
 def get_injuries():
-    # ----------------------------- Get Injuries -----------------------------
+
     # Data Lake credentials
     dl_pg_hook = PostgresHook(
         postgres_conn_id='datalake1_airflow',
@@ -28,7 +28,7 @@ def get_injuries():
     )
 
     # SQL Statement
-    sql_statement = "SELECT team_url, team_name FROM team_urls;"
+    sql_statement = "SELECT player, dob, height, nationality, int_caps, int_goals, current_club, season, injury, date_from, date_until, days, games_missed FROM historical injuries;"
 
     # Connect to data lake
     dl_pg_conn = dl_pg_hook.get_conn()
@@ -42,21 +42,35 @@ def get_injuries():
 
     # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
-    column_names = ['one', 'two']
+    column_names = ['player', 'dob', 'height', 'nationality', 'int_caps',
+                    'int_goals', 'current_club', 'season', 'injury',
+                    'date_from', 'date_until','days', 'games_missed']
+
     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
 
     # ----------------------------- Transformation -----------------------------
     # Test reformat
-    injuries_df_1['two'] = injuries_df_1['two'].replace('Chelsea FC', "blabla")
+    injuries_df_1['height'] = injuries_df_1['height'].replace('188', "blabla")
 
     # Revert DataFrame to list
     injuries_df_2 = injuries_df_1.values.tolist()
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statements: Create staging table and insert into staging table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS test_stage (one VARCHAR(255), two VARCHAR(255));"
-    sql_add_data_to_table = """INSERT INTO test_stage (one, two)
-                               VALUES (%s, %s) """
+    #sql_create_table = "CREATE TABLE IF NOT EXISTS test_stage (one VARCHAR(255), two VARCHAR(255));"
+    sql_create_table = "CREATE TABLE IF NOT EXISTS injuries_stage (player VARCHAR(255), dob VARCHAR(255), " \
+                       "height VARCHAR(255), nationality VARCHAR(255), int_caps VARCHAR(255)," \
+                       "int_goals VARCHAR(255), current_club VARCHAR(255)" \
+                       "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
+                       "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
+
+    #sql_add_data_to_table = """INSERT INTO test_stage (one, two)
+    #                           VALUES (%s, %s) """
+
+    sql_add_data_to_table = """INSERT INTO injuries_stage (player, dob, height, nationality, \n
+                                                            int_caps, int_goals, current_club, season, \n
+                                                            injury, date_from, date_until, days, games_missed) 
+                                VALUES ( %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s) """
     # Create table
     dl_cursor.execute(sql_create_table)
 
