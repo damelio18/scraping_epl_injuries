@@ -39,8 +39,8 @@ def load_injuries():
     print("111")
 
     # Fetch all data from table
-    #tuples_list = cur.fetchall()
-    df = pd.read_sql(cursor)
+    tuples_list = cur.fetchall()
+    #df = pd.read_sql(cursor)
 
     print("222")
 
@@ -54,7 +54,7 @@ def load_injuries():
     #injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
     print("333")
 
-    return df
+    return tuples_list
 
 
 # ----------------------------- Create DAG -----------------------------
