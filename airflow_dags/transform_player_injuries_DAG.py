@@ -60,7 +60,7 @@ def get_injuries():
     #sql_create_table = "CREATE TABLE IF NOT EXISTS test_stage (one VARCHAR(255), two VARCHAR(255));"
     sql_create_table = "CREATE TABLE IF NOT EXISTS injuries_stage (player VARCHAR(255), dob VARCHAR(255), " \
                        "height VARCHAR(255), nationality VARCHAR(255), int_caps VARCHAR(255)," \
-                       "int_goals VARCHAR(255), current_club VARCHAR(255)" \
+                       "int_goals VARCHAR(255), current_club VARCHAR(255)," \
                        "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
                        "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
 
