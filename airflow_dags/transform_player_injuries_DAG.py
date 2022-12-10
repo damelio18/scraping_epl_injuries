@@ -55,24 +55,27 @@ def get_injuries():
     # Revert DataFrame to list
     injuries_df_2 = injuries_df_1.values.tolist()
 
+    injuries_df_2 = injuries_df_2[:25]
+
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statements: Create staging table and insert into staging table
-    #sql_create_table = "CREATE TABLE IF NOT EXISTS test_stage (one VARCHAR(255), two VARCHAR(255));"
+
     sql_create_table = "CREATE TABLE IF NOT EXISTS injuries_stage (player VARCHAR(255), dob VARCHAR(255), " \
                        "height VARCHAR(255), nationality VARCHAR(255), int_caps VARCHAR(255)," \
                        "int_goals VARCHAR(255), current_club VARCHAR(255)," \
                        "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
                        "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
 
-    #sql_add_data_to_table = """INSERT INTO test_stage (one, two)
-    #                           VALUES (%s, %s) """
+    sql_truncate_table = "TRUNCATE TABLE injuries_stage"
 
     sql_add_data_to_table = """INSERT INTO injuries_stage (player, dob, height, nationality, \n
                                                             int_caps, int_goals, current_club, season, \n
                                                             injury, date_from, date_until, days, games_missed) 
                                 VALUES ( %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s) """
-    # Create table
+
+    # Create table and truncate table
     dl_cursor.execute(sql_create_table)
+    dl_cursor.execute(sql_truncate_table)
 
     # Insert data into staging table
     dl_cursor.executemany(sql_add_data_to_table, injuries_df_2)
@@ -81,9 +84,13 @@ def get_injuries():
 
     return injuries_df_2
 
+
+
 # .... Log the end of the DAG
 def finish_DAG():
     logging.info('DAG HAS FINISHED,OBTAINED EPL PLAYER INJURIES')
+
+
 
 # ----------------------------- Create DAG -----------------------------
 default_args = {
