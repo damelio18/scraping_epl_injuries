@@ -59,7 +59,7 @@ def load_injuries():
     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
     print("333")
 
-    return tuples_list
+    return injuries_df_1
 
 # .... Log the end of the DAG
 def finish_DAG():
