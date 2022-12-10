@@ -35,12 +35,12 @@ def load_injuries():
     cursor = pg_conn.cursor()
 
     # Execute SQL statements
-    #cursor.execute(sql_statement)
+    cursor.execute(sql_statement)
     print("111")
 
     # Fetch all data from table
     #tuples_list = cur.fetchall()
-    df = pd.read_sql(sql_statement, cursor)
+    df = pd.read_sql(cursor)
 
     print("222")
 
