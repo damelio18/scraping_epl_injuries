@@ -60,7 +60,7 @@ def load_injuries():
 
     # Create DataFrame
     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
-    injuries_df_1.to_json()
+    #injuries_df_1.to_json()
     print("333")
 
     return column_names
