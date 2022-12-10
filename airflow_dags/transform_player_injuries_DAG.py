@@ -57,7 +57,7 @@ def load_injuries():
     cursor.execute(sql_create_table)
 
     # Insert data into Data Lake
-    cursor.executemany(sql_add_data_to_table, injury_data)
+    cursor.executemany(sql_add_data_to_table, injuries_df_2)
     #print(cursor.rowcount, "Records inserted successfully into table")
 
 
