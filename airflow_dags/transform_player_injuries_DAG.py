@@ -80,7 +80,6 @@ start_task = PythonOperator(
 get_injuries_task = PythonOperator(
     task_id = "get_injuries_task",
     python_callable = load_injuries,
-    #do_xcom_push = True,
     dag = dag
 )
 
