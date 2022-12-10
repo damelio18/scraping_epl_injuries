@@ -67,7 +67,7 @@ def get_injuries():
     # Revert DataFrame to list
     injuries_df_2 = injuries_df_2.values.tolist()
 
-    injuries_df_2 = injuries_df_2[:25]
+    injuries_df_2 = injuries_df_2[:50]
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statements: Create, truncate and insert into staging table
