@@ -45,7 +45,7 @@ def load_injuries():
     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
 
     # Test reformat
-    injuries_df_1['one'] = injuries_df_1['one'].replace('https', "blabla")
+    injuries_df_1['two'] = injuries_df_1['two'].replace('Chelsea FC', "blabla")
 
     # Revert DataFrame to list
     injuries_df_2 = injuries_df_1.values.tolist()
