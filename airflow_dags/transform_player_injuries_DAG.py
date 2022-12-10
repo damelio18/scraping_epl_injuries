@@ -43,14 +43,21 @@ def load_injuries():
 
     # Create DataFrame
     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
+
+    # Test reformat
+    injuries_df_1['one'] = injuries_df_1['one'].replace('https', "blabla")
+
+    # Revert DataFrame to list
     injuries_df_2 = injuries_df_1.values.tolist()
 
-    sql_create_table = "CREATE TABLE IF NOT EXISTS test_stager (one VARCHAR(255), two VARCHAR(255));"
+    # SQL Statements: Create staging table and insert into staging table
+    sql_create_table = "CREATE TABLE IF NOT EXISTS test_stage (one VARCHAR(255), two VARCHAR(255));"
     sql_add_data_to_table = """INSERT INTO test_stage (one, two)
                                VALUES (%s, %s) """
+    # Create table
     cursor.execute(sql_create_table)
 
-    # Insert data into Data Lake
+    # Insert data into staging table
     cursor.executemany(sql_add_data_to_table, injuries_df_2)
     pg_conn.commit()
     print(cursor.rowcount, "Records inserted successfully into table")
