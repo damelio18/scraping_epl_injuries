@@ -53,8 +53,7 @@ def load_injuries():
     cursor.execute(sql_create_table)
 
     for index, row in injuries_df_1.iterrows():
-        cursor.execute("INSERT INTO test_STAGE (one,two) values(?,?)",
-                       row.team_url, row.team_name)
+        cursor.execute("INSERT INTO test_STAGE (one,two) values(?,?)", row.team_url, row.team_name)
     pg_conn.commit()
 
     tt = "SQL UPLOAD COMPLETE"
