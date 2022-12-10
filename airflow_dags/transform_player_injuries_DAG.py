@@ -38,12 +38,12 @@ def load_injuries():
     cursor = pg_conn.cursor()
 
     # Execute SQL statements
-    #cursor.execute(sql_statement)
+    cursor.execute(sql_statement)
     print("111")
 
     # Fetch all data from table
-    #tuples_list = cursor.fetchall()
-    df = pd.read_sql(sql_statement, pg_conn)
+    tuples_list = cursor.fetchall()
+    #df = pd.read_sql(sql_statement, pg_conn)
 
     print("222")
 
@@ -53,13 +53,13 @@ def load_injuries():
     #                'shirt_number', 'season', 'injury', 'date_from', 'date_until',
     #                'days', 'games_missed', 'scrape_time']
 
-    #column_names = ['1','2']
+    column_names = ['1','2']
 
     # Create DataFrame
-    #injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
+    injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
     print("333")
 
-    return df
+    return injuries_df_1
 
 # .... Log the end of the DAG
 def finish_DAG():
