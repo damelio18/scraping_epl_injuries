@@ -43,10 +43,10 @@ def load_injuries():
 
     print("222")
 
-    #column_names = ['one','two']
+    column_names = ['one','two']
 
     # Create DataFrame
-    #injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
+    injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
     print("333")
 
     sql_create_table = "CREATE TABLE IF NOT EXISTS test_STAGE (one VARCHAR(255), two VARCHAR(255));"
