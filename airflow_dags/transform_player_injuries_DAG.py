@@ -51,9 +51,11 @@ def load_injuries():
 
     sql_create_table = "CREATE TABLE IF NOT EXISTS test_stage (one VARCHAR(255), two VARCHAR(255));"
     cursor.execute(sql_create_table)
-    injuries_df_1.to_sql('test_stage', cursor)
-    #for index, row in injuries_df_1.iterrows():
-    #    cursor.execute("INSERT INTO test_STAGE (one,two) values(?,?)", row.one, row.two)
+
+    print("444")
+    cursor.copy_from(injuries_df_1, test_stage, null='', sep=',', columns=column_names)
+    #injuries_df_1.to_sql('test_stage', cursor)
+
     pg_conn.commit()
 
     tt = "SQL UPLOAD COMPLETE"
