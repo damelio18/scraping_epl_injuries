@@ -28,7 +28,7 @@ def get_injuries():
     )
 
     # SQL Statement
-    sql_statement = "SELECT player, dob, height, nationality, int_caps, int_goals, current_club, season, injury, date_from, date_until, days, games_missed FROM historical injuries;"
+    sql_statement = "SELECT player, dob, height, nationality, int_caps, int_goals, current_club, season, injury, date_from, date_until, days, games_missed FROM historical_injuries;"
 
     # Connect to data lake
     dl_pg_conn = dl_pg_hook.get_conn()
