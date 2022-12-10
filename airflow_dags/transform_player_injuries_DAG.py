@@ -46,7 +46,7 @@ def load_injuries():
     injuries_df_2 = injuries_df_1.values.tolist()
 
     sql_create_table = "CREATE TABLE IF NOT EXISTS test_stager (one VARCHAR(255), two VARCHAR(255));"
-    sql_add_data_to_table = """INSERT INTO test_stage (one, two) 
+    sql_add_data_to_table = """INSERT INTO test_stage (one, two)
                                VALUES (%s, %s) """
     cursor.execute(sql_create_table)
 
