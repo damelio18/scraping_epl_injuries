@@ -44,9 +44,9 @@ def load_injuries():
                     'days', 'games_missed', 'scrape_time']
 
     # Create DataFrame
-    injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
+    #injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
 
-    return injuries_df_1
+    return tuples_list
 
 
 # ----------------------------- Create DAG -----------------------------
