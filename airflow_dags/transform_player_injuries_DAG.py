@@ -53,7 +53,7 @@ def load_injuries():
     cursor.execute(sql_create_table)
 
     print("444")
-    cursor.copy_from(injuries_df_1, test_stage, null='', sep=',', columns=column_names)
+    #cursor.copy_from(injuries_df_1, test_stage, null='', sep=',', columns=column_names)
     #injuries_df_1.to_sql('test_stage', cursor)
 
     pg_conn.commit()
