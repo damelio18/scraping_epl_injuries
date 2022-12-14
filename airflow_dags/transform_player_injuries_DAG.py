@@ -52,6 +52,7 @@ def stg_table():
 
     # Execute SQL statements
     cursor_1.execute(sql_statement_1)
+    cursor_2.execute(sql_statement_2)
 
     # Fetch all data from table
     tuples_list = cursor_1.fetchall()
