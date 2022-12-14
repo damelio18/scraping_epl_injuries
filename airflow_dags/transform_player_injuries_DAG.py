@@ -445,8 +445,8 @@ def store_table():
     dw_cursor = dw_pg_conn.cursor()
 
     # SQL Statement: Create and drop tables
-    sql_drop_store = "DROP TABLE IF EXISTS store_historical_injuries;"
-    sql_store_table = "CREATE TABLE store_historical_injuries AS TABLE stg_historical_injuries;"
+    sql_drop_store = "DROP TABLE IF EXISTS store_clean_historical_injuries;"
+    sql_store_table = "CREATE TABLE store_clean_historical_injuries AS TABLE stg_historical_injuries;"
     sql_drop_staging = "DROP TABLE stg_historical_injuries"
 
     # Create and drop table
@@ -468,7 +468,7 @@ default_args = {
 }
 
 dag = DAG('transform_player_injuries_DAG',
-          schedule_interval = '0 06 * * *',
+          schedule_interval = '0 07 * * *',
           catchup = False,
           default_args = default_args)
 
