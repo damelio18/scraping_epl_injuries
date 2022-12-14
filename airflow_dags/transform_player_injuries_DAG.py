@@ -50,12 +50,14 @@ def stg_table():
                        "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
                        "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
 
-    # Execute SQL statements
+    # Fetch all data from table in DL
     cursor_1.execute(sql_statement_1)
-    cursor_2.execute(sql_statement_2)
-
-    # Fetch all data from table
     tuples_list = cursor_1.fetchall()
+
+    #Create and insert data into DW table
+    cursor_2.execute(sql_statement_2)
+    pg_conn_2.commit()
+
 
     return tuples_list
 
