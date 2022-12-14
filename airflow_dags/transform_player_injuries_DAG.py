@@ -237,11 +237,25 @@ def date_columns():
     except:
         pass
 
-    return list(df.columns)
+# ----------------------------- Load to Staging Table -----------------------------
+    # SQL Statement: Truncate staging table
+    sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
+                  "dob_mon VARCHAR(255),dob_year VARCHAR(255),age VARCHAR(255)," \
+                  "date_from_day VARCHAR(255), date_until_day VARCHAR(255)"
 
+    # SQL Statement: Truncate staging table
+    sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
+    # Truncate staging table
+    dw_cursor.execute(sql_alter)
+    dw_cursor.execute(sql_truncate_table)
+    dw_pg_conn.commit()
 
+    # Create a list of tuples representing the rows in the dataframe
+    #rows = [tuple(x) for x in df.values]
 
+    # Insert the rows into the database
+    #dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
 
