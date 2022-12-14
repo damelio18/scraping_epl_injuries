@@ -232,9 +232,6 @@ def date_columns():
     # Clean date_until column
     clean_date(df, 'date_until')
 
-    return list(df.columns)
-
-
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
     sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
