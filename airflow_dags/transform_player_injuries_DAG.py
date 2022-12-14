@@ -82,7 +82,7 @@ def player_names():
     dw_cursor = dw_pg_conn.cursor()
 
     # SQL Statement: Get data from staging data
-    sql_statement = "SELECT player FROM stg_historical_injuries;"
+    sql_statement = "SELECT * FROM stg_historical_injuries;"
 
     # Execute SQL statements
     dw_cursor.execute(sql_statement)
@@ -90,51 +90,40 @@ def player_names():
     # Fetch all data from table
     tuples_list = dw_cursor.fetchall()
 
+    tuples_list = tuples_list[:50]
+
     # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
-    column_names = ['player']
+    column_names = ['player', 'dob', 'height', 'nationality', 'int_caps',
+                    'int_goals', 'current_club', 'season', 'injury',
+                    'date_from', 'date_until','days', 'games_missed']
 
     df = pd.DataFrame(tuples_list, columns = column_names)
 
     # ----------------------------- Transformation -----------------------------
-    # Strip all leading and trailing whitespace from player names
-    df['player'] = df.player.str.strip()
-
-    # Split name into first and second name
-    df[['first_name', 'second_name']] = df['player'].str.split(' ', n=1, expand=True)
-
-    # Remove players with no first name
-    df = df[~df['first_name'].isnull()]
-    first = df['first_name'].values.tolist()
-
-    # Drop player column
-    df = df.drop(['player'], axis=1)
-
-    # Revert DataFrame to list
-    df_list = df.values.tolist()
-
-    # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in df['first_name'].values]
+    # Replace the empty strings and '-'
+    df = df.replace(['NA'], np.nan)
+    df['date_until'] = df['date_until'].replace(['-'], np.nan)
+    df['games_missed'] = df['games_missed'].replace(['?', '-'], "0").astype('float')
+    df[['int_caps', 'int_goals']] = df[['int_caps', 'int_goals']].fillna('0')
 
     # ----------------------------- Load to Staging Table -----------------------------
-    # SQL Statement: Add columns to staging table
-    sql_statement_1 = "ALTER TABLE stg_historical_injuries ADD first_name VARCHAR(255)"
-    sql_statement_2 = "ALTER TABLE stg_historical_injuries ADD second_name VARCHAR(255)"
+    sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
-    # Execute SQL statements
-    dw_cursor.execute(sql_statement_1)
-    dw_cursor.execute(sql_statement_2)
+    sql_add_data_to_table = """INSERT INTO injuries_stage (player, dob, height, nationality, \n
+                                                            int_caps, int_goals, current_club, season, \n
+                                                            injury, date_from, date_until, days, games_missed)
+                               VALUES ( %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s) """
 
-    sql = """ UPDATE stg_historical_injuries SET first_name=%s, second_name=%s,  WHERE first_name = %s """
+    # Truncate staging table
+    dw_cursor.execute(sql_truncate_table)
 
-    #val = (email, first, last, phone, passw, user)
-
-    dw_cursor.execute(sql, df_list)
-
-    #for d in df_list:
-    #     dw_cursor.execute("INSERT into stg_historical_injuries(first_name, second_name) VALUES (%s, %s)", d)
-
+    # Insert data into staging table
+    dw_cursor.executemany(sql_add_data_to_table, df)
     dw_pg_conn.commit()
+    #print(dw_cursor.rowcount, "Records inserted successfully into table")
+
+
 
 
 #     # SQL Statement
