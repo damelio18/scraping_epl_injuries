@@ -87,7 +87,7 @@ def bios():
     rows = [tuple(x) for x in df.values]
 
     # Insert the rows into the database
-    pg_hook_2.insert_rows(table="stg_historical_injuries", rows=rows)
+    pg_hook_2.insert_rows(table="store_player_bios", rows=rows)
 
 
 # 4. Log the end of the DAG
