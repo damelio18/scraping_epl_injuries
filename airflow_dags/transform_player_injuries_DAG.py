@@ -41,7 +41,7 @@ def stg_table():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
-    tuples_list = tuples_list[40:51]
+    tuples_list = tuples_list[45:51]
 
     # ----------------------------- Create Staging Table in Data Warehouse -----------------------------
     # Data warehouse credentials
@@ -222,9 +222,9 @@ def date_columns():
 
     # Create Age column: Days difference
     df['age'] = date.today() - df['dob']
-    #
-    # # Create Age column: Convert age to years
-    # df['age'] = round(df['age'] / np.timedelta64(1, 'Y'), 0)
+
+    # Create Age column: Convert age to years
+    df['age'] = round(df['age'] / np.timedelta64(1, 'Y'), 0)
     #
     # # Clean date_from column
     # clean_date(df, 'date_from')
