@@ -106,8 +106,8 @@ def player_names():
     # Remove players with no first name
     df = df[~df['first_name'].isnull()]
 
-    first = df['first_name'.values.tolist()
-    second = df['second_name'.values.tolist()
+    first = df['first_name'].values.tolist()
+    second = df['second_name'].values.tolist()
 
     # Drop player column
     #df = df.drop(['player'], axis=1)
