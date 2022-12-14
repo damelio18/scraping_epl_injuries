@@ -107,13 +107,13 @@ def player_names():
     df = df[~df['first_name'].isnull()]
 
     first = df['first_name'.values.tolist()
-    #second = df['second_name'.values.tolist()
+    second = df['second_name'.values.tolist()
 
     # Drop player column
     #df = df.drop(['player'], axis=1)
 
     # Revert DataFrame to list
-    #df_list = df.values.tolist()
+    df_list = df.values.tolist()
 
     # Create a list of tuples representing the rows in the dataframe
     #rows = [tuple(x) for x in df.values]
