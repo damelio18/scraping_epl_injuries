@@ -110,13 +110,13 @@ def player_names():
     second = df['second_name'].values.tolist()
 
     # Drop player column
-    #df = df.drop(['player'], axis=1)
+    df = df.drop(['player'], axis=1)
 
     # Revert DataFrame to list
-    #df_list = df.values.tolist()
+    df_list = df.values.tolist()
 
     # Create a list of tuples representing the rows in the dataframe
-    #rows = [tuple(x) for x in df.values]
+    rows = [tuple(x) for x in df.values]
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Add columns to staging table
