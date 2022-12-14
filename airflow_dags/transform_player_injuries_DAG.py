@@ -416,7 +416,7 @@ def days_injured():
 
     # ----------------------------- Transformation -----------------------------
     # Clean days injured
-    #df['days_injured'] = df['days_injured'].str.rstrip(' days').astype('float')
+    df['days'] = df['days'].str.rstrip(' days').astype('float')
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
@@ -432,7 +432,7 @@ def days_injured():
     rows = [tuple(x) for x in df.values]
 
     # Insert the rows into the database
-    #dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+    dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
 
@@ -517,7 +517,7 @@ days_injured_task = PythonOperator(
 
 
 
-# .... End Task
+# 9. End Task
 end_task = PythonOperator(
     task_id = "end_task",
     python_callable = finish_DAG,
