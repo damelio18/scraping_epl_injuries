@@ -226,36 +226,34 @@ def date_columns():
     # Create Age column: Convert age to years
     df['age'] = round(df['age'] / np.timedelta64(1, 'Y'), 0)
 
-    try:
-        # Clean date_from column
-        clean_date(df, 'date_from')
-    except:
-        pass
-    try:
-        # Clean date_until column
-        clean_date(df, 'date_until')
-    except:
-        pass
+    # Clean date_from column
+    clean_date(df, 'date_from')
+
+    # try:
+    #     # Clean date_until column
+    #     clean_date(df, 'date_until')
+    # except:
+    #     pass
 
 # ----------------------------- Load to Staging Table -----------------------------
-    # SQL Statement: Truncate staging table
-    sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
-                  "ADD dob_mon VARCHAR(255),ADD dob_year VARCHAR(255),ADD age VARCHAR(255)," \
-                  "ADD date_from_day VARCHAR(255), ADD date_until_day VARCHAR(255)"
-
-    # SQL Statement: Truncate staging table
-    sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
-
-    # Truncate staging table
-    dw_cursor.execute(sql_alter)
-    dw_cursor.execute(sql_truncate_table)
-    dw_pg_conn.commit()
-
-    # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in df.values]
-
-    # Insert the rows into the database
-    dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+#     # SQL Statement: Truncate staging table
+#     sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
+#                   "ADD dob_mon VARCHAR(255),ADD dob_year VARCHAR(255),ADD age VARCHAR(255)," \
+#                   "ADD date_from_day VARCHAR(255), ADD date_until_day VARCHAR(255)"
+#
+#     # SQL Statement: Truncate staging table
+#     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
+#
+#     # Truncate staging table
+#     dw_cursor.execute(sql_alter)
+#     dw_cursor.execute(sql_truncate_table)
+#     dw_pg_conn.commit()
+#
+#     # Create a list of tuples representing the rows in the dataframe
+#     rows = [tuple(x) for x in df.values]
+#
+#     # Insert the rows into the database
+#     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
 
