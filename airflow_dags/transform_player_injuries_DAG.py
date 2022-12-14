@@ -113,7 +113,7 @@ def player_names():
     #df_list = df.values.tolist()
 
     # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in element_types_df.values]
+    rows = [tuple(x) for x in df.values]
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Add columns to staging table
@@ -127,12 +127,6 @@ def player_names():
     #     dw_cursor.execute('INSERT INTO stg_historical_injuries (first_name, second_name) VALUES %s', (row,))
 
     dw_pg_conn.commit()
-
-    # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in element_types_df.values]
-
-    # Insert the rows into the database
-    #pg_hook.insert_rows(table="element_types", rows=rows)
 
     return rows
 
