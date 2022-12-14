@@ -113,7 +113,7 @@ def player_names():
     #df = df.drop(['player'], axis=1)
 
     # Revert DataFrame to list
-    df_list = df.values.tolist()
+    #df_list = df.values.tolist()
 
     # Create a list of tuples representing the rows in the dataframe
     #rows = [tuple(x) for x in df.values]
@@ -128,9 +128,9 @@ def player_names():
     dw_cursor.execute(sql_statement_2)
     #for row in df_list:
     #     dw_cursor.execute('INSERT INTO stg_historical_injuries (first_name, second_name) VALUES %s', (row,))
-    #sql = 'INSERT INTO stg_historical_injuries (first_name, second_name) VALUES (%s, %s)'
+    sql = 'INSERT INTO stg_historical_injuries (first_name) VALUES (%s)'
     #value = None
-    #dw_cursor.execute(sql, rows)
+    dw_cursor.execute(sql, first)
 
     dw_pg_conn.commit()
 
