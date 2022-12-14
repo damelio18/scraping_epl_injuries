@@ -119,7 +119,7 @@ def player_names():
     dw_cursor.execute(sql_truncate_table)
 
     # Insert data into staging table
-    dw_cursor.executemany(sql_add_data_to_table, df)
+    #dw_cursor.executemany(sql_add_data_to_table, df)
     dw_pg_conn.commit()
     #print(dw_cursor.rowcount, "Records inserted successfully into table")
 
