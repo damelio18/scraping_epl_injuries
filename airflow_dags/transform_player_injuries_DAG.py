@@ -225,9 +225,12 @@ def date_columns():
 
     # Create Age column: Convert age to years
     df['age'] = round(df['age'] / np.timedelta64(1, 'Y'), 0)
-    #
-    # Clean date_from column
-    clean_date(df, 'date_from')
+
+    try:
+        # Clean date_from column
+        clean_date(df, 'date_from')
+    except:
+        pass
     #
     # # Clean date_until column
     # clean_date(df, 'date_until')
