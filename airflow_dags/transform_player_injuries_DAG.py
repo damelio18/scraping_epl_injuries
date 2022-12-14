@@ -105,14 +105,7 @@ def player_names():
 
     # Remove players with no first name
     df = df[~df['first_name'].isnull()]
-
     first = df['first_name'].values.tolist()
-
-    ff = []
-    for i in first:
-        ff.append([i])
-
-    print(ff)
 
     # Drop player column
     df = df.drop(['player'], axis=1)
@@ -132,19 +125,10 @@ def player_names():
     dw_cursor.execute(sql_statement_1)
     dw_cursor.execute(sql_statement_2)
 
-    postgres_insert_query = """ INSERT INTO stg_historical_injuries (first_name) VALUES (%s)"""
-    #record_to_insert = (5, 'One Plus 6', 950)
-    dw_cursor.execute(postgres_insert_query, (first))
-
-
-
-    # for d in df_list:
-    #     #dw_cursor.execute("INSERT into stg_historical_injuries(first_name, second_name) VALUES (%s, %s)", d)
-
+    for d in df_list:
+         dw_cursor.execute("INSERT into stg_historical_injuries(first_name, second_name) VALUES (%s, %s)", rows)
 
     dw_pg_conn.commit()
-
-    return ff
 
 
 #     # SQL Statement
