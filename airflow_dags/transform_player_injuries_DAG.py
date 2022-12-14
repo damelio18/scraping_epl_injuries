@@ -110,6 +110,15 @@ def player_names():
     # Revert DataFrame to list
     df_list = df.values.tolist()
 
+    # ----------------------------- Load to Staging Table -----------------------------
+    sql_statement_2 = "ALTER TABLE stg_historical_injuries \
+                       ADD first_name VARCHAR(100) \
+                       FIRST"
+
+    # Execute SQL statements
+    dw_cursor.execute(sql_statement_2)
+    #dw_pg_conn.commit()
+
     return df_list
 
 
