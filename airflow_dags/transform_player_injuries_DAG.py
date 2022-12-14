@@ -161,7 +161,7 @@ def player_names():
     df = df.drop(['player'], axis=1)
 
     # ----------------------------- Load to Staging Table -----------------------------
-    # SQL Statement: Truncate staging table
+    # SQL Statement: Alter staging table
     sql_alter_1 = "ALTER TABLE stg_historical_injuries ADD first_name VARCHAR(255)"
     sql_alter_2 = "ALTER TABLE stg_historical_injuries ADD second_name VARCHAR(255)"
     sql_alter_3 = "ALTER TABLE stg_historical_injuries DROP COLUMN player;"
@@ -446,7 +446,7 @@ def store_table():
     dw_cursor = dw_pg_conn.cursor()
 
     # SQL Statement: Create and drop tables
-    sql_store_table = "CREATE TABLE store_historical_injuries LIKE stg_historical_injuries"
+    sql_store_table = "CREATE TABLE store_historical_injuries AS TABLE stg_historical_injuries;"
     sql_drop_staging = "DROP TABLE stg_historical_injuries"
 
     # Create and drop table
