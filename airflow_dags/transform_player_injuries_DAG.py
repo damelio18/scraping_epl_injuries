@@ -110,7 +110,10 @@ def player_names():
     df = df.drop(['player'], axis=1)
 
     # Revert DataFrame to list
-    df_list = df.values.tolist()
+    #df_list = df.values.tolist()
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in element_types_df.values]
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Add columns to staging table
@@ -125,11 +128,13 @@ def player_names():
 
     dw_pg_conn.commit()
 
-    return df_list
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in element_types_df.values]
 
+    # Insert the rows into the database
+    #pg_hook.insert_rows(table="element_types", rows=rows)
 
-
-
+    return rows
 
 
 #     # SQL Statement
