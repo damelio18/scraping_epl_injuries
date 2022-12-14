@@ -34,9 +34,10 @@ def bios():
     cursor_1 = pg_conn_1.cursor()
 
     # SQL Statement: Get data data warehouse: injuries
-    sql_statement_get_data = "SELECT 'first_name', 'second_name','current_club'," \
-                             "'dob_day', 'dob_mon','dob_year', 'dob','age'," \
-                             "'height', 'nationality','int_caps', 'int_goals';"
+    sql_statement_get_data = "SELECT first_name, second_name,current_club," \
+                             "dob_day, dob_mon,dob_year, dob, age," \
+                             "height, nationality,int_caps, int_goals " \
+                             "FROM store_historical_injuries;"
 
     # Fetch all data from table in data warehouse: injuries
     cursor_1.execute(sql_statement_get_data)
