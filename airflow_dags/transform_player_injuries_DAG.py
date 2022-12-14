@@ -420,11 +420,11 @@ def days_injured():
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
-    sql_alter = "ALTER TABLE stg_historical_injuries RENAME COLUMN days TO days_injured"
+    #sql_alter = "ALTER TABLE stg_historical_injuries RENAME COLUMN days TO days_injured"
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
     # Truncate staging table
-    dw_cursor.execute(sql_alter)
+    #dw_cursor.execute(sql_alter)
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
 
