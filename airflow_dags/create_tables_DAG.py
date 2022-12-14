@@ -18,27 +18,27 @@ from airflow.hooks.postgres_hook import PostgresHook
 
 # 1. Log the start of the DAG
 def start_DAG():
-    logging.info('STARTING THE DAG,DIVIDING TABLES FOR DW')
+    logging.info('STARTING THE DAG, CREATING TABLES FOR DW')
 
 
 # 2. Create player bios table
 def bios():
-    # ----------------------------- Get Data from Data Lake -----------------------------
-    # Data warehouse credentials
+    # ----------------------------- Get Injuries Data from Data Warehouse -----------------------------
+    # Data warehouse: injuries credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='dw_injuries',
         schema='injuries'
     )
-    # Connect to data lake
+    # Connect to data warehouse: injuries
     pg_conn_1 = pg_hook_1.get_conn()
     cursor_1 = pg_conn_1.cursor()
 
-    # SQL Statement: Get data from data lake
+    # SQL Statement: Get data data warehouse: injuries
     sql_statement_get_data = "SELECT 'first_name', 'second_name','current_club'," \
                              "'dob_day', 'dob_mon','dob_year', 'dob','age'," \
                              "'height', 'nationality','int_caps', 'int_goals';"
 
-    # Fetch all data from table in data lake
+    # Fetch all data from table in data warehouse: injuries
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
@@ -68,7 +68,6 @@ def bios():
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-
     # SQL Statement: Drop old table
     sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
 
@@ -94,7 +93,6 @@ def bios():
 # 4. Log the end of the DAG
 def finish_DAG():
     logging.info('DAG HAS FINISHED,EPL PLAYER INJURIES & BIOS LOADED TO DW')
-
 
 
 # ----------------------------- Create DAG -----------------------------
