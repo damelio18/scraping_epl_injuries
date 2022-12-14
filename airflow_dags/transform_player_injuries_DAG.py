@@ -233,11 +233,10 @@ def date_columns():
     clean_date(df, 'date_until')
 
     # Replace NaT type with np.nan
-    #df = df.replace("NaT","tt", inplace=True)
     df = df.where(pd.notnull(df), None)
 
     # ----------------------------- Load to Staging Table -----------------------------
-    # SQL Statement: Truncate staging table
+    # SQL Statement: Alter staging table
     sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
                 "ADD dob_mon VARCHAR(255), ADD dob_year VARCHAR(255), ADD age VARCHAR(255)," \
                 "ADD date_from_day VARCHAR(255), ADD date_from_mon VARCHAR(255)," \
@@ -247,7 +246,7 @@ def date_columns():
     # SQL Statement: Truncate staging table
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
-    # Truncate staging table
+    # Alter and truncate staging table
     dw_cursor.execute(sql_alter)
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
@@ -419,11 +418,11 @@ def days_injured():
     df['days'] = df['days'].str.rstrip(' days').astype('float')
 
     # ----------------------------- Load to Staging Table -----------------------------
-    # SQL Statement: Truncate staging table
+    # SQL Statement: Alter and truncate staging table
     sql_alter = "ALTER TABLE stg_historical_injuries RENAME COLUMN days TO days_injured"
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
-    # Truncate staging table
+    # Alter and truncate staging table
     dw_cursor.execute(sql_alter)
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
@@ -435,16 +434,30 @@ def days_injured():
     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
+# 9. Store table
+def store_table():
+    # Data warehouse credentials
+    dw_pg_hook = PostgresHook(
+        postgres_conn_id='test_dw',
+        schema='test_dw'
+    )
+    # Connect to data warehouse
+    dw_pg_conn = dw_pg_hook.get_conn()
+    dw_cursor = dw_pg_conn.cursor()
+
+    # SQL Statement: Create and drop tables
+    sql_store_table = "CREATE TABLE store_historical_injuries LIKE stg_historical_injuries"
+    sql_drop_staging = "DROP TABLE stg_historical_injuries"
+
+    # Create and drop table
+    dw_cursor.execute(sql_store_table)
+    dw_cursor.execute(sql_drop_staging)
+    dw_pg_conn.commit()
 
 
-
-
-
-
-# .... Log the end of the DAG
+# 10. Log the end of the DAG
 def finish_DAG():
     logging.info('DAG HAS FINISHED,OBTAINED EPL PLAYER INJURIES')
-
 
 
 # ----------------------------- Create DAG -----------------------------
@@ -515,9 +528,14 @@ days_injured_task = PythonOperator(
     dag = dag
 )
 
+# 9. Store Table
+store_table_task = PythonOperator(
+    task_id = "store_table_task",
+    python_callable = store_table,
+    dag = dag
+)
 
-
-# 9. End Task
+# 10. End Task
 end_task = PythonOperator(
     task_id = "end_task",
     python_callable = finish_DAG,
@@ -526,4 +544,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> stg_table_task >> missing_values_task >> player_names_task >> clean_dates_task >> current_club_task >> season_task >> days_injured_task >> end_task
+start_task >> stg_table_task >> missing_values_task >> player_names_task >> clean_dates_task >> current_club_task >> season_task >> days_injured_task >> store_table_task >> end_task
