@@ -116,8 +116,8 @@ def player_names():
     df_list = df.values.tolist()
 
     # Create a list of tuples representing the rows in the dataframe
-    #rows = [tuple(x) for x in df.values]
-    #rows = [tuple(x) for x in df['first_name'].values]
+    rows1 = [tuple(x) for x in df.values]
+    rows2 = [tuple(x) for x in df['first_name'].values]
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Add columns to staging table
@@ -128,16 +128,9 @@ def player_names():
     dw_cursor.execute(sql_statement_1)
     dw_cursor.execute(sql_statement_2)
 
-    var_string = ', '.join('?' * len(first))
-    query_string = 'INSERT INTO stg_historical_injuries (first_name) VALUES (%s);' % var_string
-    dw_cursor.execute(query_string, first)
-
-    #value = None
-    #dw_cursor.execute(sql, first)
-
     dw_pg_conn.commit()
 
-    return first
+    return rows1, rows2
 
 
 #     # SQL Statement
