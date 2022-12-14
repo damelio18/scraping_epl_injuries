@@ -207,6 +207,7 @@ default_args = {
     'start_date': datetime.datetime(2022,12,2)
 }
 
+# Schedule for 6am daily
 dag = DAG('scrape_player_injuries_DAG',
           schedule_interval = '0 06 * * *',
           catchup = False,

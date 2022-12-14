@@ -7,9 +7,6 @@ from airflow.operators.python_operator import PythonOperator
 
 # For Transformation
 import pandas as pd
-import numpy as np
-from datetime import date
-from scraping_epl_injuries.airflow_dags.Functions.function_clean_date import clean_date
 
 # Connecting to the Data Lake
 from airflow.hooks.postgres_hook import PostgresHook
@@ -39,7 +36,7 @@ def bios():
                              "height, nationality,int_caps, int_goals " \
                              "FROM store_clean_historical_injuries;"
 
-    # Fetch all data from table in data warehouse: injuries
+    # Fetch data from table in data warehouse: injuries
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
@@ -74,7 +71,7 @@ def bios():
                              "age VARCHAR(255), height VARCHAR(255),nationality VARCHAR(255), " \
                              "int_caps VARCHAR(255), int_goals VARCHAR(255));"
 
-    # Alter and truncate staging table
+    # Drop and create table
     cursor_2.execute(sql_drop_table)
     cursor_2.execute(sql_create_table)
     pg_conn_2.commit()
@@ -84,8 +81,6 @@ def bios():
 
     # Insert the rows into the database
     pg_hook_2.insert_rows(table="store_player_bios", rows=rows)
-
-    return tuples_list
 
 
 # 3. Create player bios table
@@ -107,7 +102,7 @@ def injuries():
                              "date_until_mon, date_until_year, date_until," \
                              "days_injured, games_missed FROM store_clean_historical_injuries;"
 
-    # Fetch all data from table in data warehouse: injuries
+    # Fetch data from table in data warehouse: injuries
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
@@ -154,13 +149,13 @@ def injuries():
 
     # SQL Statement: Create new table
     sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (first_name VARCHAR(255)," \
-                             "second_name VARCHAR(255), current_club VARCHAR(255), season VARCHAR(255), " \
-                             "injury VARCHAR(255), date_from_day VARCHAR(255), date_from_mon VARCHAR(255)," \
-                             "date_from_year VARCHAR(255), date_from VARCHAR(255),date_until_day VARCHAR(255), " \
-                             "date_until_mon VARCHAR(255), date_until_year VARCHAR(255), date_until_year VARCHAR(255)" \
-                             "date_until VARCHAR(255), days_injured VARCHAR(255), games_missed VARCHAR(255));"
+                       "second_name VARCHAR(255), current_club VARCHAR(255), season VARCHAR(255), " \
+                       "injury VARCHAR(255), date_from_day VARCHAR(255), date_from_mon VARCHAR(255)," \
+                       "date_from_year VARCHAR(255), date_from VARCHAR(255),date_until_day VARCHAR(255), " \
+                       "date_until_mon VARCHAR(255), date_until_year VARCHAR(255), date_until_year VARCHAR(255)" \
+                       "date_until VARCHAR(255), days_injured VARCHAR(255), games_missed VARCHAR(255));"
 
-    # Alter and truncate staging table
+    # Drop and create table
     cursor_2.execute(sql_drop_table)
     cursor_2.execute(sql_create_table)
     pg_conn_2.commit()
@@ -183,6 +178,7 @@ default_args = {
     'start_date': datetime.datetime(2022,12,2)
 }
 
+# Schedule for 8am daily
 dag = DAG('create_tables_DAG',
           schedule_interval = '0 08 * * *',
           catchup = False,

@@ -144,6 +144,7 @@ default_args = {
     'start_date': datetime.datetime(2022,12,2)
 }
 
+# Schedule for 5am daily
 dag = DAG('scrape_player_urls_DAG',
           schedule_interval = '00 05 * * *',
           catchup = False,
