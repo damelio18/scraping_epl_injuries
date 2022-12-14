@@ -19,7 +19,7 @@ from airflow.hooks.postgres_hook import PostgresHook
 def start_DAG():
     logging.info('STARTING THE DAG,OBTAINING EPL PLAYER INJURIES')
 
-# 2. Load injuries data
+# 2. Create staging table
 def stg_table():
     # Data Lake credentials
     pg_hook_1 = PostgresHook(
@@ -30,6 +30,17 @@ def stg_table():
     pg_conn_1 = pg_hook_1.get_conn()
     cursor_1 = pg_conn_1.cursor()
 
+    # Select Table in data lake
+    sql_statement_get_data = "SELECT player, dob, height, nationality, int_caps," \
+                             "int_goals, current_club, season, injury, date_from," \
+                             "date_until, days, games_missed FROM historical_injuries;"
+
+    # Fetch all data from table in DL
+    cursor_1.execute(sql_statement_get_data)
+    tuples_list = cursor_1.fetchall()
+
+    tuples_list = tuples_list[:10]
+
     # Data Warehouse credentials
     pg_hook_2 = PostgresHook(
         postgres_conn_id='test_dw',
@@ -39,54 +50,68 @@ def stg_table():
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-    # Select Table in data lake
-    sql_statement_1 = "SELECT player, dob, height, nationality, int_caps," \
-                      "int_goals, current_club, season, injury, date_from," \
-                      "date_until, days, games_missed FROM historical_injuries;"
+    sql_statement_create_table = "CREATE TABLE IF NOT EXISTS stg_historical_injuries (player VARCHAR(255)," \
+                                 "dob VARCHAR(255), height VARCHAR(255), nationality VARCHAR(255), " \
+                                 "int_caps VARCHAR(255), int_goals VARCHAR(255), current_club VARCHAR(255)," \
+                                 "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
+                                 "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
 
-    sql_statement_2 = "CREATE TABLE IF NOT EXISTS stg_historical_injuries (player VARCHAR(255), dob VARCHAR(255), " \
-                       "height VARCHAR(255), nationality VARCHAR(255), int_caps VARCHAR(255)," \
-                       "int_goals VARCHAR(255), current_club VARCHAR(255)," \
-                       "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
-                       "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
-
-    # Fetch all data from table in DL
-    cursor_1.execute(sql_statement_1)
-    tuples_list = cursor_1.fetchall()
-
-    tuples_list = tuples_list[:3]
+    sql_statement_truncate = "TRUNCATE TABLE stg_historical_injuries"
 
     #Create and insert data into DW table
-    cursor_2.execute(sql_statement_2)
-    #pg_conn_2.commit()
+    cursor_2.execute(sql_statement_create_table)
+    cursor_2.execute(sql_statement_truncate)
     for row in tuples_list:
         cursor_2.execute('INSERT INTO stg_historical_injuries VALUES %s', (row,))
-
     pg_conn_2.commit()
-
-    return tuples_list
 
 
 # # 2. Load injuries data.
 # def get_injuries():
 #
 #     # Data Lake credentials
-#     dl_pg_hook = PostgresHook(
-#         postgres_conn_id='datalake1_airflow',
-#         schema='datalake1'
+#     dw_pg_hook = PostgresHook(
+#         postgres_conn_id='test_dw',
+#         schema='test_dw'
 #     )
+#     # Connect to data lake
+#     dw_pg_conn = dw_pg_hook.get_conn()
+#     dw_cursor = dw_pg_conn.cursor()
 #
+#     # SQL Statement
+#     sql_statement = "SELECT player FROM historical_injuries;"
+#
+#     # Execute SQL statements
+#     dw_cursor.execute(sql_statement)
+#
+#     # Fetch all data from table
+#     tuples_list = dw_cursor.fetchall()
+#
+#     # ----------------------------- Create DataFrame -----------------------------
+#     # Create DataFrame
+#     column_names = ['player']
+#
+#     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
+
+
+
+
+
+
+
+
+
 #     # SQL Statement
 #     sql_statement = "SELECT player, dob, height, nationality, int_caps," \
 #                     "int_goals, current_club, season, injury, date_from," \
 #                     "date_until, days, games_missed FROM historical_injuries;"
 #
 #     # Connect to data lake
-#     dl_pg_conn = dl_pg_hook.get_conn()
-#     dl_cursor = dl_pg_conn.cursor()
+#     dw_pg_conn = dw_pg_hook.get_conn()
+#     dw_cursor = dw_pg_conn.cursor()
 #
 #     # Execute SQL statements
-#     dl_cursor.execute(sql_statement)
+#     dw_cursor.execute(sql_statement)
 #
 #     # Fetch all data from table
 #     tuples_list = dl_cursor.fetchall()
