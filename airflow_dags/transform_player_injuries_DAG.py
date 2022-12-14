@@ -323,9 +323,64 @@ def current_club():
 
 
 
+# 7. Season
+def seasons():
+    # Data warehouse credentials
+    dw_pg_hook = PostgresHook(
+        postgres_conn_id='test_dw',
+        schema='test_dw'
+    )
+    # Connect to data warehouse
+    dw_pg_conn = dw_pg_hook.get_conn()
+    dw_cursor = dw_pg_conn.cursor()
 
+    # SQL Statement: Get data from staging data
+    sql_statement = "SELECT * FROM stg_historical_injuries;"
 
+    # Execute SQL statements
+    dw_cursor.execute(sql_statement)
 
+    # Fetch all data from table
+    tuples_list = dw_cursor.fetchall()
+
+    # ----------------------------- Create DataFrame -----------------------------
+    # Create DataFrame
+    column_names = ['dob', 'height', 'nationality', 'int_caps',
+                    'int_goals', 'current_club', 'season', 'injury',
+                    'date_from', 'date_until','days', 'games_missed',
+                    'first_name', 'second_name', 'dob_day', 'dob_mon',
+                    'dob_year', 'age', 'date_from_day', 'date_from_mon',
+                    'date_from_year', 'date_until_day', 'date_until_mon',
+                    'date_until_year']
+
+    df = pd.DataFrame(tuples_list, columns = column_names)
+
+    # ----------------------------- Transformation -----------------------------
+    # Create seasons dictionary
+    season_dict = {'22/23': '2022/23', '21/22': '2021/22', '20/21': '2020/21',
+                   '19/20': '2019/20', '18/19': '2018/19', '17/18': '2017/18',
+                   '16/17': '2016/17', '15/16': '2015/16', '14/15': '2014/15',
+                   '13/14': '2013/14', '12/13': '2012/13', '11/12': '2011/12',
+                   '10/11': '2010/11', '09/10': '2009/10', '08/09': '2008/09',
+                   '07/08': '2007/08', '06/07': '2006/07', '05/06': '2005/06',
+                   '04/05': '2004/05', '03/04': '2003/04', '02/03': '2002/03'}
+
+    # Change names of seasons
+    injuries_df_2['season'] = injuries_df_2['season'].map(season_dict)
+
+    # ----------------------------- Load to Staging Table -----------------------------
+    # SQL Statement: Truncate staging table
+    sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
+
+    # Truncate staging table
+    dw_cursor.execute(sql_truncate_table)
+    dw_pg_conn.commit()
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in df.values]
+
+    # Insert the rows into the database
+    dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
 
@@ -392,6 +447,13 @@ current_club_task = PythonOperator(
     dag = dag
 )
 
+# 7. Season
+season_task = PythonOperator(
+    task_id = "season_task",
+    python_callable = seasons,
+    dag = dag
+)
+
 
 
 # .... End Task
@@ -403,4 +465,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> stg_table_task >> missing_values_task >> player_names_task >> clean_dates_task >> current_club_task >> end_task
+start_task >> stg_table_task >> missing_values_task >> player_names_task >> clean_dates_task >> current_club_task >> season_task >> end_task
