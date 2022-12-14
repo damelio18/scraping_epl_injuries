@@ -126,7 +126,7 @@ def player_names():
     # Execute SQL statements
     dw_cursor.execute(sql_statement_1)
     dw_cursor.execute(sql_statement_2)
-    dw_cursor.execute("UPDATE stg_historical_injuries(first_name, second_name) VALUES (%s, %s)", rows)
+    dw_cursor.execute("UPDATE stg_historical_injuries(first_name, second_name) VALUES (%s, %s)", df_list)
     # for d in df_list:
     #     #dw_cursor.execute("INSERT into stg_historical_injuries(first_name, second_name) VALUES (%s, %s)", d)
     #     dw_cursor.execute("UPDATE stg_historical_injuries(first_name, second_name) VALUES (%s, %s)", d)
