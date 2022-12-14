@@ -80,7 +80,7 @@ def player_names():
     dw_cursor = dw_pg_conn.cursor()
 
     # SQL Statement
-    sql_statement = "SELECT player FROM historical_injuries;"
+    sql_statement = "SELECT player FROM stg_historical_injuries;"
 
     # Execute SQL statements
     dw_cursor.execute(sql_statement)
