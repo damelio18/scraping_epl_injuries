@@ -22,25 +22,45 @@ def start_DAG():
 # 2. Load injuries data
 def stg_table():
     # Data Lake credentials
-    dl_pg_hook = PostgresHook(
+    pg_hook_1 = PostgresHook(
         postgres_conn_id='datalake1_airflow',
         schema='datalake1'
     )
     # Connect to data lake
-    dl_pg_conn = dl_pg_hook.get_conn()
-    dl_cursor = dl_pg_conn.cursor()
+    pg_conn_1 = pg_hook_1.get_conn()
+    cursor_1 = pg_conn_1.cursor()
 
-    sql_statement = "SELECT player, dob, height, nationality, int_caps," \
-                    "int_goals, current_club, season, injury, date_from," \
-                    "date_until, days, games_missed FROM historical_injuries;"
+    # Data Warehouse credentials
+    pg_hook_2 = PostgresHook(
+        postgres_conn_id='test_dw',
+        schema='test_dw'
+    )
+    # Connect to data warehouse
+    pg_conn_2 = pg_hook_2.get_conn()
+    cursor_2 = pg_conn_2.cursor()
+
+    # Select Table in data lake
+    sql_statement_1 = "SELECT player, dob, height, nationality, int_caps," \
+                      "int_goals, current_club, season, injury, date_from," \
+                      "date_until, days, games_missed FROM historical_injuries;"
+
+    sql_statement_2 = "CREATE TABLE IF NOT EXISTS stg_historical_injuries (player VARCHAR(255), dob VARCHAR(255), " \
+                       "height VARCHAR(255), nationality VARCHAR(255), int_caps VARCHAR(255)," \
+                       "int_goals VARCHAR(255), current_club VARCHAR(255)," \
+                       "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
+                       "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
 
     # Execute SQL statement
-    dl_cursor.execute(sql_statement)
+    result = cursor_1.execute(sql_statement_1)
+    cursor_2.execute(sql_statement_2)
+
+    for row in result.fetchall():
+        cursor_2.execute('INSERT INTO stg_historical_injuries VALUES %s', (row,))
 
     # Fetch all data from table
-    result = dl_cursor.fetchall()
+    #result = dl_cursor.fetchall()
 
-    return result
+    #return result
 
 
 # # 2. Load injuries data.
