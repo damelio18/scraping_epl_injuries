@@ -126,7 +126,8 @@ def player_names():
     #for row in df_list:
     #     dw_cursor.execute('INSERT INTO stg_historical_injuries (first_name, second_name) VALUES %s', (row,))
     sql = 'INSERT INTO stg_historical_injuries (first_name, second_name) VALUES (%s, %s)'
-    dw_cursor.execute(sql, (df_list))
+    value = None
+    dw_cursor.execute(sql, (value,),rows)
 
     dw_pg_conn.commit()
 
