@@ -237,6 +237,7 @@ def date_columns():
     except:
         pass
 
+    return list(df.columns)
 
 
 
