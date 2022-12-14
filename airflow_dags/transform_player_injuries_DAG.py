@@ -120,6 +120,9 @@ def player_names():
     # Execute SQL statements
     dw_cursor.execute(sql_statement_1)
     dw_cursor.execute(sql_statement_2)
+    for row in df_list:
+        dw_cursor.execute('INSERT INTO first_name, second_name FROM stg_historical_injuries VALUES %s', (row,))
+
     dw_pg_conn.commit()
 
     return df_list
