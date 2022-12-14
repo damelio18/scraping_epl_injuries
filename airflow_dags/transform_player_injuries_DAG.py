@@ -106,11 +106,11 @@ def player_names():
     # Remove players with no first name
     df = df[~df['first_name'].isnull()]
 
-    first = df['first_name'].values.tolist()
+    first = [df['first_name'].values.tolist()]
     print(first)
 
-    first = str(df['first_name'].values.tolist())
-    print(first)
+    #first = str(df['first_name'].values.tolist())
+    #print(first)
 
     second = df['second_name'].values.tolist()
 
@@ -121,7 +121,8 @@ def player_names():
     df_list = df.values.tolist()
 
     # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in df.values]
+    #rows = [tuple(x) for x in df.values]
+    #rows = [tuple(x) for x in df['first_name'].values]
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Add columns to staging table
@@ -139,7 +140,7 @@ def player_names():
 
     dw_pg_conn.commit()
 
-    return df_list
+    return first
 
 
 #     # SQL Statement
