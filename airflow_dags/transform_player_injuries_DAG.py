@@ -127,9 +127,9 @@ def player_names():
     dw_cursor.execute(sql_statement_1)
     dw_cursor.execute(sql_statement_2)
 
-    postgres_insert_query = """ INSERT INTO stg_historical_injuries (first_name, second_name) VALUES (%s,%s)"""
+    postgres_insert_query = """ INSERT INTO stg_historical_injuries (first_name) VALUES (%s)"""
     #record_to_insert = (5, 'One Plus 6', 950)
-    dw_cursor.execute(postgres_insert_query, rows)
+    dw_cursor.execute(postgres_insert_query, first)
 
 
 
