@@ -22,7 +22,7 @@ def start_DAG():
 # 2. Create staging table
 def stg_table():
     # ----------------------------- Get Data from Data Lake -----------------------------
-    # Data Lake credentials
+    # Data lake credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='datalake1_airflow',
         schema='datalake1'
@@ -31,19 +31,19 @@ def stg_table():
     pg_conn_1 = pg_hook_1.get_conn()
     cursor_1 = pg_conn_1.cursor()
 
-    # Select Table in data lake
+    # SQL Statement: Get data from data lake
     sql_statement_get_data = "SELECT player, dob, height, nationality, int_caps," \
                              "int_goals, current_club, season, injury, date_from," \
                              "date_until, days, games_missed FROM historical_injuries;"
 
-    # Fetch all data from table in DL
+    # Fetch all data from table in data lake
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
     tuples_list = tuples_list[:10]
 
-    # ----------------------------- Create STG Table in Data Warehouse -----------------------------
-    # Data Warehouse credentials
+    # ----------------------------- Create Staging Table in Data Warehouse -----------------------------
+    # Data warehouse credentials
     pg_hook_2 = PostgresHook(
         postgres_conn_id='test_dw',
         schema='test_dw'
@@ -52,16 +52,17 @@ def stg_table():
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-    # SQL Statements
+    # SQL Statement: Drop staging table
     sql_statement_drop = "DROP TABLE stg_historical_injuries"
 
+    # SQL Statement: Create staging table
     sql_statement_create_table = "CREATE TABLE IF NOT EXISTS stg_historical_injuries (player VARCHAR(255)," \
                                  "dob VARCHAR(255), height VARCHAR(255), nationality VARCHAR(255), " \
                                  "int_caps VARCHAR(255), int_goals VARCHAR(255), current_club VARCHAR(255)," \
                                  "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
                                  "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
 
-    # Create and insert data into DW table
+    # Create and insert data into data warehouse staging table
     cursor_2.execute(sql_statement_drop)
     cursor_2.execute(sql_statement_create_table)
     for row in tuples_list:
@@ -80,7 +81,7 @@ def player_names():
     dw_pg_conn = dw_pg_hook.get_conn()
     dw_cursor = dw_pg_conn.cursor()
 
-    # SQL Statement
+    # SQL Statement: Get data from staging data
     sql_statement = "SELECT player FROM stg_historical_injuries;"
 
     # Execute SQL statements
@@ -112,10 +113,12 @@ def player_names():
     df_list = df.values.tolist()
 
     # ----------------------------- Load to Staging Table -----------------------------
-    sql_statement_2 = "ALTER TABLE stg_historical_injuries \
-                       ADD first_name VARCHAR(100)"
+    # SQL Statement: Add columns to staging table
+    sql_statement_1 = "ALTER TABLE stg_historical_injuries ADD first_name VARCHAR(100)"
+    sql_statement_2 = "ALTER TABLE stg_historical_injuries ADD second_name VARCHAR(100)"
 
     # Execute SQL statements
+    dw_cursor.execute(sql_statement_1)
     dw_cursor.execute(sql_statement_2)
     dw_pg_conn.commit()
 
