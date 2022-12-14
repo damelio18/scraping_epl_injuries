@@ -219,9 +219,9 @@ def date_columns():
 
     # Clean dob column
     clean_date(df, 'dob')
-    #
-    # # Create Age column: Days difference
-    # df['age'] = date.today() - df['dob']
+
+    # Create Age column: Days difference
+    df['age'] = date.today() - df['dob']
     #
     # # Create Age column: Convert age to years
     # df['age'] = round(df['age'] / np.timedelta64(1, 'Y'), 0)
