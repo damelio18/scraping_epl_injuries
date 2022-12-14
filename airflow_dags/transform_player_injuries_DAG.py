@@ -89,7 +89,7 @@ def missing_values():
     #
     # # Fetch all data from table
     # tuples_list = dw_cursor.fetchall()
-    access_staging_table()
+    tuples_list = access_staging_table()
 
     # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
