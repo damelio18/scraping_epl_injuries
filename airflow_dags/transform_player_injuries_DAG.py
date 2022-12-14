@@ -107,6 +107,11 @@ def player_names():
     df = df[~df['first_name'].isnull()]
 
     first = df['first_name'].values.tolist()
+    print(first)
+
+    first = str(df['first_name'].values.tolist())
+    print(first)
+
     second = df['second_name'].values.tolist()
 
     # Drop player column
@@ -130,7 +135,7 @@ def player_names():
     #     dw_cursor.execute('INSERT INTO stg_historical_injuries (first_name, second_name) VALUES %s', (row,))
     sql = 'INSERT INTO stg_historical_injuries (first_name) VALUES (%s)'
     #value = None
-    dw_cursor.execute(sql, str(first))
+    #dw_cursor.execute(sql, str(first))
 
     dw_pg_conn.commit()
 
