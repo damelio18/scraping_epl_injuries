@@ -218,7 +218,7 @@ def date_columns():
     df['dob'] = [v[:3] + " " + v[3:] for v in df['dob']]
 
     # Clean dob column
-    # clean_date(df, 'dob')
+    clean_date(df, 'dob')
     #
     # # Create Age column: Days difference
     # df['age'] = date.today() - df['dob']
