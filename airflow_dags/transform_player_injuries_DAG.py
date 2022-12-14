@@ -100,7 +100,7 @@ def player_names():
 
     # ----------------------------- Transformation -----------------------------
     # Replace the empty strings and '-'
-    # df = df.replace(['NA'], np.nan)
+    df = df.replace(['NA'], np.nan)
     # df['date_until'] = df['date_until'].replace(['-'], np.nan)
     # df['games_missed'] = df['games_missed'].replace(['?', '-'], "0").astype('float')
     # df[['int_caps', 'int_goals']] = df[['int_caps', 'int_goals']].fillna('0')
