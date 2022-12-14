@@ -8,7 +8,7 @@ from airflow.operators.python_operator import PythonOperator
 # For Transformation
 import pandas as pd
 import numpy as np
-#from scraping_epl_injuries.airflow_dags.Functions.function_clean_date import clean_date
+from scraping_epl_injuries.airflow_dags.Functions.function_staging_data import access_staging_table
 
 # Connecting to the Data Lake
 from airflow.hooks.postgres_hook import PostgresHook
@@ -72,23 +72,24 @@ def stg_table():
 
 # 3. Player names
 def missing_values():
-    # Data warehouse credentials
-    dw_pg_hook = PostgresHook(
-        postgres_conn_id='test_dw',
-        schema='test_dw'
-    )
-    # Connect to data warehouse
-    dw_pg_conn = dw_pg_hook.get_conn()
-    dw_cursor = dw_pg_conn.cursor()
-
-    # SQL Statement: Get data from staging data
-    sql_statement = "SELECT * FROM stg_historical_injuries;"
-
-    # Execute SQL statements
-    dw_cursor.execute(sql_statement)
-
-    # Fetch all data from table
-    tuples_list = dw_cursor.fetchall()
+    # # Data warehouse credentials
+    # dw_pg_hook = PostgresHook(
+    #     postgres_conn_id='test_dw',
+    #     schema='test_dw'
+    # )
+    # # Connect to data warehouse
+    # dw_pg_conn = dw_pg_hook.get_conn()
+    # dw_cursor = dw_pg_conn.cursor()
+    #
+    # # SQL Statement: Get data from staging data
+    # sql_statement = "SELECT * FROM stg_historical_injuries;"
+    #
+    # # Execute SQL statements
+    # dw_cursor.execute(sql_statement)
+    #
+    # # Fetch all data from table
+    # tuples_list = dw_cursor.fetchall()
+    access_staging_table()
 
     # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
