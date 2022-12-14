@@ -41,7 +41,7 @@ def stg_table():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
-    tuples_list = tuples_list[45:51]
+    tuples_list = tuples_list[:51]
 
     # ----------------------------- Create Staging Table in Data Warehouse -----------------------------
     # Data warehouse credentials
