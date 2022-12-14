@@ -62,6 +62,8 @@ def stg_table():
     for row in tuples_list:
         cursor_2.execute('INSERT INTO stg_historical_injuries VALUES %s', (row,))
 
+    pg_conn_2.commit()
+
     return tuples_list
 
 
