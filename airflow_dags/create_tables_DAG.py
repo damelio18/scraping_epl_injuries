@@ -54,9 +54,9 @@ def bios():
     df = df.drop_duplicates()
 
     # Change types
-    df = df.astype({'dob_day': 'int', 'dob_mon': 'int', 'dob_year': 'int',
-                    'age': 'int', 'height': 'int', 'int_caps': 'int',
-                    'int_goals': 'int'})
+    #df = df.astype({'dob_day': 'int', 'dob_mon': 'int', 'dob_year': 'int',
+    #                'age': 'int', 'height': 'int', 'int_caps': 'int',
+    #                'int_goals': 'int'})
 
     # ----------------------------- Load to Data Warehouse with other sources -----------------------------
     # Data warehouse credentials
@@ -131,4 +131,4 @@ end_task = PythonOperator(
 
 
 # ----------------------------- Trigger Tasks -----------------------------
-start_task >> create_bios_task
+start_task >> create_bios_task >> end_task
