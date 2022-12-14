@@ -106,14 +106,17 @@ def player_names():
     # Remove players with no first name
     df = df[~df['first_name'].isnull()]
 
+    first = df['first_name'.values.tolist()
+    second = df['second_name'.values.tolist()
+
     # Drop player column
-    df = df.drop(['player'], axis=1)
+    #df = df.drop(['player'], axis=1)
 
     # Revert DataFrame to list
-    df_list = df.values.tolist()
+    #df_list = df.values.tolist()
 
     # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in df.values]
+    #rows = [tuple(x) for x in df.values]
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Add columns to staging table
@@ -125,13 +128,13 @@ def player_names():
     dw_cursor.execute(sql_statement_2)
     #for row in df_list:
     #     dw_cursor.execute('INSERT INTO stg_historical_injuries (first_name, second_name) VALUES %s', (row,))
-    sql = 'INSERT INTO stg_historical_injuries (first_name, second_name) VALUES (%s, %s)'
-    value = None
-    dw_cursor.execute(sql, (value,),rows)
+    #sql = 'INSERT INTO stg_historical_injuries (first_name, second_name) VALUES (%s, %s)'
+    #value = None
+    #dw_cursor.execute(sql, rows)
 
     dw_pg_conn.commit()
 
-    return rows
+    return first
 
 
 #     # SQL Statement
