@@ -8,7 +8,8 @@ from airflow.operators.python_operator import PythonOperator
 # For Transformation
 import pandas as pd
 import numpy as np
-from scraping_epl_injuries.airflow_dags.Functions.function_staging_data import access_staging_table
+from datetime import date
+from scraping_epl_injuries.airflow_dags.Functions.function_clean_date import clean_date
 
 # Connecting to the Data Lake
 from airflow.hooks.postgres_hook import PostgresHook
@@ -40,7 +41,7 @@ def stg_table():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
-    tuples_list = tuples_list[:51]
+    tuples_list = tuples_list[40:51]
 
     # ----------------------------- Create Staging Table in Data Warehouse -----------------------------
     # Data warehouse credentials
@@ -68,7 +69,6 @@ def stg_table():
     for row in tuples_list:
         cursor_2.execute('INSERT INTO stg_historical_injuries VALUES %s', (row,))
     pg_conn_2.commit()
-
 
 # 3. Missing Values
 def missing_values():
@@ -148,7 +148,6 @@ def player_names():
     df = pd.DataFrame(tuples_list, columns = column_names)
 
     # ----------------------------- Transformation -----------------------------
-
     # Strip all leading and trailing whitespace from player names
     df['player'] = df.player.str.strip()
 
@@ -160,8 +159,6 @@ def player_names():
 
     # Drop player column
     df = df.drop(['player'], axis=1)
-
-
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
@@ -186,10 +183,54 @@ def player_names():
     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
+# 5. Player names
+def date_columns():
+    # Data warehouse credentials
+    dw_pg_hook = PostgresHook(
+        postgres_conn_id='test_dw',
+        schema='test_dw'
+    )
+    # Connect to data warehouse
+    dw_pg_conn = dw_pg_hook.get_conn()
+    dw_cursor = dw_pg_conn.cursor()
 
+    # SQL Statement: Get data from staging data
+    sql_statement = "SELECT * FROM stg_historical_injuries;"
 
+    # Execute SQL statements
+    dw_cursor.execute(sql_statement)
 
+    # Fetch all data from table
+    tuples_list = dw_cursor.fetchall()
 
+    # ----------------------------- Create DataFrame -----------------------------
+    # Create DataFrame
+    column_names = ['dob', 'height', 'nationality', 'int_caps',
+                    'int_goals', 'current_club', 'season', 'injury',
+                    'date_from', 'date_until','days', 'games_missed',
+                    'first_name', 'second_name']
+
+    df = pd.DataFrame(tuples_list, columns = column_names)
+
+    # ----------------------------- Transformation -----------------------------
+    # # Standarise format of all date columns to ('mmm dd, yyy')
+    # df['dob'] = [v[:-4] + " " + v[-4:] for v in df['dob']]
+    # df['dob'] = [v[:3] + " " + v[3:] for v in df['dob']]
+    #
+    # # Clean dob column
+    # clean_date(df, 'dob')
+    #
+    # # Create Age column: Days difference
+    # df['age'] = date.today() - df['dob']
+    #
+    # # Create Age column: Convert age to years
+    # df['age'] = round(df['age'] / np.timedelta64(1, 'Y'), 0)
+    #
+    # # Clean date_from column
+    # clean_date(df, 'date_from')
+    #
+    # # Clean date_until column
+    # clean_date(df, 'date_until')
 
 
 
