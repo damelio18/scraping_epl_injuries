@@ -180,10 +180,10 @@ def player_names():
     dw_pg_conn.commit()
 
     # # Create a list of tuples representing the rows in the dataframe
-    # rows = [tuple(x) for x in df.values]
-    #
-    # # Insert the rows into the database
-    # dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+    rows = [tuple(x) for x in df.values]
+
+    # Insert the rows into the database
+    dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
 
