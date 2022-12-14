@@ -35,7 +35,10 @@ def stg_table():
                     "date_until, days, games_missed FROM historical_injuries;"
 
     # Execute SQL statement
-    result = dl_cursor.execute(sql_statement)
+    dl_cursor.execute(sql_statement)
+
+    # Fetch all data from table
+    result = dl_cursor.fetchall()
 
     return result
 
