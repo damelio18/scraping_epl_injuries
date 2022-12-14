@@ -460,7 +460,7 @@ def store_table():
 
 # 10. Log the end of the DAG
 def finish_DAG():
-    logging.info('DAG HAS FINISHED,OBTAINED EPL PLAYER INJURIES')
+    logging.info('DAG HAS FINISHED,TRANSFORMED EPL PLAYER INJURIES')
 
 
 # ----------------------------- Create DAG -----------------------------
