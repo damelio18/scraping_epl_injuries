@@ -21,13 +21,23 @@ def start_DAG():
 
 # 2. Load injuries data
 def stg_table():
-    # Data Warehouse credentials
-    dw_pg_hook = PostgresHook(
-        postgres_conn_id='test_dw',
-        schema='test_dw'
+    # Data Lake credentials
+    dl_pg_hook = PostgresHook(
+        postgres_conn_id='datalake1_airflow',
+        schema='datalake1'
     )
+    # Connect to data lake
+    dl_pg_conn = dl_pg_hook.get_conn()
+    dl_cursor = dl_pg_conn.cursor()
 
+    sql_statement = "SELECT player, dob, height, nationality, int_caps," \
+                    "int_goals, current_club, season, injury, date_from," \
+                    "date_until, days, games_missed FROM historical_injuries;"
 
+    # Execute SQL statement
+    result = dl_cursor.execute(sql_statement)
+
+    return result
 
 
 # # 2. Load injuries data
