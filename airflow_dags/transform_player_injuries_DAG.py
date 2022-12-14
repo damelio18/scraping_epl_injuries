@@ -40,7 +40,7 @@ def stg_table():
     return result
 
 
-# # 2. Load injuries data
+# # 2. Load injuries data.
 # def get_injuries():
 #
 #     # Data Lake credentials
