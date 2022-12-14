@@ -233,7 +233,7 @@ def date_columns():
     clean_date(df, 'date_until')
 
     # Replace NaT type with np.nan
-    df = df.replace({'NaT': None}, inplace=True)
+    df = df.replace("NaT",np.NaN, inplace=True)
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
