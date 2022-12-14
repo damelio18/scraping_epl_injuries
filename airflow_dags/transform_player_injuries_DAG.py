@@ -54,7 +54,7 @@ def stg_table():
     cursor_2 = pg_conn_2.cursor()
 
     # SQL Statement: Drop staging table
-    sql_statement_drop = "DROP TABLE stg_historical_injuries"
+    sql_statement_drop = "DROP TABLE IF EXISTS stg_historical_injuries"
 
     # SQL Statement: Create staging table
     sql_statement_create_table = "CREATE TABLE IF NOT EXISTS stg_historical_injuries (player VARCHAR(255)," \
@@ -162,17 +162,18 @@ def player_names():
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Alter staging table
-    sql_alter_1 = "ALTER TABLE stg_historical_injuries ADD first_name VARCHAR(255)"
-    sql_alter_2 = "ALTER TABLE stg_historical_injuries ADD second_name VARCHAR(255)"
-    sql_alter_3 = "ALTER TABLE stg_historical_injuries DROP COLUMN player;"
+    sql_alter_1 = "ALTER TABLE stg_historical_injuries ADD first_name VARCHAR(255)," \
+                  "ADD second_name VARCHAR(255), DROP COLUMN player;"
+    #sql_alter_2 = "ALTER TABLE stg_historical_injuries ADD second_name VARCHAR(255)"
+    #sql_alter_3 = "ALTER TABLE stg_historical_injuries DROP COLUMN player;"
 
     # SQL Statement: Truncate staging table
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
     # Truncate staging table
     dw_cursor.execute(sql_alter_1)
-    dw_cursor.execute(sql_alter_2)
-    dw_cursor.execute(sql_alter_3)
+    #dw_cursor.execute(sql_alter_2)
+    #dw_cursor.execute(sql_alter_3)
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
 
