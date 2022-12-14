@@ -23,21 +23,36 @@ def clean_date(x, y):
                   'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12}
 
     # Extract day
-    df[col_day] = df[df_col].str[4:6]
-    df[col_day] = df[col_day].replace(",", "", regex = True).astype('float')
+    try:
+        df[col_day] = df[df_col].str[4:6]
+        df[col_day] = df[col_day].replace(",", "", regex = True).astype('float')
+    except:
+        pass
 
-    # Extract Month and convert to number (Jan = 1, Feb = 2 etc.)
-    df[col_mon] = df[df_col].str[:3]
-    df[col_mon] = df[col_mon].map(month_dict).astype('float')
+    try:
+        # Extract Month and convert to number (Jan = 1, Feb = 2 etc.)
+        df[col_mon] = df[df_col].str[:3]
+        df[col_mon] = df[col_mon].map(month_dict).astype('float')
+    except:
+        pass
 
-    # Extract Year
-    df[col_year] = df[df_col].str[-4:].astype('float')
+    try:
+        # Extract Year
+        df[col_year] = df[df_col].str[-4:].astype('float')
+    except:
+        pass
 
-    # Create dob
-    df[df_col] = pd.to_datetime(dict(year = df[col_year], month=df[col_mon], day=df[col_day]))
+    try:
+        # Create dob
+        df[df_col] = pd.to_datetime(dict(year = df[col_year], month=df[col_mon], day=df[col_day]))
+    except:
+        pass
 
-    #Remove time from format
-    df[df_col] = pd.to_datetime(df[df_col]).dt.date
+    try:
+        #Remove time from format
+        df[df_col] = pd.to_datetime(df[df_col]).dt.date
+    except:
+        pass
 
     return df
 
