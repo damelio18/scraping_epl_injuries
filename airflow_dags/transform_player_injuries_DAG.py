@@ -231,10 +231,11 @@ def date_columns():
         clean_date(df, 'date_from')
     except:
         pass
-    #
-    # # Clean date_until column
-    # clean_date(df, 'date_until')
-
+    try:
+        # Clean date_until column
+        clean_date(df, 'date_until')
+    except:
+        pass
 
 
 
