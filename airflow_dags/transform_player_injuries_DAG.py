@@ -112,7 +112,7 @@ def player_names():
 
     # ----------------------------- Load to Staging Table -----------------------------
     sql_statement_2 = "ALTER TABLE stg_historical_injuries \
-                       ADD first_name VARCHAR(100) INT AFTER player"
+                       ADD first_name VARCHAR(100) AFTER player"
 
     # Execute SQL statements
     dw_cursor.execute(sql_statement_2)
