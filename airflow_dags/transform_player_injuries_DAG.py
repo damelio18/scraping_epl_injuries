@@ -229,6 +229,8 @@ def date_columns():
     # Clean date_from column
     clean_date(df, 'date_from')
 
+    return list(df.columns)
+
     # try:
     #     # Clean date_until column
     #     clean_date(df, 'date_until')
