@@ -232,6 +232,9 @@ def date_columns():
     # Clean date_until column
     clean_date(df, 'date_until')
 
+    # Replace NaT type with np.nan
+    df = df.replace({'NaT': None}, inplace=True)
+
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
     sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
@@ -252,7 +255,7 @@ def date_columns():
     rows = [tuple(x) for x in df.values]
 
     # Insert the rows into the database
-    #dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+    dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
 
