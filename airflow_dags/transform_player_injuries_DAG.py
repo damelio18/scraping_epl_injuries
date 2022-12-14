@@ -88,36 +88,29 @@ def player_names():
     # Fetch all data from table
     tuples_list = dw_cursor.fetchall()
 
-    return tuples_list
-
     # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
-    # column_names = ['player', 'dob', 'height', 'nationality', 'int_caps',
-    #                 'int_goals', 'current_club', 'season', 'injury',
-    #                 'date_from', 'date_until','days', 'games_missed']
-    #
-    # injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
+    column_names = ['player']
 
-#     # ----------------------------- Transformation -----------------------------
-#     #Save new instance of DataFrame
-#     injuries_df_2 = injuries_df_1
-#
-#     # Test reformat
-#     injuries_df_2['height'] = injuries_df_2['height'].replace('188', "blabla")
-#
-#     # Replace the empty strings and '-'
-#     injuries_df_2 = injuries_df_2.replace(['NA'], np.nan)
-#     injuries_df_2['date_until'] = injuries_df_2['date_until'].replace(['-'], np.nan)
-#     injuries_df_2['games_missed'] = injuries_df_2['games_missed'].replace(['?', '-'], "0").astype('float')
-#     injuries_df_2[['int_caps', 'int_goals']] = injuries_df_2[['int_caps', 'int_goals']].fillna('0')
-#
-#     # Revert DataFrame to list
-#     injuries_df_2 = injuries_df_2.values.tolist()
-#
-#     injuries_df_2 = injuries_df_2[:50]
+    df = pd.DataFrame(tuples_list, columns = column_names)
 
+    # ----------------------------- Transformation -----------------------------
+    # Strip all leading and trailing whitespace from player names
+    df['player'] = df.player.str.strip()
 
+    # Split name into first and second name
+    df[['first_name', 'second_name']] = df['player'].str.split(' ', n=1, expand=True)
 
+    # Remove players with no first name
+    df = df[~df['first_name'].isnull()]
+
+    # Drop player column
+    df = df.drop(['player'], axis=1)
+
+    # Revert DataFrame to list
+    df_list = df.values.tolist()
+
+    return df_list
 
 
 
