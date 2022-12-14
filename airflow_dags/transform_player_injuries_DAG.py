@@ -127,7 +127,7 @@ def player_names():
     dw_cursor.execute(sql_statement_1)
     dw_cursor.execute(sql_statement_2)
 
-    for d in rows:
+    for d in df_list:
         dw_cursor.execute("INSERT into stg_historical_injuries(first_name, second_name) VALUES (%s, %s)", d)
 
     dw_pg_conn.commit()
