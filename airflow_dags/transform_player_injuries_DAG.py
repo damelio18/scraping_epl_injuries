@@ -41,7 +41,7 @@ def stg_table():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
-    tuples_list = tuples_list[:51]
+    tuples_list = tuples_list[40:51]
 
     # ----------------------------- Create Staging Table in Data Warehouse -----------------------------
     # Data warehouse credentials
@@ -416,15 +416,15 @@ def days_injured():
 
     # ----------------------------- Transformation -----------------------------
     # Clean days injured
-    df['days_injured'] = df['days_injured'].str.rstrip(' days').astype('float')
+    #df['days_injured'] = df['days_injured'].str.rstrip(' days').astype('float')
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
-    #sql_alter = "ALTER TABLE stg_historical_injuries RENAME COLUMN days TO days_injured"
+    sql_alter = "ALTER TABLE stg_historical_injuries RENAME COLUMN days TO days_injured"
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
     # Truncate staging table
-    #dw_cursor.execute(sql_alter)
+    dw_cursor.execute(sql_alter)
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
 
@@ -432,7 +432,7 @@ def days_injured():
     rows = [tuple(x) for x in df.values]
 
     # Insert the rows into the database
-    dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+    #dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
 
