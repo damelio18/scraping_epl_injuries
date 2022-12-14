@@ -107,7 +107,12 @@ def player_names():
     df = df[~df['first_name'].isnull()]
 
     first = df['first_name'].values.tolist()
-    print(first)
+
+    ff = []
+    for i in first:
+        ff.append((i))
+
+    print(ff)
 
     # Drop player column
     df = df.drop(['player'], axis=1)
@@ -129,7 +134,7 @@ def player_names():
 
     postgres_insert_query = """ INSERT INTO stg_historical_injuries (first_name) VALUES (%s)"""
     #record_to_insert = (5, 'One Plus 6', 950)
-    dw_cursor.execute(postgres_insert_query, first)
+    dw_cursor.execute(postgres_insert_query, ff)
 
 
 
