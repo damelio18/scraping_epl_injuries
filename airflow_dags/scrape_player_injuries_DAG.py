@@ -208,7 +208,7 @@ default_args = {
 }
 
 # Schedule for 6am daily
-dag = DAG('scrape_player_injuries_DAG',
+dag = DAG('3_scrape_player_injuries_DAG',
           schedule_interval = '0 06 * * *',
           catchup = False,
           default_args = default_args)

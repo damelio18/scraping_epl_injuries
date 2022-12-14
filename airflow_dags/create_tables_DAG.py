@@ -179,7 +179,7 @@ default_args = {
 }
 
 # Schedule for 8am daily
-dag = DAG('create_tables_DAG',
+dag = DAG('5_create_tables_DAG',
           schedule_interval = '0 08 * * *',
           catchup = False,
           default_args = default_args)
