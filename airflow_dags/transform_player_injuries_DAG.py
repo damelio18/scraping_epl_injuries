@@ -52,17 +52,18 @@ def stg_table():
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
+    # SQL Statements
+    sql_statement_drop = "DROP TABLE stg_historical_injuries"
+
     sql_statement_create_table = "CREATE TABLE IF NOT EXISTS stg_historical_injuries (player VARCHAR(255)," \
                                  "dob VARCHAR(255), height VARCHAR(255), nationality VARCHAR(255), " \
                                  "int_caps VARCHAR(255), int_goals VARCHAR(255), current_club VARCHAR(255)," \
                                  "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
                                  "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
 
-    sql_statement_truncate = "TRUNCATE TABLE stg_historical_injuries"
-
-    #Create and insert data into DW table
+    # Create and insert data into DW table
+    cursor_2.execute(sql_statement_drop)
     cursor_2.execute(sql_statement_create_table)
-    cursor_2.execute(sql_statement_truncate)
     for row in tuples_list:
         cursor_2.execute('INSERT INTO stg_historical_injuries VALUES %s', (row,))
     pg_conn_2.commit()
