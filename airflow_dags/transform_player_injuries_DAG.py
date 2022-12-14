@@ -120,6 +120,12 @@ def missing_values():
     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
+
+
+
+
+
+
 # .... Log the end of the DAG
 def finish_DAG():
     logging.info('DAG HAS FINISHED,OBTAINED EPL PLAYER INJURIES')
@@ -152,12 +158,15 @@ stg_table_task = PythonOperator(
     dag = dag
 )
 
-# 3. Clean player names
+# 3. Deal with missing values
 missing_values_task = PythonOperator(
     task_id = "missing_values_task",
     python_callable = missing_values,
     dag = dag
 )
+
+
+
 
 # .... End Task
 end_task = PythonOperator(
