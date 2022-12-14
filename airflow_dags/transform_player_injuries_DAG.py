@@ -218,19 +218,19 @@ def date_columns():
     df['dob'] = [v[:3] + " " + v[3:] for v in df['dob']]
 
     # Clean dob column
-    clean_date(df, 'dob')
-
-    # Create Age column: Days difference
-    df['age'] = date.today() - df['dob']
-
-    # Create Age column: Convert age to years
-    df['age'] = round(df['age'] / np.timedelta64(1, 'Y'), 0)
-
-    # Clean date_from column
-    clean_date(df, 'date_from')
-
-    # Clean date_until column
-    clean_date(df, 'date_until')
+    # clean_date(df, 'dob')
+    #
+    # # Create Age column: Days difference
+    # df['age'] = date.today() - df['dob']
+    #
+    # # Create Age column: Convert age to years
+    # df['age'] = round(df['age'] / np.timedelta64(1, 'Y'), 0)
+    #
+    # # Clean date_from column
+    # clean_date(df, 'date_from')
+    #
+    # # Clean date_until column
+    # clean_date(df, 'date_until')
 
 
 
