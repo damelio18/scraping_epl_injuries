@@ -110,7 +110,7 @@ def player_names():
 
     ff = []
     for i in first:
-        ff.append((i))
+        ff.append([i])
 
     print(ff)
 
@@ -144,7 +144,7 @@ def player_names():
 
     dw_pg_conn.commit()
 
-    return rows
+    return ff
 
 
 #     # SQL Statement
