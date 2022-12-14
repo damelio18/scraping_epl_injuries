@@ -234,6 +234,7 @@ def date_columns():
 
     # Replace NaT type with np.nan
     #df = df.replace("NaT","tt", inplace=True)
+    df = df.where(pd.notnull(df), None)
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
@@ -256,6 +257,8 @@ def date_columns():
 
     # Insert the rows into the database
     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+
+
 
 
 
