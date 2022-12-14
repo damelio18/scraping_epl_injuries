@@ -235,7 +235,7 @@ def date_columns():
     return list(df.columns)
 
 
------------------------------ Load to Staging Table -----------------------------
+    # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
     sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
                 "ADD dob_mon VARCHAR(255), ADD dob_year VARCHAR(255), ADD age VARCHAR(255)," \
