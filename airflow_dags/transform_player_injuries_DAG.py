@@ -322,7 +322,6 @@ def current_club():
     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
-
 # 7. Season
 def seasons():
     # Data warehouse credentials
@@ -366,7 +365,7 @@ def seasons():
                    '04/05': '2004/05', '03/04': '2003/04', '02/03': '2002/03'}
 
     # Change names of seasons
-    injuries_df_2['season'] = injuries_df_2['season'].map(season_dict)
+    df['season'] = df['season'].map(season_dict)
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
@@ -381,6 +380,61 @@ def seasons():
 
     # Insert the rows into the database
     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+
+
+# 8. Days injured
+def days_injured():
+    # Data warehouse credentials
+    dw_pg_hook = PostgresHook(
+        postgres_conn_id='test_dw',
+        schema='test_dw'
+    )
+    # Connect to data warehouse
+    dw_pg_conn = dw_pg_hook.get_conn()
+    dw_cursor = dw_pg_conn.cursor()
+
+    # SQL Statement: Get data from staging data
+    sql_statement = "SELECT * FROM stg_historical_injuries;"
+
+    # Execute SQL statements
+    dw_cursor.execute(sql_statement)
+
+    # Fetch all data from table
+    tuples_list = dw_cursor.fetchall()
+
+    # ----------------------------- Create DataFrame -----------------------------
+    # Create DataFrame
+    column_names = ['dob', 'height', 'nationality', 'int_caps',
+                    'int_goals', 'current_club', 'season', 'injury',
+                    'date_from', 'date_until','days', 'games_missed',
+                    'first_name', 'second_name', 'dob_day', 'dob_mon',
+                    'dob_year', 'age', 'date_from_day', 'date_from_mon',
+                    'date_from_year', 'date_until_day', 'date_until_mon',
+                    'date_until_year']
+
+    df = pd.DataFrame(tuples_list, columns = column_names)
+
+    # ----------------------------- Transformation -----------------------------
+    # Clean days injured
+    df['days_injured'] = df['days_injured'].str.rstrip(' days').astype('float')
+
+    # ----------------------------- Load to Staging Table -----------------------------
+    # SQL Statement: Truncate staging table
+    sql_alter = "ALTER TABLE stg_historical_injuries RENAME COLUMN days TO days_injured"
+    sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
+
+    # Truncate staging table
+    dw_cursor.execute(sql_alter)
+    dw_cursor.execute(sql_truncate_table)
+    dw_pg_conn.commit()
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in df.values]
+
+    # Insert the rows into the database
+    dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+
+
 
 
 
@@ -454,6 +508,13 @@ season_task = PythonOperator(
     dag = dag
 )
 
+# 8. Days Injured
+days_injured_task = PythonOperator(
+    task_id = "days_injured_task",
+    python_callable = days_injured,
+    dag = dag
+)
+
 
 
 # .... End Task
@@ -465,4 +526,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> stg_table_task >> missing_values_task >> player_names_task >> clean_dates_task >> current_club_task >> season_task >> end_task
+start_task >> stg_table_task >> missing_values_task >> player_names_task >> clean_dates_task >> current_club_task >> season_task >> days_injured_task >> end_task
