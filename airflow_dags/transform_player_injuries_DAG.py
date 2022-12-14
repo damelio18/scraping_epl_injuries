@@ -21,6 +21,7 @@ def start_DAG():
 
 # 2. Create staging table
 def stg_table():
+    # ----------------------------- Get Data from Data Lake -----------------------------
     # Data Lake credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='datalake1_airflow',
@@ -41,6 +42,7 @@ def stg_table():
 
     tuples_list = tuples_list[:10]
 
+    # ----------------------------- Create STG Table in Data Warehouse -----------------------------
     # Data Warehouse credentials
     pg_hook_2 = PostgresHook(
         postgres_conn_id='test_dw',
@@ -66,32 +68,53 @@ def stg_table():
     pg_conn_2.commit()
 
 
-# # 2. Load injuries data.
-# def get_injuries():
+# 3. Player names
+ def player_names():
+    # Data warehouse credentials
+    dw_pg_hook = PostgresHook(
+        postgres_conn_id='test_dw',
+        schema='test_dw'
+    )
+    # Connect to data warehouse
+    dw_pg_conn = dw_pg_hook.get_conn()
+    dw_cursor = dw_pg_conn.cursor()
+
+    # SQL Statement
+    sql_statement = "SELECT player FROM historical_injuries;"
+
+    # Execute SQL statements
+    dw_cursor.execute(sql_statement)
+
+    # Fetch all data from table
+    tuples_list = dw_cursor.fetchall()
+
+    return tuples_list
+
+    # ----------------------------- Create DataFrame -----------------------------
+    # Create DataFrame
+    # column_names = ['player', 'dob', 'height', 'nationality', 'int_caps',
+    #                 'int_goals', 'current_club', 'season', 'injury',
+    #                 'date_from', 'date_until','days', 'games_missed']
+    #
+    # injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
+
+#     # ----------------------------- Transformation -----------------------------
+#     #Save new instance of DataFrame
+#     injuries_df_2 = injuries_df_1
 #
-#     # Data Lake credentials
-#     dw_pg_hook = PostgresHook(
-#         postgres_conn_id='test_dw',
-#         schema='test_dw'
-#     )
-#     # Connect to data lake
-#     dw_pg_conn = dw_pg_hook.get_conn()
-#     dw_cursor = dw_pg_conn.cursor()
+#     # Test reformat
+#     injuries_df_2['height'] = injuries_df_2['height'].replace('188', "blabla")
 #
-#     # SQL Statement
-#     sql_statement = "SELECT player FROM historical_injuries;"
+#     # Replace the empty strings and '-'
+#     injuries_df_2 = injuries_df_2.replace(['NA'], np.nan)
+#     injuries_df_2['date_until'] = injuries_df_2['date_until'].replace(['-'], np.nan)
+#     injuries_df_2['games_missed'] = injuries_df_2['games_missed'].replace(['?', '-'], "0").astype('float')
+#     injuries_df_2[['int_caps', 'int_goals']] = injuries_df_2[['int_caps', 'int_goals']].fillna('0')
 #
-#     # Execute SQL statements
-#     dw_cursor.execute(sql_statement)
+#     # Revert DataFrame to list
+#     injuries_df_2 = injuries_df_2.values.tolist()
 #
-#     # Fetch all data from table
-#     tuples_list = dw_cursor.fetchall()
-#
-#     # ----------------------------- Create DataFrame -----------------------------
-#     # Create DataFrame
-#     column_names = ['player']
-#
-#     injuries_df_1 = pd.DataFrame(tuples_list, columns = column_names)
+#     injuries_df_2 = injuries_df_2[:50]
 
 
 
@@ -196,9 +219,16 @@ start_task = PythonOperator(
 )
 
 # 2. Retrieve player urls from data lake
-create_stg_table = PythonOperator(
-    task_id = "create_stg_table",
+stg_table_task = PythonOperator(
+    task_id = "stg_table_task",
     python_callable = stg_table,
+    dag = dag
+)
+
+# 3. Clean player names
+player_name_task = PythonOperator(
+    task_id = "player_name_task",
+    python_callable = player_names,
     dag = dag
 )
 
@@ -211,4 +241,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> create_stg_table >> end_task
+start_task >> stg_table_task >> player_name_task >> end_task
