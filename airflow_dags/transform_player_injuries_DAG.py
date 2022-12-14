@@ -54,6 +54,8 @@ def stg_table():
     cursor_1.execute(sql_statement_1)
     tuples_list = cursor_1.fetchall()
 
+    tuples_list = tuples_list[:10]
+
     #Create and insert data into DW table
     cursor_2.execute(sql_statement_2)
     pg_conn_2.commit()
