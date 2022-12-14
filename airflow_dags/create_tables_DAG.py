@@ -60,13 +60,13 @@ def bios():
 
     # ----------------------------- Load to Data Warehouse with other sources -----------------------------
     # Data warehouse credentials
-    dw_pg_hook = PostgresHook(
-        postgres_conn_id='data_warehouse_1',
+    pg_hook_2 = PostgresHook(
+        postgres_conn_id='datawarehouse_airflow',
         schema='datawarehouse'
     )
     # Connect to data warehouse
-    dw_pg_conn = dw_pg_hook.get_conn()
-    dw_cursor = dw_pg_conn.cursor()
+    pg_conn_2 = pg_hook_2.get_conn()
+    cursor_2 = pg_conn_2.cursor()
 
 
     # SQL Statement: Drop old table
@@ -80,15 +80,15 @@ def bios():
                              "int_caps VARCHAR(255), int_goals VARCHAR(255));"
 
     # Alter and truncate staging table
-    dw_cursor.execute(sql_drop_table)
-    dw_cursor.execute(sql_create_table)
-    dw_pg_conn.commit()
+    cursor_2.execute(sql_drop_table)
+    cursor_2.execute(sql_create_table)
+    pg_conn_2.commit()
 
     # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in df.values]
 
     # Insert the rows into the database
-    dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+    pg_hook_2.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
 # 4. Log the end of the DAG
