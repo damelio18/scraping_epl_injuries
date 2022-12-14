@@ -240,8 +240,8 @@ def date_columns():
 # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
     sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
-                  "dob_mon VARCHAR(255),dob_year VARCHAR(255),age VARCHAR(255)," \
-                  "date_from_day VARCHAR(255), date_until_day VARCHAR(255)"
+                  "ADD dob_mon VARCHAR(255),ADD dob_year VARCHAR(255),ADD age VARCHAR(255)," \
+                  "ADD date_from_day VARCHAR(255), ADD date_until_day VARCHAR(255)"
 
     # SQL Statement: Truncate staging table
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
