@@ -123,7 +123,7 @@ def player_names():
     dw_pg_conn.commit()
     #print(dw_cursor.rowcount, "Records inserted successfully into table")
 
-
+    return tuples_list
 
 
 #     # SQL Statement
