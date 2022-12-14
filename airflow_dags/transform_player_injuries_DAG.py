@@ -235,25 +235,27 @@ def date_columns():
     return list(df.columns)
 
 
-# ----------------------------- Load to Staging Table -----------------------------
-#     # SQL Statement: Truncate staging table
-#     sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
-#                   "ADD dob_mon VARCHAR(255),ADD dob_year VARCHAR(255),ADD age VARCHAR(255)," \
-#                   "ADD date_from_day VARCHAR(255), ADD date_until_day VARCHAR(255)"
-#
-#     # SQL Statement: Truncate staging table
-#     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
-#
-#     # Truncate staging table
-#     dw_cursor.execute(sql_alter)
-#     dw_cursor.execute(sql_truncate_table)
-#     dw_pg_conn.commit()
-#
-#     # Create a list of tuples representing the rows in the dataframe
-#     rows = [tuple(x) for x in df.values]
-#
-#     # Insert the rows into the database
-#     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+----------------------------- Load to Staging Table -----------------------------
+    # SQL Statement: Truncate staging table
+    sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
+                "ADD dob_mon VARCHAR(255), ADD dob_year VARCHAR(255), ADD age VARCHAR(255)," \
+                "ADD date_from_day VARCHAR(255), ADD date_from_mon VARCHAR(255)," \
+                "ADD date_from_year VARCHAR(255), ADD date_until_day VARCHAR(255)," \
+                "ADD date_until_mon VARCHAR(255), ADD date_until_year VARCHAR(255)"
+
+    # SQL Statement: Truncate staging table
+    sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
+
+    # Truncate staging table
+    dw_cursor.execute(sql_alter)
+    dw_cursor.execute(sql_truncate_table)
+    dw_pg_conn.commit()
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in df.values]
+
+    # Insert the rows into the database
+    dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
 
