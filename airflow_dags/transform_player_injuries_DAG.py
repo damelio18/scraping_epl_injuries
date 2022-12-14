@@ -50,17 +50,13 @@ def stg_table():
                        "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
                        "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
 
-    # Execute SQL statement
-    result = cursor_1.execute(sql_statement_1)
-    cursor_2.execute(sql_statement_2)
-
-    for row in result.fetchall():
-        cursor_2.execute('INSERT INTO stg_historical_injuries VALUES %s', (row,))
+    # Execute SQL statements
+    cursor_1.execute(sql_statement_1)
 
     # Fetch all data from table
-    #result = dl_cursor.fetchall()
+    tuples_list = cursor_1.fetchall()
 
-    #return result
+    return tuples_list
 
 
 # # 2. Load injuries data.
