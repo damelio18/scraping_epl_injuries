@@ -106,7 +106,7 @@ def player_names():
     # Remove players with no first name
     df = df[~df['first_name'].isnull()]
 
-    first = [df['first_name'].values.tolist()]
+    first = df['first_name'].values.tolist()
     print(first)
 
     #first = str(df['first_name'].values.tolist())
@@ -135,6 +135,8 @@ def player_names():
     #for row in df_list:
     #     dw_cursor.execute('INSERT INTO stg_historical_injuries (first_name, second_name) VALUES %s', (row,))
     sql = 'INSERT INTO stg_historical_injuries (first_name) VALUES (%s)'
+    dw_cursor.execute('INSERT INTO stg_historical_injuries (first_name) VALUES (?);', [','.join(first)])
+
     #value = None
     #dw_cursor.execute(sql, first)
 
