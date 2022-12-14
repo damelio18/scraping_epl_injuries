@@ -116,7 +116,7 @@ def player_names():
 
     # Execute SQL statements
     dw_cursor.execute(sql_statement_2)
-    #dw_pg_conn.commit()
+    dw_pg_conn.commit()
 
     return df_list
 
