@@ -40,7 +40,7 @@ def stg_table():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
-    tuples_list = tuples_list[:10]
+    tuples_list = tuples_list[:50]
 
     # ----------------------------- Create Staging Table in Data Warehouse -----------------------------
     # Data warehouse credentials
@@ -90,8 +90,6 @@ def player_names():
     # Fetch all data from table
     tuples_list = dw_cursor.fetchall()
 
-    tuples_list = tuples_list[:50]
-
     # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
     column_names = ['player', 'dob', 'height', 'nationality', 'int_caps',
@@ -108,20 +106,12 @@ def player_names():
     # df[['int_caps', 'int_goals']] = df[['int_caps', 'int_goals']].fillna('0')
 
     # ----------------------------- Load to Staging Table -----------------------------
+    # SQL Statement: Truncate staging table
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
-
-    sql_add_data_to_table = """INSERT INTO injuries_stage (player, dob, height, nationality, \n
-                                                            int_caps, int_goals, current_club, season, \n
-                                                            injury, date_from, date_until, days, games_missed)
-                               VALUES ( %s, %s,%s, %s, %s, %s,%s, %s, %s, %s,%s, %s, %s) """
 
     # Truncate staging table
     dw_cursor.execute(sql_truncate_table)
-
-    # Insert data into staging table
-    #dw_cursor.executemany(sql_add_data_to_table, df)
     dw_pg_conn.commit()
-    #print(dw_cursor.rowcount, "Records inserted successfully into table")
 
     # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in df.values]
