@@ -70,7 +70,7 @@ def stg_table():
     pg_conn_2.commit()
 
 
-# 3. Player names
+# 3. Missing Values
 def missing_values():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
@@ -119,6 +119,75 @@ def missing_values():
     # Insert the rows into the database
     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
+# 4. Player names
+def player_names():
+    # Data warehouse credentials
+    dw_pg_hook = PostgresHook(
+        postgres_conn_id='test_dw',
+        schema='test_dw'
+    )
+    # Connect to data warehouse
+    dw_pg_conn = dw_pg_hook.get_conn()
+    dw_cursor = dw_pg_conn.cursor()
+
+    # SQL Statement: Get data from staging data
+    sql_statement = "SELECT * FROM stg_historical_injuries;"
+
+    # Execute SQL statements
+    dw_cursor.execute(sql_statement)
+
+    # Fetch all data from table
+    tuples_list = dw_cursor.fetchall()
+
+    # ----------------------------- Create DataFrame -----------------------------
+    # Create DataFrame
+    column_names = ['player', 'dob', 'height', 'nationality', 'int_caps',
+                    'int_goals', 'current_club', 'season', 'injury',
+                    'date_from', 'date_until','days', 'games_missed']
+
+    df = pd.DataFrame(tuples_list, columns = column_names)
+
+    # ----------------------------- Transformation -----------------------------
+
+    # Strip all leading and trailing whitespace from player names
+    df['player'] = df.player.str.strip()
+
+    # Split name into first and second name
+    df[['first_name', 'second_name']] = df['player'].str.split(' ', n=1, expand=True)
+
+    # Remove players with no first name
+    df = df[~df['first_name'].isnull()]
+
+    # Drop player column
+    df = df.drop(['player'], axis=1)
+
+
+
+    # ----------------------------- Load to Staging Table -----------------------------
+    # SQL Statement: Truncate staging table
+    sql_alter_1 = "ALTER TABLE stg_historical_injuries ADD first_name VARCHAR(255)"
+    sql_alter_2 = "ALTER TABLE stg_historical_injuries ADD second_name VARCHAR(255)"
+    sql_alter_3 = "ALTER TABLE stg_historical_injuries DROP COLUMN player;"
+
+    # SQL Statement: Truncate staging table
+    sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
+
+    # Truncate staging table
+    dw_cursor.execute(sql_alter_1)
+    dw_cursor.execute(sql_alter_2)
+    dw_cursor.execute(sql_alter_3)
+    dw_cursor.execute(sql_truncate_table)
+    dw_pg_conn.commit()
+
+    # # Create a list of tuples representing the rows in the dataframe
+    # rows = [tuple(x) for x in df.values]
+    #
+    # # Insert the rows into the database
+    # dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+
+
+
+
 
 
 
@@ -165,7 +234,12 @@ missing_values_task = PythonOperator(
     dag = dag
 )
 
-
+# 4. Deal with missing values
+player_names_task = PythonOperator(
+    task_id = "player_names_task",
+    python_callable = player_names,
+    dag = dag
+)
 
 
 # .... End Task
@@ -177,4 +251,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> stg_table_task >> missing_values_task >> end_task
+start_task >> stg_table_task >> missing_values_task >> player_names_task >> end_task
