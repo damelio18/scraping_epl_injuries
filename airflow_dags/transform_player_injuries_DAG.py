@@ -46,8 +46,8 @@ def stg_table():
     # ----------------------------- Create Staging Table in Data Warehouse -----------------------------
     # Data warehouse credentials
     pg_hook_2 = PostgresHook(
-        postgres_conn_id='datawarehouse_injuries',
-        schema='datawarehouse_injuries'
+        postgres_conn_id='dw_injuries',
+        schema='injuries'
     )
     # Connect to data warehouse
     pg_conn_2 = pg_hook_2.get_conn()
@@ -74,8 +74,8 @@ def stg_table():
 def missing_values():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='datawarehouse_injuries',
-        schema='datawarehouse_injuries'
+        postgres_conn_id='dw_injuries',
+        schema='injuries'
     )
     # Connect to data warehouse
     dw_pg_conn = dw_pg_hook.get_conn()
@@ -123,8 +123,8 @@ def missing_values():
 def player_names():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='datawarehouse_injuries',
-        schema='datawarehouse_injuries'
+        postgres_conn_id='dw_injuries',
+        schema='injuries'
     )
     # Connect to data warehouse
     dw_pg_conn = dw_pg_hook.get_conn()
@@ -188,8 +188,8 @@ def player_names():
 def date_columns():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='datawarehouse_injuries',
-        schema='datawarehouse_injuries'
+        postgres_conn_id='dw_injuries',
+        schema='injuries'
     )
     # Connect to data warehouse
     dw_pg_conn = dw_pg_hook.get_conn()
@@ -262,8 +262,8 @@ def date_columns():
 def current_club():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='datawarehouse_injuries',
-        schema='datawarehouse_injuries'
+        postgres_conn_id='dw_injuries',
+        schema='injuries'
     )
     # Connect to data warehouse
     dw_pg_conn = dw_pg_hook.get_conn()
@@ -326,8 +326,8 @@ def current_club():
 def seasons():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='datawarehouse_injuries',
-        schema='datawarehouse_injuries'
+        postgres_conn_id='dw_injuries',
+        schema='injuries'
     )
     # Connect to data warehouse
     dw_pg_conn = dw_pg_hook.get_conn()
@@ -386,8 +386,8 @@ def seasons():
 def days_injured():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='datawarehouse_injuries',
-        schema='datawarehouse_injuries'
+        postgres_conn_id='dw_injuries',
+        schema='injuries'
     )
     # Connect to data warehouse
     dw_pg_conn = dw_pg_hook.get_conn()
@@ -439,8 +439,8 @@ def days_injured():
 def store_table():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='datawarehouse_injuries',
-        schema='datawarehouse_injuries'
+        postgres_conn_id='dw_injuries',
+        schema='injuries'
     )
     # Connect to data warehouse
     dw_pg_conn = dw_pg_hook.get_conn()
