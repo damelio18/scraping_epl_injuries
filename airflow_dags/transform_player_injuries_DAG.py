@@ -58,7 +58,7 @@ def stg_table():
 
     #Create and insert data into DW table
     cursor_2.execute(sql_statement_2)
-    pg_conn_2.commit()
+    #pg_conn_2.commit()
     for row in tuples_list:
         cursor_2.execute('INSERT INTO stg_historical_injuries VALUES %s', (row,))
 
