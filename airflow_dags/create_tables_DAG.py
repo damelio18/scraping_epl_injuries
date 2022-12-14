@@ -89,6 +89,8 @@ def bios():
     # Insert the rows into the database
     pg_hook_2.insert_rows(table="store_player_bios", rows=rows)
 
+    return rows
+
 
 # 4. Log the end of the DAG
 def finish_DAG():
