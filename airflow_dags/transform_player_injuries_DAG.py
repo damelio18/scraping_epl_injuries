@@ -183,7 +183,7 @@ def player_names():
     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
-# 5. Player names
+# 5. Clean dates
 def date_columns():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
@@ -214,23 +214,37 @@ def date_columns():
 
     # ----------------------------- Transformation -----------------------------
     # # Standarise format of all date columns to ('mmm dd, yyy')
-    # df['dob'] = [v[:-4] + " " + v[-4:] for v in df['dob']]
-    # df['dob'] = [v[:3] + " " + v[3:] for v in df['dob']]
-    #
-    # # Clean dob column
-    # clean_date(df, 'dob')
-    #
-    # # Create Age column: Days difference
-    # df['age'] = date.today() - df['dob']
-    #
-    # # Create Age column: Convert age to years
-    # df['age'] = round(df['age'] / np.timedelta64(1, 'Y'), 0)
-    #
-    # # Clean date_from column
-    # clean_date(df, 'date_from')
-    #
-    # # Clean date_until column
-    # clean_date(df, 'date_until')
+    df['dob'] = [v[:-4] + " " + v[-4:] for v in df['dob']]
+    df['dob'] = [v[:3] + " " + v[3:] for v in df['dob']]
+
+    # Clean dob column
+    clean_date(df, 'dob')
+
+    # Create Age column: Days difference
+    df['age'] = date.today() - df['dob']
+
+    # Create Age column: Convert age to years
+    df['age'] = round(df['age'] / np.timedelta64(1, 'Y'), 0)
+
+    # Clean date_from column
+    clean_date(df, 'date_from')
+
+    # Clean date_until column
+    clean_date(df, 'date_until')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -268,19 +282,28 @@ stg_table_task = PythonOperator(
     dag = dag
 )
 
-# 3. Deal with missing values
+# 3. Missing Values
 missing_values_task = PythonOperator(
     task_id = "missing_values_task",
     python_callable = missing_values,
     dag = dag
 )
 
-# 4. Deal with missing values
+# 4. Player names
 player_names_task = PythonOperator(
     task_id = "player_names_task",
     python_callable = player_names,
     dag = dag
 )
+
+# 5. Dates
+clean_dates_task = PythonOperator(
+    task_id = "clean_dates_task",
+    python_callable = date_columns,
+    dag = dag
+)
+
+
 
 
 # .... End Task
@@ -292,4 +315,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> stg_table_task >> missing_values_task >> player_names_task >> end_task
+start_task >> stg_table_task >> missing_values_task >> player_names_task >> clean_dates_task >> end_task
