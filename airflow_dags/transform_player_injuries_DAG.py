@@ -120,8 +120,8 @@ def player_names():
 
     # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Add columns to staging table
-    sql_statement_1 = "ALTER TABLE stg_historical_injuries ADD first_name VARCHAR(100)"
-    sql_statement_2 = "ALTER TABLE stg_historical_injuries ADD second_name VARCHAR(100)"
+    sql_statement_1 = "ALTER TABLE stg_historical_injuries ADD first_name VARCHAR(255)"
+    sql_statement_2 = "ALTER TABLE stg_historical_injuries ADD second_name VARCHAR(255)"
 
     # Execute SQL statements
     dw_cursor.execute(sql_statement_1)
