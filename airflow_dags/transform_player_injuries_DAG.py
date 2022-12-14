@@ -126,13 +126,16 @@ def player_names():
     # Execute SQL statements
     dw_cursor.execute(sql_statement_1)
     dw_cursor.execute(sql_statement_2)
-    #dw_cursor.executemany('UPDATE stg_historical_injuries SET first_name=?',  ((val,) for val in first))
-    #query_string = 'INSERT INTO table VALUES (%s);' % var_string
-    dw_cursor.execute('INSERT INTO stg_historical_injuries (first_name, second_name) VALUES (%s, %s);' % df_list)
-    #dw_cursor.execute("UPDATE stg_historical_injuries(first_name, second_name) VALUES (%s, %s)", df_list)
+
+    postgres_insert_query = """ INSERT INTO stg_historical_injuries (first_name, second_name) VALUES (%s,%s)"""
+    #record_to_insert = (5, 'One Plus 6', 950)
+    dw_cursor.execute(postgres_insert_query, rows)
+
+
+
     # for d in df_list:
     #     #dw_cursor.execute("INSERT into stg_historical_injuries(first_name, second_name) VALUES (%s, %s)", d)
-    #     dw_cursor.execute("UPDATE stg_historical_injuries(first_name, second_name) VALUES (%s, %s)", d)
+
 
     dw_pg_conn.commit()
 
