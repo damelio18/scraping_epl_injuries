@@ -109,11 +109,6 @@ def player_names():
     first = df['first_name'].values.tolist()
     print(first)
 
-    #first = str(df['first_name'].values.tolist())
-    #print(first)
-
-    second = df['second_name'].values.tolist()
-
     # Drop player column
     df = df.drop(['player'], axis=1)
 
@@ -132,10 +127,10 @@ def player_names():
     # Execute SQL statements
     dw_cursor.execute(sql_statement_1)
     dw_cursor.execute(sql_statement_2)
-    #for row in df_list:
-    #     dw_cursor.execute('INSERT INTO stg_historical_injuries (first_name, second_name) VALUES %s', (row,))
-    sql = 'INSERT INTO stg_historical_injuries (first_name) VALUES (%s)'
-    dw_cursor.execute('INSERT INTO stg_historical_injuries (first_name) VALUES (?);', [','.join(first)])
+
+    var_string = ', '.join('?' * len(first))
+    query_string = 'INSERT INTO stg_historical_injuries (first_name) VALUES (%s);' % var_string
+    dw_cursor.execute(query_string, first)
 
     #value = None
     #dw_cursor.execute(sql, first)
