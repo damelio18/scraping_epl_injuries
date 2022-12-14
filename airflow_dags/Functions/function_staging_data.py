@@ -1,3 +1,5 @@
+from airflow.hooks.postgres_hook import PostgresHook
+
 # Function to connect to DW and get data from staging table
 def access_staging_table():
     # Data warehouse credentials
