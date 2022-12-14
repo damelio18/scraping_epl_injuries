@@ -135,11 +135,11 @@ def player_names():
     #     dw_cursor.execute('INSERT INTO stg_historical_injuries (first_name, second_name) VALUES %s', (row,))
     sql = 'INSERT INTO stg_historical_injuries (first_name) VALUES (%s)'
     #value = None
-    #dw_cursor.execute(sql, str(first))
+    #dw_cursor.execute(sql, first)
 
     dw_pg_conn.commit()
 
-    return first
+    return df_list
 
 
 #     # SQL Statement
