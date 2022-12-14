@@ -258,8 +258,68 @@ def date_columns():
     # Insert the rows into the database
     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
+# 6. Current clubs
+def current_club():
+    # Data warehouse credentials
+    dw_pg_hook = PostgresHook(
+        postgres_conn_id='test_dw',
+        schema='test_dw'
+    )
+    # Connect to data warehouse
+    dw_pg_conn = dw_pg_hook.get_conn()
+    dw_cursor = dw_pg_conn.cursor()
 
+    # SQL Statement: Get data from staging data
+    sql_statement = "SELECT * FROM stg_historical_injuries;"
 
+    # Execute SQL statements
+    dw_cursor.execute(sql_statement)
+
+    # Fetch all data from table
+    tuples_list = dw_cursor.fetchall()
+
+    # ----------------------------- Create DataFrame -----------------------------
+    # Create DataFrame
+    column_names = ['dob', 'height', 'nationality', 'int_caps',
+                    'int_goals', 'current_club', 'season', 'injury',
+                    'date_from', 'date_until','days', 'games_missed',
+                    'first_name', 'second_name', 'dob_day', 'dob_mon',
+                    'dob_year', 'age', 'date_from_day', 'date_from_mon',
+                    'date_from_year', 'date_until_day', 'date_until_mon',
+                    'date_until_year']
+
+    df = pd.DataFrame(tuples_list, columns = column_names)
+
+    # ----------------------------- Transformation -----------------------------
+    # Create clubs dictionary
+    club_dict = {'Arsenal FC': 'Arsenal', 'Aston Villa': 'Aston Villa',
+                 'AFC Bournemouth': 'Bournemouth', 'Brentford FC': 'Brentford',
+                 'Brighton & Hove Albion U21': 'Brighton', 'Brighton & Hove Albion': 'Brighton',
+                 'Chelsea FC': 'Chelsea', 'Crystal Palace': 'Crystal Palace',
+                 'Everton FC': 'Everton', 'Fulham FC': 'Fulham',
+                 'Leicester City': 'Leicester', 'Leeds United U21': 'Leeds',
+                 'Leeds United': 'Leeds', 'Liverpool FC': 'Liverpool',
+                 'Manchester City': 'Man City', 'Manchester United': 'Man Utd',
+                 'Newcastle United': 'Newcastle', 'Nottingham Forest': 'Nott\'m Forest',
+                 'Southampton FC': 'Southampton', 'Tottenham Hotspur': 'Spurs',
+                 'West Ham United': 'West Ham', 'Wolverhampton Wanderers': 'Wolves'}
+
+    # Change names of clubs
+    df['current_club'] = df['current_club'].map(club_dict)
+
+    # ----------------------------- Load to Staging Table -----------------------------
+    # SQL Statement: Truncate staging table
+    sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
+
+    # Truncate staging table
+    dw_cursor.execute(sql_truncate_table)
+    dw_pg_conn.commit()
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in df.values]
+
+    # Insert the rows into the database
+    dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
 
 
 
@@ -325,6 +385,12 @@ clean_dates_task = PythonOperator(
     dag = dag
 )
 
+# 6. Current Club
+current_club_task = PythonOperator(
+    task_id = "current_club_task",
+    python_callable = current_club,
+    dag = dag
+)
 
 
 
@@ -337,4 +403,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 
-start_task >> stg_table_task >> missing_values_task >> player_names_task >> clean_dates_task >> end_task
+start_task >> stg_table_task >> missing_values_task >> player_names_task >> clean_dates_task >> current_club_task >> end_task
