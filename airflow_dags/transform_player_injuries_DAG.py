@@ -40,7 +40,7 @@ def stg_table():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
-    tuples_list = tuples_list[:50]
+    tuples_list = tuples_list[40:51]
 
     # ----------------------------- Create Staging Table in Data Warehouse -----------------------------
     # Data warehouse credentials
@@ -102,7 +102,7 @@ def player_names():
     # Replace the empty strings and '-'
     df = df.replace(['NA'], np.nan)
     df['date_until'] = df['date_until'].replace(['-'], np.nan)
-    # df['games_missed'] = df['games_missed'].replace(['?', '-'], "0").astype('float')
+    df['games_missed'] = df['games_missed'].replace(['?', '-'], "0").astype('float')
     # df[['int_caps', 'int_goals']] = df[['int_caps', 'int_goals']].fillna('0')
 
     # ----------------------------- Load to Staging Table -----------------------------
