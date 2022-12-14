@@ -69,7 +69,7 @@ def stg_table():
 
 
 # 3. Player names
- def player_names():
+def player_names():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
         postgres_conn_id='test_dw',
