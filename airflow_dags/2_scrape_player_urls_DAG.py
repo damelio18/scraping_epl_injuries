@@ -114,7 +114,9 @@ def load(ti):
 
     # SQL statements: Drop, create and insert into table
     sql_drop_table = "DROP TABLE player_URLs;"
-    sql_create_table = "CREATE TABLE IF NOT EXISTS player_urls (player_url_id SERIAL NOT NULL, player_name VARCHAR(255), player_url VARCHAR(255), upload_time timestamp DEFAULT CURRENT_TIMESTAMP);"
+    sql_create_table = "CREATE TABLE IF NOT EXISTS player_urls (player_url_id SERIAL NOT NULL, " \
+                       "player_name VARCHAR(255), player_url VARCHAR(255), " \
+                       "upload_time timestamp DEFAULT CURRENT_TIMESTAMP);"
     sql_add_data_to_table = 'INSERT INTO player_urls (player_name, player_url) VALUES (%s, %s)'
 
     # Connect to data lake
