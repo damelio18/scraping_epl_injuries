@@ -20,7 +20,6 @@ def start_DAG():
 
 # 2. Create player bios table
 def bios():
-    # ----------------------------- Get Injuries Data from Data Warehouse -----------------------------
     # Data warehouse: injuries credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='dw_injuries',
@@ -40,7 +39,6 @@ def bios():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
-    # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
     column_names = ['first_name', 'second_name', 'current_club', 'dob_day',
                     'dob_mon','dob_year', 'dob', 'age', 'height',
@@ -51,8 +49,7 @@ def bios():
     # Remove duplicate rows
     df = df.drop_duplicates()
 
-    # ----------------------------- Load to Data Warehouse with other sources -----------------------------
-    # Data warehouse credentials
+    # Data warehouse credentials for loading
     pg_hook_2 = PostgresHook(
         postgres_conn_id='datawarehouse_airflow',
         schema='datawarehouse'
@@ -85,7 +82,6 @@ def bios():
 
 # 3. Create player bios table
 def injuries():
-    # ----------------------------- Get Injuries Data from Data Warehouse -----------------------------
     # Data warehouse: injuries credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='dw_injuries',
@@ -106,7 +102,6 @@ def injuries():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
-    # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
     column_names = ['first_name', 'second_name','current_club',
                     'season', 'injury', 'date_from_day',
@@ -119,28 +114,15 @@ def injuries():
     # Remove players with no injury history
     df = df[df['season'].notna()]
 
-    # # Change types
-    # player_injuries = player_injuries.astype({'date_from_day': 'int', 'date_from_mon': 'int', 'date_from_year': 'int',
-    #                                           'days_injured': 'int', 'games_missed': 'int'})
-
-    # # Extract current injuries
-    # current_injuries = player_injuries[player_injuries['date_until'].isna()]
-    #
-    # # Drop columns not needed for Data Warehouse
-    # current_injuries = current_injuries.drop(['date_until_day', 'date_until_mon',
-    #                                           'date_until_year', 'date_until'], axis=1)
-
     # Remove current injuries
     df = df[df['date_until'].notna()]
 
-
-# ----------------------------- Load to Data Warehouse with other sources -----------------------------
-    # Data warehouse credentials
+    # Data warehouse credentials for loading
     pg_hook_2 = PostgresHook(
         postgres_conn_id='datawarehouse_airflow',
         schema='datawarehouse'
     )
-    # Connect to data warehouse
+    # Connect to data warehouse for loading
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 

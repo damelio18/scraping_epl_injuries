@@ -22,7 +22,6 @@ def start_DAG():
 
 # 2. Create staging table
 def stg_table():
-    # ----------------------------- Get Data from Data Lake -----------------------------
     # Data lake credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='datalake1_airflow',
@@ -41,13 +40,12 @@ def stg_table():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
-    # ----------------------------- Create Staging Table in Data Warehouse -----------------------------
-    # Data warehouse credentials
+    # Data warehouse: injuries credentials
     pg_hook_2 = PostgresHook(
         postgres_conn_id='dw_injuries',
         schema='injuries'
     )
-    # Connect to data warehouse
+    # Connect to data warehouse: injuries
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
@@ -88,7 +86,6 @@ def missing_values():
     # Fetch all data from table
     tuples_list = dw_cursor.fetchall()
 
-    # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
     column_names = ['player', 'dob', 'height', 'nationality', 'int_caps',
                     'int_goals', 'current_club', 'season', 'injury',
@@ -96,14 +93,12 @@ def missing_values():
 
     df = pd.DataFrame(tuples_list, columns = column_names)
 
-    # ----------------------------- Transformation -----------------------------
     # Replace the empty strings and '-'
     df = df.replace(['NA'], np.nan)
     df['date_until'] = df['date_until'].replace(['-'], np.nan)
     df['games_missed'] = df['games_missed'].replace(['?', '-'], "0").astype('float')
     df[['int_caps', 'int_goals']] = df[['int_caps', 'int_goals']].fillna('0')
 
-    # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
@@ -137,7 +132,6 @@ def player_names():
     # Fetch all data from table
     tuples_list = dw_cursor.fetchall()
 
-    # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
     column_names = ['player', 'dob', 'height', 'nationality', 'int_caps',
                     'int_goals', 'current_club', 'season', 'injury',
@@ -145,7 +139,6 @@ def player_names():
 
     df = pd.DataFrame(tuples_list, columns = column_names)
 
-    # ----------------------------- Transformation -----------------------------
     # Strip all leading and trailing whitespace from player names
     df['player'] = df.player.str.strip()
 
@@ -158,24 +151,19 @@ def player_names():
     # Drop player column
     df = df.drop(['player'], axis=1)
 
-    # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Alter staging table
-    sql_alter_1 = "ALTER TABLE stg_historical_injuries ADD first_name VARCHAR(255)," \
+    sql_alter = "ALTER TABLE stg_historical_injuries ADD first_name VARCHAR(255)," \
                   "ADD second_name VARCHAR(255), DROP COLUMN player;"
-    #sql_alter_2 = "ALTER TABLE stg_historical_injuries ADD second_name VARCHAR(255)"
-    #sql_alter_3 = "ALTER TABLE stg_historical_injuries DROP COLUMN player;"
 
     # SQL Statement: Truncate staging table
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
-    # Truncate staging table
-    dw_cursor.execute(sql_alter_1)
-    #dw_cursor.execute(sql_alter_2)
-    #dw_cursor.execute(sql_alter_3)
+    # Alter and truncate staging table
+    dw_cursor.execute(sql_alter)
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
 
-    # # Create a list of tuples representing the rows in the dataframe
+    # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in df.values]
 
     # Insert the rows into the database
@@ -202,7 +190,6 @@ def date_columns():
     # Fetch all data from table
     tuples_list = dw_cursor.fetchall()
 
-    # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps',
                     'int_goals', 'current_club', 'season', 'injury',
@@ -211,8 +198,7 @@ def date_columns():
 
     df = pd.DataFrame(tuples_list, columns = column_names)
 
-    # ----------------------------- Transformation -----------------------------
-    # # Standarise format of all date columns to ('mmm dd, yyy')
+    # Standarise format of all date columns to ('mmm dd, yyy')
     df['dob'] = [v[:-4] + " " + v[-4:] for v in df['dob']]
     df['dob'] = [v[:3] + " " + v[3:] for v in df['dob']]
 
@@ -234,7 +220,6 @@ def date_columns():
     # Replace NaT type with np.nan
     df = df.where(pd.notnull(df), None)
 
-    # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Alter staging table
     sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
                 "ADD dob_mon VARCHAR(255), ADD dob_year VARCHAR(255), ADD age VARCHAR(255)," \
@@ -276,7 +261,6 @@ def current_club():
     # Fetch all data from table
     tuples_list = dw_cursor.fetchall()
 
-    # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps',
                     'int_goals', 'current_club', 'season', 'injury',
@@ -288,7 +272,6 @@ def current_club():
 
     df = pd.DataFrame(tuples_list, columns = column_names)
 
-    # ----------------------------- Transformation -----------------------------
     # Create clubs dictionary
     club_dict = {'Arsenal FC': 'Arsenal', 'Aston Villa': 'Aston Villa',
                  'AFC Bournemouth': 'Bournemouth', 'Brentford FC': 'Brentford',
@@ -305,7 +288,6 @@ def current_club():
     # Change names of clubs
     df['current_club'] = df['current_club'].map(club_dict)
 
-    # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
@@ -340,7 +322,6 @@ def seasons():
     # Fetch all data from table
     tuples_list = dw_cursor.fetchall()
 
-    # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps',
                     'int_goals', 'current_club', 'season', 'injury',
@@ -352,7 +333,6 @@ def seasons():
 
     df = pd.DataFrame(tuples_list, columns = column_names)
 
-    # ----------------------------- Transformation -----------------------------
     # Create seasons dictionary
     season_dict = {'22/23': '2022/23', '21/22': '2021/22', '20/21': '2020/21',
                    '19/20': '2019/20', '18/19': '2018/19', '17/18': '2017/18',
@@ -365,7 +345,6 @@ def seasons():
     # Change names of seasons
     df['season'] = df['season'].map(season_dict)
 
-    # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Truncate staging table
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
@@ -400,7 +379,6 @@ def days_injured():
     # Fetch all data from table
     tuples_list = dw_cursor.fetchall()
 
-    # ----------------------------- Create DataFrame -----------------------------
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps',
                     'int_goals', 'current_club', 'season', 'injury',
@@ -412,11 +390,9 @@ def days_injured():
 
     df = pd.DataFrame(tuples_list, columns = column_names)
 
-    # ----------------------------- Transformation -----------------------------
     # Clean days injured
     df['days'] = df['days'].str.rstrip(' days').astype('float')
 
-    # ----------------------------- Load to Staging Table -----------------------------
     # SQL Statement: Alter and truncate staging table
     sql_alter = "ALTER TABLE stg_historical_injuries RENAME COLUMN days TO days_injured"
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
