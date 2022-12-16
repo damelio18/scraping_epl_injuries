@@ -176,6 +176,10 @@ def bios():
     # Remove duplicate rows
     df = df.drop_duplicates()
 
+    df[['code', 'age']] = df[['code', 'age']].apply(pd.to_numeric)
+
+
+
     ####################################
     # Data warehouse credentials for loading
     pg_hook_2 = PostgresHook(
