@@ -178,8 +178,6 @@ def bios():
 
     df[['code', 'age']] = df[['code', 'age']].apply(pd.to_numeric)
 
-
-
     ####################################
     # Data warehouse credentials for loading
     pg_hook_2 = PostgresHook(
@@ -194,7 +192,7 @@ def bios():
     sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code VARCHAR(255)," \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day VARCHAR(255), dob_mon VARCHAR(255), dob_year VARCHAR(255)," \
                        "dob VARCHAR(255), age VARCHAR(255), height int," \
