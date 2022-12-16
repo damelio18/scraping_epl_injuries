@@ -176,14 +176,10 @@ def bios():
     # Remove duplicate rows
     df = df.drop_duplicates()
 
-    # Change types
-    convert_dict = {'code': int,
-                    'height': int
-                    }
-    df = df.astype(convert_dict)
-    #df[['code','dob_day','dob_mon','dob_year',
-    #    'age','height','int_caps','int_goals']] = df[['code','dob_day','dob_mon','dob_year',
-    #                                                   'age','height','int_caps','int_goals']].apply(pd.to_numeric)
+    # Change types to int
+    change_int = ['code','dob_day','dob_mon','dob_year','age','height','int_caps','int_goals']
+
+    df[change_int] = df[change_int].apply(pd.to_numeric)
 
     ####################################
     # Data warehouse credentials for loading
