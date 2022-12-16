@@ -20,7 +20,7 @@ def start_DAG():
 
 # 2. Assign fpl_player_id to transfermarkt.com players
 def assign_ids():
-    # Data warehouse: injuries credentials
+    # Data warehouse: injuries
     pg_hook_1 = PostgresHook(
         postgres_conn_id='dw_injuries',
         schema='injuries'
@@ -29,10 +29,10 @@ def assign_ids():
     pg_conn_1 = pg_hook_1.get_conn()
     cursor_1 = pg_conn_1.cursor()
 
-    # SQL Statement: Get data data warehouse: injuries
+    # SQL Statement: Get data
     sql_statement_get_data = "SELECT * FROM store_clean_historical_injuries;"
 
-    # Fetch data from table in data warehouse: injuries
+    # Fetch data
     cursor_1.execute(sql_statement_get_data)
     tuples_list_1 = cursor_1.fetchall()
 
@@ -47,24 +47,24 @@ def assign_ids():
                     'date_from_day', 'date_from_mon' 'date_from_year',
                     'date_until_day', 'date_until_mon','date_until_year']
 
-    df1 = pd.DataFrame(tuples_list_1, columns = column_names)
+    #df1 = pd.DataFrame(tuples_list_1, columns = column_names)
 
     ####################################
 
-    # Data warehouse: fpl credentials
+    # Data warehouse: fpl
     pg_hook_2 = PostgresHook(
         postgres_conn_id='dw_fpl',
         schema='fantasypl'
     )
-    # Connect to data warehouse: injuries
+    # Connect to data warehouse: fpl
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-    # SQL Statement: Get data data warehouse: injuries
+    # SQL Statement: Get data
     sql_statement_get_data = "SELECT first_name, second_name, web_name, " \
                              "team_name, code FROM elements;"
 
-    # Fetch data from table in data warehouse: injuries
+    # Fetch data
     cursor_2.execute(sql_statement_get_data)
     tuples_list_2 = cursor_2.fetchall()
 
@@ -73,7 +73,7 @@ def assign_ids():
 
     df2 = pd.DataFrame(tuples_list_1, columns = column_names)
 
-    return
+    return tuples_list_1
 
 
 
