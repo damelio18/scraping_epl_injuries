@@ -257,9 +257,9 @@ def injuries():
     df = df[df['date_until'].notna()]
 
     # Change columns to int type
-    change_int = ['code','date_from_day','date_from_mon','date_from_year','date_until_day',
-                  'date_until_mon','date_until_year','days_injured', 'games_missed']
-    df[change_int] = df[change_int].apply(pd.to_numeric)
+    #change_int = ['code','date_from_day','date_from_mon','date_from_year','date_until_day',
+    #              'date_until_mon','date_until_year','days_injured', 'games_missed']
+    #df[change_int] = df[change_int].apply(pd.to_numeric)
 
     ################ Load data to DW
 
@@ -277,10 +277,10 @@ def injuries():
 
     # SQL Statement: Create new table
     sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (" \
-                       "code int, season VARCHAR(255), injury VARCHAR(255), date_from_day int," \
-                       "date_from_mon int, date_from_year int, date_from date," \
-                       "date_until_day int, date_until_mon int, date_until_year int," \
-                       "date_until date, days_injured int, games_missed int, injury_id SERIAL NOT NULL);"
+                       "code VARCHAR(255), season VARCHAR(255), injury VARCHAR(255), date_from_day VARCHAR(255)," \
+                       "date_from_mon VARCHAR(255), date_from_year VARCHAR(255), date_from VARCHAR(255)," \
+                       "date_until_day VARCHAR(255), date_until_mon VARCHAR(255), date_until_year VARCHAR(255)," \
+                       "date_until VARCHAR(255), days_injured VARCHAR(255), games_missed VARCHAR(255), injury_id SERIAL NOT NULL);"
 
     # Drop and create table
     cursor_2.execute(sql_drop_table)
