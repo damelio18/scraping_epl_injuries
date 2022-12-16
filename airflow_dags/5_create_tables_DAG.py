@@ -74,7 +74,6 @@ def assign_ids():
     df2 = pd.DataFrame(tuples_list_2, columns = column_names)
 
     ####################################
-
     # Join based on first and second name
     df = pd.merge(df1, df2[['first_name', 'second_name', 'team', 'code']],
                         on=['first_name', 'second_name', 'team'], how='left').fillna(0)
@@ -86,6 +85,7 @@ def assign_ids():
     missing = df[df.code == 0]
     missing.pop("code")
 
+    ####################################
     # Join based on second_name and web_name
     missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
                        left_on=['second_name', 'team'],
@@ -100,6 +100,21 @@ def assign_ids():
     # Unsuccesful joins
     missing = missing[missing.code == 0]
     missing.pop("code")
+
+    ####################################
+    # Join based on first_name and web_name
+    missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
+                       left_on=['first_name', 'team'],
+                       right_on=['web_name', 'team'],
+                       how='left').fillna(0)
+
+    missing.pop("web_name")
+
+    # Add new successful joins to master
+    merge = pd.concat([merge, missing[missing.code != 0]])
+
+    # Unsuccessful joins
+    missing = missing[missing.code == 0]
 
     # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in merge.values]
