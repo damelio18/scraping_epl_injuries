@@ -132,7 +132,7 @@ def assign_ids():
     # Drop and Create staging table
     cursor_1.execute(sql_drop_stage)
     cursor_1.execute(sql_statement_create_table)
-    dw_pg_conn.commit()
+    pg_conn_1.commit()
 
     # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in merge.values]
