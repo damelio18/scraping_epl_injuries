@@ -22,7 +22,7 @@ def clean_date(x, y):
     month_dict = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
                   'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12}
 
-    # Extract day.
+    # Extract day
     try:
         df[col_day] = df[df_col].str[4:6]
         df[col_day] = df[col_day].str.replace(",", "", regex = True).astype('float')
