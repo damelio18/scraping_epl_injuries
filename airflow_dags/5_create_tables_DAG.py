@@ -71,7 +71,7 @@ def assign_ids():
     # Create DataFrame
     column_names = ['first_name', 'second_name', 'web_name', 'team_name', 'code']
 
-    df2 = pd.DataFrame(tuples_list_1, columns = column_names)
+    df2 = pd.DataFrame(tuples_list_2, columns = column_names)
 
     return tuples_list_1
 
