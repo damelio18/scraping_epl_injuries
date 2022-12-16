@@ -21,6 +21,7 @@ def start_DAG():
 
 # 2. Assign fpl_player_id to transfermarkt.com players
 def assign_ids():
+
     ################ Get injuries data from DW
 
     # Data warehouse: injuries
@@ -115,8 +116,9 @@ def assign_ids():
     # Joined unsuccessfully
     missing = missing[missing.code == 0]
 
-    # Replace 0 to np.nan in second name column
+    # Replace 0 to np.nan
     assigned['second_name'] = assigned['second_name'].replace(0, np.nan)
+    assigned['date_until'] = assigned['date_until'].replace(0, np.nan)
 
     ################ Load data to staging table
 
@@ -146,6 +148,7 @@ def assign_ids():
 
 # 3. Create player bios table
 def bios():
+
     ################ Get data from staging table
 
     # Data warehouse: injuries
@@ -216,6 +219,7 @@ def bios():
 
 # 4. Create historical injuries table
 def injuries():
+
     ################ Get data from staging table
 
     # Data warehouse: injuries credentials
