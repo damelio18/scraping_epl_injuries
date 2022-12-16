@@ -21,6 +21,8 @@ def start_DAG():
 
 # 2. Assign fpl_player_id to transfermarkt.com players
 def assign_ids():
+    ################ Get injuries data from DW
+
     # Data warehouse: injuries
     pg_hook_1 = PostgresHook(
         postgres_conn_id='dw_injuries',
@@ -50,7 +52,7 @@ def assign_ids():
 
     df1 = pd.DataFrame(tuples_list_1, columns = column_names)
 
-    ####################################
+    ################ Get fpl data from DW
 
     # Data warehouse: fpl
     pg_hook_2 = PostgresHook(
@@ -74,8 +76,9 @@ def assign_ids():
 
     df2 = pd.DataFrame(tuples_list_2, columns = column_names)
 
-    ####################################
-    # Join 1 based on first and second name
+    ################ Join datasets
+
+    # Join 1 - based on first and second name
     df = pd.merge(df1, df2[['first_name', 'second_name', 'team', 'code']],
                         on=['first_name', 'second_name', 'team'], how='left').fillna(0)
 
@@ -86,8 +89,7 @@ def assign_ids():
     missing = df[df.code == 0]
     missing.pop("code")
 
-    ####################################
-    # Join 2 based on second_name and web_name
+    # Join 2 - based on second_name and web_name
     missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
                        left_on=['second_name', 'team'],
                        right_on=['web_name', 'team'],
@@ -95,15 +97,14 @@ def assign_ids():
 
     missing.pop("web_name")
 
-    # Add new successful joins to master
+    # Add new successful joins to assigned
     assigned = pd.concat([assigned, missing[missing.code != 0]])
 
-    # Unsuccesful joins
+    # Joined unsuccessfully
     missing = missing[missing.code == 0]
     missing.pop("code")
 
-    ####################################
-    # Join 3 based on first_name and web_name
+    # Join 3 - based on first_name and web_name
     missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
                        left_on=['first_name', 'team'],
                        right_on=['web_name', 'team'],
@@ -111,16 +112,17 @@ def assign_ids():
 
     missing.pop("web_name")
 
-    # Add new successful joins to master
+    # Add new successful joins to assigned
     assigned = pd.concat([assigned, missing[missing.code != 0]])
 
-    # Unsuccessful joins
+    # Joined unsuccessfully
     missing = missing[missing.code == 0]
 
     # Replace 0 to np.nan in second name column
     assigned['second_name'] = assigned['second_name'].replace(0, np.nan)
 
-    ####################################
+    ################ Load data to staging table
+
     # SQL Statements: Drop and create staging table
     sql_drop_stage = "DROP TABLE IF EXISTS stage_clean_historical_injuries;"
     sql_statement_create_table = "CREATE TABLE IF NOT EXISTS stage_clean_historical_injuries (dob VARCHAR(255)," \
@@ -147,6 +149,8 @@ def assign_ids():
 
 # 3. Create player bios table
 def bios():
+    ################ Get data from staging table
+
     # Data warehouse: injuries
     pg_hook_1 = PostgresHook(
         postgres_conn_id='dw_injuries',
@@ -180,7 +184,8 @@ def bios():
     change_int = ['code','dob_day','dob_mon','dob_year','age','height','int_caps','int_goals']
     df[change_int] = df[change_int].apply(pd.to_numeric)
 
-    ####################################
+    ################ Load data to DW
+
     # Data warehouse credentials for loading
     pg_hook_2 = PostgresHook(
         postgres_conn_id='datawarehouse_airflow',
@@ -211,11 +216,11 @@ def bios():
     # Insert the rows into the database
     pg_hook_2.insert_rows(table="store_player_bios", rows=rows)
 
-############################################################
-
 
 # 4. Create historical injuries table
 def injuries():
+    ################ Get data from staging table
+
     # Data warehouse: injuries credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='dw_injuries',
@@ -254,6 +259,8 @@ def injuries():
     change_int = ['code','date_from_day','date_from_mon','date_from_year','date_until_day',
                   'date_until_mon','date_until_year','days_injured', 'games_missed']
     df[change_int] = df[change_int].apply(pd.to_numeric)
+
+    ################ Load data to DW
 
     # Data warehouse credentials for loading
     pg_hook_2 = PostgresHook(
