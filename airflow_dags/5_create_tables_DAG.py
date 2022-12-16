@@ -259,13 +259,11 @@ def injuries():
     sql_drop_table = "DROP TABLE IF EXISTS store_historical_injuries"
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (" \
-                       "code VARCHAR(255), first_name VARCHAR(255), second_name VARCHAR(255)," \
-                       "current_club VARCHAR(255), season VARCHAR(255), " \
-                       "injury VARCHAR(255), date_from_day VARCHAR(255), date_from_mon VARCHAR(255)," \
-                       "date_from_year VARCHAR(255), date_from VARCHAR(255), date_until_day VARCHAR(255), " \
-                       "date_until_mon VARCHAR(255), date_until_year VARCHAR(255), date_until VARCHAR(255)," \
-                       "days_injured VARCHAR(255), games_missed VARCHAR(255));"
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (code VARCHAR(255)," \
+                       " season VARCHAR(255), injury VARCHAR(255), date_from_day VARCHAR(255)," \
+                       "date_from_mon VARCHAR(255), date_from_year VARCHAR(255), date_from VARCHAR(255)," \
+                       "date_until_day VARCHAR(255), date_until_mon VARCHAR(255), date_until_year VARCHAR(255)," \
+                       "date_until VARCHAR(255), days_injured VARCHAR(255), games_missed VARCHAR(255));"
 
     # Drop and create table
     cursor_2.execute(sql_drop_table)
