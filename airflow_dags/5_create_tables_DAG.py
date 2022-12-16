@@ -250,6 +250,11 @@ def injuries():
     # Remove current injuries
     df = df[df['date_until'].notna()]
 
+    # Change columns to int type
+    change_int = ['code','date_from_day','date_from_mon','date_from_year','date_until_day',
+                  'date_until_mon','date_until_year','days_injured', 'games_missed']
+    df[change_int] = df[change_int].apply(pd.to_numeric)
+
     # Data warehouse credentials for loading
     pg_hook_2 = PostgresHook(
         postgres_conn_id='datawarehouse_airflow',
