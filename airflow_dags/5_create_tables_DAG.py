@@ -197,7 +197,7 @@ def bios():
     sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
-                       "dob VARCHAR(255), age int, height int," \
+                       "dob date, age int, height int," \
                        "nationality VARCHAR(255), int_caps int, int_goals int);"
 
     # Drop and create table
