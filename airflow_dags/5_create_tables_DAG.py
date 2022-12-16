@@ -116,6 +116,9 @@ def assign_ids():
     # Unsuccessful joins
     missing = missing[missing.code == 0]
 
+    # Replace 0 to np.nan in second name column
+    df['second_name'] = df['second_name'].replace([0], np.nan)
+
     ####################################
     # SQL Statements: Drop and create staging table
     sql_drop_stage = "DROP TABLE IF EXISTS stage_clean_historical_injuries;"
@@ -140,7 +143,6 @@ def assign_ids():
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="stage_clean_historical_injuries", rows=rows)
 
-    return merge
 
 
 
