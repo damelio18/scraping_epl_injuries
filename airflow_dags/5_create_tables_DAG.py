@@ -53,7 +53,7 @@ def assign_ids():
 
     # Data warehouse: fpl
     pg_hook_2 = PostgresHook(
-        postgres_conn_id='dw_fpl',
+        postgres_conn_id = 'dw_fpl',
         schema='fantasypl'
     )
     # Connect to data warehouse: fpl
@@ -75,15 +75,22 @@ def assign_ids():
 
     ####################################
 
+    # Join based on first and second name
+    df = pd.merge(df1, df2[['first_name', 'second_name', 'team', 'code']],
+                        on=['first_name', 'second_name', 'team'], how='left').fillna(0)
+
+    # Joined successfully
+    merge = df[df.code != 0]
+
+    # Joined unsuccessfully
+    missing = df[df.code == 0]
+    missing.pop("code")
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in df.values]
 
 
-
-
-
-
-
-
-    return tuples_list_1
+    return rows
 
 
 
