@@ -41,7 +41,7 @@ def assign_ids():
 
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps', 'int_goals',
-                    'current_club', 'season', 'injury', 'date_from',
+                    'team', 'season', 'injury', 'date_from',
                     'date_until', 'days_injured','games_missed', 'first_name',
                     'second_name', 'dob_day', 'dob_mon', 'dob_year', 'age',
                     'date_from_day', 'date_from_mon', 'date_from_year',
@@ -69,11 +69,21 @@ def assign_ids():
     tuples_list_2 = cursor_2.fetchall()
 
     # Create DataFrame
-    column_names = ['first_name', 'second_name', 'web_name', 'team_name', 'code']
+    column_names = ['first_name', 'second_name', 'web_name', 'team', 'code']
 
     df2 = pd.DataFrame(tuples_list_2, columns = column_names)
 
-    return tuples_list_2
+    ####################################
+
+
+
+
+
+
+
+
+
+    return tuples_list_1
 
 
 
