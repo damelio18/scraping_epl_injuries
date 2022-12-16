@@ -38,7 +38,7 @@ def assign_ids():
     tuples_list_1 = cursor_1.fetchall()
 
     #REMOVE
-    tuples_list_1 = tuples_list_1[:15]
+    tuples_list_1 = tuples_list_1[:100]
 
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps', 'int_goals',
