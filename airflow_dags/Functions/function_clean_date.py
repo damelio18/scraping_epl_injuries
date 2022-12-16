@@ -26,9 +26,9 @@ def clean_date(x, y):
     try:
         df[col_day] = df[df_col].str[4:6]
         df[col_day] = df[col_day].str.replace(",", "", regex = True)
+        df[col_day] = df[col_day].astype('float')
     except:
         pass
-    #df[col_day] = df[col_day].str.replace(",", "")
 
     try:
         # Extract Month and convert to number (Jan = 1, Feb = 2 etc.)
