@@ -44,10 +44,10 @@ def assign_ids():
                     'current_club', 'season', 'injury', 'date_from',
                     'date_until', 'days_injured','games_missed', 'first_name',
                     'second_name', 'dob_day', 'dob_mon', 'dob_year', 'age',
-                    'date_from_day', 'date_from_mon' 'date_from_year',
+                    'date_from_day', 'date_from_mon', 'date_from_year',
                     'date_until_day', 'date_until_mon','date_until_year']
 
-    #df1 = pd.DataFrame(tuples_list_1, columns = column_names)
+    df1 = pd.DataFrame(tuples_list_1, columns = column_names)
 
     ####################################
 
@@ -73,7 +73,7 @@ def assign_ids():
 
     df2 = pd.DataFrame(tuples_list_2, columns = column_names)
 
-    return tuples_list_1
+    return tuples_list_2
 
 
 
