@@ -138,7 +138,7 @@ def assign_ids():
     rows = [tuple(x) for x in merge.values]
 
     # Insert the rows into the database
-    pg_hook_1.insert_rows(table="stg_historical_injuries", rows=rows)
+    pg_hook_1.insert_rows(table="stage_clean_historical_injuries", rows=rows)
 
     return merge
 
