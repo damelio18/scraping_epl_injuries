@@ -176,7 +176,11 @@ def bios():
     # Remove duplicate rows
     df = df.drop_duplicates()
 
-    df[['code', 'age']] = df[['code', 'age']].apply(pd.to_numeric)
+    df = df.infer_objects()
+
+    #df[['code','dob_day','dob_mon','dob_year',
+    #    'age','height','int_caps','int_goals']] = df[['code','dob_day','dob_mon','dob_year',
+    #                                                   'age','height','int_caps','int_goals']].apply(pd.to_numeric)
 
     ####################################
     # Data warehouse credentials for loading
