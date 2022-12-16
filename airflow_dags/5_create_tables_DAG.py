@@ -62,7 +62,7 @@ def assign_ids():
 
     # SQL Statement: Get data
     sql_statement_get_data = "SELECT first_name, second_name, web_name, " \
-                             "team_name, code FROM elements;"
+                             "team, code FROM elements;"
 
     # Fetch data
     cursor_2.execute(sql_statement_get_data)
