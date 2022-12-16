@@ -116,11 +116,31 @@ def assign_ids():
     # Unsuccessful joins
     missing = missing[missing.code == 0]
 
+    ####################################
+    # SQL Statements: Drop and create staging table
+    sql_drop_stage = "DROP TABLE IF EXISTS stage_clean_historical_injuries;"
+    sql_statement_create_table = "CREATE TABLE IF NOT EXISTS stage_clean_historical_injuries (dob VARCHAR(255)," \
+                                 "height VARCHAR(255), nationality VARCHAR(255), int_caps VARCHAR(255), " \
+                                 "int_goals VARCHAR(255), team VARCHAR(255), season VARCHAR(255), " \
+                                 "injury VARCHAR(255),date_from VARCHAR(255), date_until VARCHAR(255), " \
+                                 "days_injured VARCHAR(255), games_missed VARCHAR(255), first_name VARCHAR(255)," \
+                                 "second_name VARCHAR(255), dob_day VARCHAR(255), dob_mon VARCHAR(255)," \
+                                 "dob_year VARCHAR(255), age VARCHAR(255), date_from_day VARCHAR(255), " \
+                                 "date_from_mon VARCHAR(255), date_from_year VARCHAR(255), date_until_day VARCHAR(255)," \
+                                 "date_until_mon VARCHAR(255), date_until_year VARCHAR(255), code VARCHAR(255));"
+
+    # Drop and Create staging table
+    cursor_1.execute(sql_drop_stage)
+    cursor_1.execute(sql_statement_create_table)
+    dw_pg_conn.commit()
+
     # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in merge.values]
 
+    # Insert the rows into the database
+    pg_hook_1.insert_rows(table="stg_historical_injuries", rows=rows)
 
-    return rows
+    return merge
 
 
 
