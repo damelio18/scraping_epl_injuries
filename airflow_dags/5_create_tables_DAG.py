@@ -80,7 +80,7 @@ def assign_ids():
                         on=['first_name', 'second_name', 'team'], how='left').fillna(0)
 
     # Joined successfully
-    merge = df[df.code != 0]
+    assigned = df[df.code != 0]
 
     # Joined unsuccessfully
     missing = df[df.code == 0]
@@ -96,7 +96,7 @@ def assign_ids():
     missing.pop("web_name")
 
     # Add new successful joins to master
-    merge = pd.concat([merge, missing[missing.code != 0]])
+    assigned = pd.concat([assigned, missing[missing.code != 0]])
 
     # Unsuccesful joins
     missing = missing[missing.code == 0]
@@ -112,13 +112,13 @@ def assign_ids():
     missing.pop("web_name")
 
     # Add new successful joins to master
-    merge = pd.concat([merge, missing[missing.code != 0]])
+    assigned = pd.concat([assigned, missing[missing.code != 0]])
 
     # Unsuccessful joins
     missing = missing[missing.code == 0]
 
     # Replace 0 to np.nan in second name column
-    df['second_name'] = df['second_name'].replace([0], np.nan)
+    assigned['second_name'] = assigned['second_name'].replace(0, np.nan)
 
     ####################################
     # SQL Statements: Drop and create staging table
@@ -139,7 +139,7 @@ def assign_ids():
     pg_conn_1.commit()
 
     # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in merge.values]
+    rows = [tuple(x) for x in assigned.values]
 
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="stage_clean_historical_injuries", rows=rows)
