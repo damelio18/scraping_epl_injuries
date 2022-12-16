@@ -86,9 +86,9 @@ def assign_ids():
     missing = df[df.code == 0]
     missing.pop("code")
 
-    # Join based on first_name and web_name
-    missing = pd.merge(missing, elem_ars[['web_name', 'team', 'code']],
-                       left_on=['first_name', 'team'],
+    # Join based on second_name and web_name
+    missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
+                       left_on=['second_name', 'team'],
                        right_on=['web_name', 'team'],
                        how='left').fillna(0)
 
@@ -99,8 +99,7 @@ def assign_ids():
 
     # Unsuccesful joins
     missing = missing[missing.code == 0]
-
-
+    missing.pop("code")
 
     # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in merge.values]
