@@ -210,74 +210,73 @@ def bios():
 ############################################################
 
 
-# # 3. Create player bios table
-# def injuries():
-#     # Data warehouse: injuries credentials
-#     pg_hook_1 = PostgresHook(
-#         postgres_conn_id='dw_injuries',
-#         schema='injuries'
-#     )
-#     # Connect to data warehouse: injuries
-#     pg_conn_1 = pg_hook_1.get_conn()
-#     cursor_1 = pg_conn_1.cursor()
-#
-#     # SQL Statement: Get data data warehouse: injuries
-#     sql_statement_get_data = "SELECT first_name, second_name, current_club," \
-#                              "season, injury, date_from_day, date_from_mon, " \
-#                              "date_from_year, date_from, date_until_day, " \
-#                              "date_until_mon, date_until_year, date_until," \
-#                              "days_injured, games_missed FROM store_clean_historical_injuries;"
-#
-#     # Fetch data from table in data warehouse: injuries
-#     cursor_1.execute(sql_statement_get_data)
-#     tuples_list = cursor_1.fetchall()
-#
-#     # Create DataFrame
-#     column_names = ['first_name', 'second_name','current_club',
-#                     'season', 'injury', 'date_from_day',
-#                     'date_from_mon', 'date_from_year', 'date_from',
-#                     'date_until_day', 'date_until_mon', 'date_until_year',
-#                     'date_until', 'days_injured', 'games_missed']
-#
-#     df = pd.DataFrame(tuples_list, columns = column_names)
-#
-#     # Remove players with no injury history
-#     df = df[df['season'].notna()]
-#
-#     # Remove current injuries
-#     df = df[df['date_until'].notna()]
-#
-#     # Data warehouse credentials for loading
-#     pg_hook_2 = PostgresHook(
-#         postgres_conn_id='datawarehouse_airflow',
-#         schema='datawarehouse'
-#     )
-#     # Connect to data warehouse for loading
-#     pg_conn_2 = pg_hook_2.get_conn()
-#     cursor_2 = pg_conn_2.cursor()
-#
-#     # SQL Statement: Drop old table
-#     sql_drop_table = "DROP TABLE IF EXISTS store_historical_injuries"
-#
-#     # SQL Statement: Create new table
-#     sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (first_name VARCHAR(255)," \
-#                        "second_name VARCHAR(255), current_club VARCHAR(255), season VARCHAR(255), " \
-#                        "injury VARCHAR(255), date_from_day VARCHAR(255), date_from_mon VARCHAR(255)," \
-#                        "date_from_year VARCHAR(255), date_from VARCHAR(255), date_until_day VARCHAR(255), " \
-#                        "date_until_mon VARCHAR(255), date_until_year VARCHAR(255), date_until VARCHAR(255)," \
-#                        "days_injured VARCHAR(255), games_missed VARCHAR(255));"
-#
-#     # Drop and create table
-#     cursor_2.execute(sql_drop_table)
-#     cursor_2.execute(sql_create_table)
-#     pg_conn_2.commit()
-#
-#     # Create a list of tuples representing the rows in the dataframe
-#     rows = [tuple(x) for x in df.values]
-#
-#     # Insert the rows into the database
-#     pg_hook_2.insert_rows(table="store_historical_injuries", rows=rows)
-#
+# 4. Create historical injuries table
+def injuries():
+    # Data warehouse: injuries credentials
+    pg_hook_1 = PostgresHook(
+        postgres_conn_id='dw_injuries',
+        schema='injuries'
+    )
+    # Connect to data warehouse: injuries
+    pg_conn_1 = pg_hook_1.get_conn()
+    cursor_1 = pg_conn_1.cursor()
+
+    # SQL Statement: Get data data warehouse: injuries
+    sql_statement_get_data = "SELECT code, season, injury, date_from_day," \
+                             "date_from_mon, date_from_year, date_from, " \
+                             "date_until_day, date_until_mon, date_until_year," \
+                             "date_until, days_injured, games_missed " \
+                             "FROM stage_clean_historical_injuries;"
+
+    # Fetch data from table in data warehouse: injuries
+    cursor_1.execute(sql_statement_get_data)
+    tuples_list = cursor_1.fetchall()
+
+    # Create DataFrame
+    column_names = ['code', 'season', 'injury', 'date_from_day',
+                    'date_from_mon', 'date_from_year', 'date_from',
+                    'date_until_day', 'date_until_mon', 'date_until_year',
+                    'date_until', 'days_injured', 'games_missed']
+
+    df = pd.DataFrame(tuples_list, columns = column_names)
+
+    # Remove players with no injury history
+    df = df[df['season'].notna()]
+
+    # Remove current injuries
+    df = df[df['date_until'].notna()]
+
+    # Data warehouse credentials for loading
+    pg_hook_2 = PostgresHook(
+        postgres_conn_id='datawarehouse_airflow',
+        schema='datawarehouse'
+    )
+    # Connect to data warehouse for loading
+    pg_conn_2 = pg_hook_2.get_conn()
+    cursor_2 = pg_conn_2.cursor()
+
+    # SQL Statement: Drop old table
+    sql_drop_table = "DROP TABLE IF EXISTS store_historical_injuries"
+
+    # SQL Statement: Create new table
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (" \
+                       "code VARCHAR(255), first_name VARCHAR(255), second_name VARCHAR(255)," \
+                       "current_club VARCHAR(255), season VARCHAR(255), " \
+                       "injury VARCHAR(255), date_from_day VARCHAR(255), date_from_mon VARCHAR(255)," \
+                       "date_from_year VARCHAR(255), date_from VARCHAR(255), date_until_day VARCHAR(255), " \
+                       "date_until_mon VARCHAR(255), date_until_year VARCHAR(255), date_until VARCHAR(255)," \
+                       "days_injured VARCHAR(255), games_missed VARCHAR(255));"
+
+    # Drop and create table
+    cursor_2.execute(sql_drop_table)
+    cursor_2.execute(sql_create_table)
+    pg_conn_2.commit()
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in df.values]
+
+    # Insert the rows into the database
+    pg_hook_2.insert_rows(table="store_historical_injuries", rows=rows)
 
 # 5. Log the end of the DAG
 def finish_DAG():
