@@ -157,7 +157,7 @@ def bios():
     cursor_1 = pg_conn_1.cursor()
 
     # SQL Statement: Get data
-    sql_statement_get_data = "SELECT first_name, second_name, " \
+    sql_statement_get_data = "SELECT code, first_name, second_name, " \
                              "team, dob_day, dob_mon, dob_year," \
                              "dob, age, height, nationality, int_caps, " \
                              "int_goals FROM stage_clean_historical_injuries;"
