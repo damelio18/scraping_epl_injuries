@@ -268,7 +268,7 @@ def injuries():
     sql_drop_table = "DROP TABLE IF EXISTS store_historical_injuries"
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (injury_id SERIAL NOT NULL" \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (injury_id SERIAL NOT NULL," \
                        "code int, season VARCHAR(255), injury VARCHAR(255), date_from_day int," \
                        "date_from_mon int, date_from_year int, date_from date," \
                        "date_until_day int, date_until_mon int, date_until_year int," \
