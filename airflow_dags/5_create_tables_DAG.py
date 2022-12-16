@@ -176,8 +176,11 @@ def bios():
     # Remove duplicate rows
     df = df.drop_duplicates()
 
-    df = df.infer_objects()
-
+    # Change types
+    convert_dict = {'code': int,
+                    'height': int
+                    }
+    df = df.astype(convert_dict)
     #df[['code','dob_day','dob_mon','dob_year',
     #    'age','height','int_caps','int_goals']] = df[['code','dob_day','dob_mon','dob_year',
     #                                                   'age','height','int_caps','int_goals']].apply(pd.to_numeric)
