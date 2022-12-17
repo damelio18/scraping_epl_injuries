@@ -181,7 +181,8 @@ def bios():
     df = df.drop_duplicates()
 
     # Change columns to int type
-    change_int = ['code','dob_day','dob_mon','dob_year','age','height','int_caps','int_goals']
+    #change_int = ['code','dob_day','dob_mon','dob_year','age','height','int_caps','int_goals']
+    change_int = ['dob_day', 'dob_mon', 'dob_year', 'age', 'height', 'int_caps', 'int_goals']
     df[change_int] = df[change_int].apply(pd.to_numeric)
 
     ################ Load data to DW
@@ -199,7 +200,7 @@ def bios():
     sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code VARCHAR(255) PRIMARY KEY," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
                        "dob date, age int, height int," \
@@ -277,10 +278,10 @@ def injuries():
 
     # SQL Statement: Create new table
     sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (" \
-                       "code int PRIMARY KEY, season VARCHAR(255), injury VARCHAR(255), date_from_day int," \
+                       "code int , season VARCHAR(255), injury VARCHAR(255), date_from_day int," \
                        "date_from_mon int, date_from_year int, date_from date," \
                        "date_until_day int, date_until_mon int, date_until_year int," \
-                       "date_until date, days_injured int, games_missed int, injury_id SERIAL NOT NULL);"
+                       "date_until date, days_injured int, games_missed int, injury_id SERIAL NOT NULL PRIMARY KEY);"
 
     # Drop and create table
     cursor_2.execute(sql_drop_table)
