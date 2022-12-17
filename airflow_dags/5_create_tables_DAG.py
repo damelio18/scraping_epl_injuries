@@ -40,7 +40,7 @@ def assign_ids():
     cursor_1.execute(sql_statement_get_data)
     tuples_list_1 = cursor_1.fetchall()
 
-    tuples_list_1 = tuples_list_1[:30]
+    #tuples_list_1 = tuples_list_1[:30]
 
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps', 'int_goals',
@@ -203,7 +203,7 @@ def bios():
     sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
                        "dob date, age int, height int," \
