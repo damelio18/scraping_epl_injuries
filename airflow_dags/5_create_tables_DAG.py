@@ -181,8 +181,8 @@ def bios():
     df = df.drop_duplicates()
 
     # Change columns to int type
-    #change_int = ['code','dob_day','dob_mon','dob_year','age','height','int_caps','int_goals']
-    change_int = ['dob_day', 'dob_mon', 'dob_year', 'age', 'height', 'int_caps', 'int_goals']
+    change_int = ['code','dob_day','dob_mon','dob_year','age','height','int_caps','int_goals']
+    #change_int = ['dob_day', 'dob_mon', 'dob_year', 'age', 'height', 'int_caps', 'int_goals']
     df[change_int] = df[change_int].apply(pd.to_numeric)
 
     ################ Load data to DW
@@ -200,7 +200,7 @@ def bios():
     sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code VARCHAR(255) PRIMARY KEY," \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
                        "dob date, age int, height int," \
