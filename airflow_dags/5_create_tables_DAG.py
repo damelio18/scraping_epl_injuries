@@ -116,9 +116,6 @@ def assign_ids():
     # Change Traore's for Wolves
     assigned.loc[assigned['first_name'].str[:] == 'Adama', 'code'] = '159533'
 
-    # Joined unsuccessfully
-    #missing = missing[missing['code'].isnull()]
-
     ################ Load data to staging table
 
     # SQL Statements: Drop and create staging table
