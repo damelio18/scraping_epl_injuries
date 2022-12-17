@@ -116,7 +116,7 @@ def assign_ids():
     assigned = pd.concat([assigned, missing[missing['code'].notnull()]])
 
     # Change Traore's for Wolves
-    assigned.loc[assigned['first_name'].str[:] == 'Adama', 'code'] = '159533'
+    #assigned.loc[assigned['first_name'].str[:] == 'Adama', 'code'] = '159533'
 
     # Joined unsuccessfully
     #missing = missing[missing['code'].isnull()]
