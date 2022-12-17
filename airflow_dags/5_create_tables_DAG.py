@@ -102,6 +102,7 @@ def assign_ids():
 
     # Joined unsuccessfully
     missing = missing[missing['code'].isnull()]
+    missing.pop("code")
     #--------------------------
     # Join 2 - based on second_name and web_name
     missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
@@ -116,7 +117,7 @@ def assign_ids():
 
     # Joined unsuccessfully
     missing = missing[missing['code'].isnull()]
-    missing.pop("code")
+    #missing.pop("code")
 
     # # Join 3 - based on first_name and web_name
     # missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
