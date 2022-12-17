@@ -199,7 +199,7 @@ def bios():
     sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int," \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
                        "dob date, age int, height int," \
@@ -277,7 +277,7 @@ def injuries():
 
     # SQL Statement: Create new table
     sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (" \
-                       "code int, season VARCHAR(255), injury VARCHAR(255), date_from_day int," \
+                       "code int PRIMARY KEY, season VARCHAR(255), injury VARCHAR(255), date_from_day int," \
                        "date_from_mon int, date_from_year int, date_from date," \
                        "date_until_day int, date_until_mon int, date_until_year int," \
                        "date_until date, days_injured int, games_missed int, injury_id SERIAL NOT NULL);"
