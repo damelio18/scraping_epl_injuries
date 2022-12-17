@@ -40,6 +40,9 @@ def assign_ids():
     cursor_1.execute(sql_statement_get_data)
     tuples_list_1 = cursor_1.fetchall()
 
+    #REMOVE
+    tuples_list_1 = tuples_list_1[:200]
+
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps', 'int_goals',
                     'team', 'season', 'injury', 'date_from','date_until',
@@ -78,47 +81,47 @@ def assign_ids():
 
     # Join 1 - based on first and second name
     df = pd.merge(df1, df2[['first_name', 'second_name', 'team', 'code']],
-                        on=['first_name', 'second_name', 'team'], how='left').fillna(0)
+                        on=['first_name', 'second_name', 'team'], how='left')
 
     # Joined successfully
-    assigned = df[df.code != 0]
+    assigned = df[df['code'].notnull()]
 
     # Joined unsuccessfully
-    missing = df[df.code == 0]
+    missing = df[df['code'].isnull()]
     missing.pop("code")
 
     # Join 2 - based on second_name and web_name
     missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
                        left_on=['second_name', 'team'],
                        right_on=['web_name', 'team'],
-                       how='left').fillna(0)
+                       how='left')
 
     missing.pop("web_name")
 
-    # Add new successful joins to assigned
-    assigned = pd.concat([assigned, missing[missing.code != 0]])
+    # Add new successful joins to master
+    assigned = pd.concat([assigned, missing[missing['code'].notnull()]])
 
     # Joined unsuccessfully
-    missing = missing[missing.code == 0]
+    missing = missing[missing['code'].isnull()]
     missing.pop("code")
 
     # Join 3 - based on first_name and web_name
     missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
                        left_on=['first_name', 'team'],
                        right_on=['web_name', 'team'],
-                       how='left').fillna(0)
+                       how='left')
 
     missing.pop("web_name")
 
-    # Add new successful joins to assigned
-    assigned = pd.concat([assigned, missing[missing.code != 0]])
+    # Add new successful joins to master
+    assigned = pd.concat([assigned, missing[missing['code'].notnull()]])
 
     # Joined unsuccessfully
-    missing = missing[missing.code == 0]
+    missing = missing[missing['code'].isnull()]
 
     # Replace 0 to np.nan
-    assigned['second_name'] = assigned['second_name'].replace(0, np.nan)
-    assigned['date_until'] = assigned['date_until'].replace(0, np.nan)
+    #assigned['second_name'] = assigned['second_name'].replace(0, np.nan)
+    #assigned['date_until'] = assigned['date_until'].replace(0, np.nan)
 
     ################ Load data to staging table
 
@@ -257,9 +260,9 @@ def injuries():
     df = df[df['date_until'].notna()]
 
     # Change columns to int type
-    #change_int = ['code','date_from_day','date_from_mon','date_from_year','date_until_day',
-    #              'date_until_mon','date_until_year','days_injured', 'games_missed']
-    #df[change_int] = df[change_int].apply(pd.to_numeric)
+    change_int = ['code','date_from_day','date_from_mon','date_from_year','date_until_day',
+                  'date_until_mon','date_until_year','days_injured', 'games_missed']
+    df[change_int] = df[change_int].apply(pd.to_numeric)
 
     ################ Load data to DW
 
