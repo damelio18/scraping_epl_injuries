@@ -40,6 +40,8 @@ def assign_ids():
     cursor_1.execute(sql_statement_get_data)
     tuples_list_1 = cursor_1.fetchall()
 
+    tuples_list_1 = tuples_list_1[:30]
+
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps', 'int_goals',
                     'team', 'season', 'injury', 'date_from','date_until',
@@ -86,21 +88,7 @@ def assign_ids():
     # Joined unsuccessfully
     missing = df[df['code'].isnull()]
     missing.pop("code")
-    #--------------------------
-    # Join 3 - based on first_name and web_name
-    missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
-                       left_on=['first_name', 'team'],
-                       right_on=['web_name', 'team'],
-                       how='left')
 
-    missing.pop("web_name")
-
-    # Add new successful joins to master
-    assigned = pd.concat([assigned, missing[missing['code'].notnull()]])
-
-    # Joined unsuccessfully
-    missing = missing[missing['code'].isnull()]
-    missing.pop("code")
     #--------------------------
     # Join 2 - based on second_name and web_name
     missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
@@ -116,20 +104,20 @@ def assign_ids():
     # Joined unsuccessfully
     missing = missing[missing['code'].isnull()]
 
-    #missing.pop("code")
-    # # Join 3 - based on first_name and web_name
-    # missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
-    #                    left_on=['first_name', 'team'],
-    #                    right_on=['web_name', 'team'],
-    #                    how='left')
-    #
-    # missing.pop("web_name")
-    #
-    # # Add new successful joins to master
-    # assigned = pd.concat([assigned, missing[missing['code'].notnull()]])
-    #
-    # # Joined unsuccessfully
-    # missing = missing[missing['code'].isnull()]
+    missing.pop("code")
+    # Join 3 - based on first_name and web_name
+    missing = pd.merge(missing, df2[['web_name', 'team', 'code']],
+                       left_on=['first_name', 'team'],
+                       right_on=['web_name', 'team'],
+                       how='left')
+
+    missing.pop("web_name")
+
+    # Add new successful joins to master
+    assigned = pd.concat([assigned, missing[missing['code'].notnull()]])
+
+    # Joined unsuccessfully
+    missing = missing[missing['code'].isnull()]
 
     # Replace 0 to np.nan
     #assigned['second_name'] = assigned['second_name'].replace(0, np.nan)
