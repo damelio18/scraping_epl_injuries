@@ -40,7 +40,7 @@ def assign_ids():
     cursor_1.execute(sql_statement_get_data)
     tuples_list_1 = cursor_1.fetchall()
 
-    tuples_list_1 = tuples_list_1[-250:30]
+    tuples_list_1 = tuples_list_1[-250:-30]
 
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps', 'int_goals',
@@ -116,7 +116,7 @@ def assign_ids():
     assigned = pd.concat([assigned, missing[missing['code'].notnull()]])
 
     # Change Traore's for Wolves
-    #assigned.loc[assigned['first_name'].str[:] == 'Adama', 'code'] = '159533'
+    assigned.loc[assigned['first_name'].str[:] == 'Adama', 'code'] = '159533'
 
     # Joined unsuccessfully
     #missing = missing[missing['code'].isnull()]
