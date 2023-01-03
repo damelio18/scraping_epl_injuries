@@ -196,7 +196,7 @@ def bios():
     change_type = ['code','dob_day','dob_mon','dob_year','height','int_caps','int_goals']
     df[change_type] = df[change_type].apply(pd.to_numeric)
 
-    ################ Load data to DW
+    ################ Load data to dw_injuries
 
     # Data warehouse credentials for loading
     pg_hook_2 = PostgresHook(
@@ -236,8 +236,8 @@ def injuries():
 
     # Data warehouse: injuries credentials
     pg_hook_1 = PostgresHook(
-        postgres_conn_id='injuries',
-        schema='injuries'
+        postgres_conn_id='dw_injuries',
+        schema='dw_injuries'
     )
     # Connect to data warehouse: injuries
     pg_conn_1 = pg_hook_1.get_conn()
@@ -344,12 +344,12 @@ bios_task = PythonOperator(
     dag = dag
 )
 
-# # 4. Historical Injuries Table
-# create_injuries_task = PythonOperator(
-#     task_id = "create_injuries_task",
-#     python_callable = injuries,
-#     dag = dag
-# )
+# 4. Historical Injuries Table
+create_injuries_task = PythonOperator(
+    task_id = "create_injuries_task",
+    python_callable = injuries,
+    dag = dag
+)
 
 # 5. End Task
 end_task = PythonOperator(
@@ -359,5 +359,5 @@ end_task = PythonOperator(
 )
 
 # ----------------------------- Trigger Tasks -----------------------------
-#start_task >> assign_ids_task >> bios_task >> create_injuries_task >> end_task
-start_task >> assign_ids_task >> bios_task >> end_task
+start_task >> assign_ids_task >> bios_task >> create_injuries_task >> end_task
+
