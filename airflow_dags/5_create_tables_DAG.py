@@ -26,7 +26,7 @@ def assign_ids():
 
     # Data warehouse: injuries
     pg_hook_1 = PostgresHook(
-        postgres_conn_id='dw_injuries',
+        postgres_conn_id='injuries',
         schema='injuries'
     )
     # Connect to data warehouse: injuries
@@ -149,7 +149,7 @@ def bios():
 
     # Data warehouse: injuries
     pg_hook_1 = PostgresHook(
-        postgres_conn_id='dw_injuries',
+        postgres_conn_id='injuries',
         schema='injuries'
     )
     # Connect to data warehouse: injuries
@@ -221,7 +221,7 @@ def injuries():
 
     # Data warehouse: injuries credentials
     pg_hook_1 = PostgresHook(
-        postgres_conn_id='dw_injuries',
+        postgres_conn_id='injuries',
         schema='injuries'
     )
     # Connect to data warehouse: injuries
@@ -344,4 +344,5 @@ end_task = PythonOperator(
 )
 
 # ----------------------------- Trigger Tasks -----------------------------
-start_task >> assign_ids_task >> bios_task >> create_injuries_task >> end_task
+#start_task >> assign_ids_task >> bios_task >> create_injuries_task >> end_task
+start_task >> assign_ids_task >> bios_task >> end_task

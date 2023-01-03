@@ -42,7 +42,7 @@ def stg_table():
 
     # Data warehouse: injuries credentials
     pg_hook_2 = PostgresHook(
-        postgres_conn_id='dw_injuries',
+        postgres_conn_id='injuries',
         schema='injuries'
     )
     # Connect to data warehouse: injuries
@@ -70,7 +70,7 @@ def stg_table():
 def missing_values():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='dw_injuries',
+        postgres_conn_id='injuries',
         schema='injuries'
     )
     # Connect to data warehouse
@@ -116,7 +116,7 @@ def missing_values():
 def player_names():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='dw_injuries',
+        postgres_conn_id='injuries',
         schema='injuries'
     )
     # Connect to data warehouse
@@ -174,7 +174,7 @@ def player_names():
 def date_columns():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='dw_injuries',
+        postgres_conn_id='injuries',
         schema='injuries'
     )
     # Connect to data warehouse
@@ -245,7 +245,7 @@ def date_columns():
 def current_club():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='dw_injuries',
+        postgres_conn_id='injuries',
         schema='injuries'
     )
     # Connect to data warehouse
@@ -306,7 +306,7 @@ def current_club():
 def seasons():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='dw_injuries',
+        postgres_conn_id='injuries',
         schema='injuries'
     )
     # Connect to data warehouse
@@ -363,7 +363,7 @@ def seasons():
 def days_injured():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='dw_injuries',
+        postgres_conn_id='injuries',
         schema='injuries'
     )
     # Connect to data warehouse
@@ -413,7 +413,7 @@ def days_injured():
 def store_table():
     # Data warehouse credentials
     dw_pg_hook = PostgresHook(
-        postgres_conn_id='dw_injuries',
+        postgres_conn_id='injuries',
         schema='injuries'
     )
     # Connect to data warehouse
