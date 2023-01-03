@@ -160,7 +160,7 @@ def bios():
     sql_statement_get_data = "SELECT code, first_name, second_name, " \
                              "team, dob_day, dob_mon, dob_year," \
                              "dob, age, height, nationality, int_caps, " \
-                             "int_goals FROM stage_clean_historical_injuries;"
+                             "int_goals, games_missed FROM stage_clean_historical_injuries;"
 
     # Fetch data
     cursor_1.execute(sql_statement_get_data)
@@ -169,17 +169,35 @@ def bios():
     # Create DataFrame
     column_names = ['code', 'first_name', 'second_name', 'team',
                     'dob_day', 'dob_mon','dob_year', 'dob', 'age', 'height',
-                    'nationality', 'int_caps','int_goals']
+                    'nationality', 'int_caps','int_goals','games_missed']
 
     df = pd.DataFrame(tuples_list, columns = column_names)
 
-    # Remove duplicate rows
-    df = df.drop_duplicates()
+    ################ Create injury KPI
 
-    # Change columns to int type
-    change_int = ['code','dob_day','dob_mon','dob_year','age','height','int_caps','int_goals']
-    #change_int = ['dob_day', 'dob_mon', 'dob_year', 'age', 'height', 'int_caps', 'int_goals']
-    df[change_int] = df[change_int].apply(pd.to_numeric)
+    # Change columns to numeric type
+    change_type = [ 'age', 'games_missed']
+    df[change_type] = df[change_type].apply(pd.to_numeric)
+
+    # Sum games missed for each player in their career
+    column_names = column_names[:-1]
+    df = df.groupby(column_names, as_index=False)["games_missed"].sum()
+
+    # Calculate games missed per season
+    df['games_missed_per_season'] = round(df['games_missed'] / (df['age'] - 18), 0)
+
+    # Create percentiles for injury risk
+    df['injury_risk'] = round(df.games_missed_per_season.rank(pct=True) * 10)
+
+    # Drop unwanted columns
+    df = df.drop(['games_missed', 'games_missed_per_season'], axis=1)
+
+    # Remove duplicate rows
+    #df = df.drop_duplicates()
+
+    # Change columns to numeric type
+    change_type = ['code','dob_day','dob_mon','dob_year','height','int_caps','int_goals']
+    df[change_type] = df[change_type].apply(pd.to_numeric)
 
     ################ Load data to DW
 
@@ -200,7 +218,7 @@ def bios():
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
                        "dob date, age int, height int," \
-                       "nationality VARCHAR(255), int_caps int, int_goals int);"
+                       "nationality VARCHAR(255), int_caps int, int_goals int, injury_risk int);"
 
     # Drop and create table
     cursor_2.execute(sql_drop_table)
