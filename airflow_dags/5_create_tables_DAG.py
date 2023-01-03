@@ -207,19 +207,21 @@ def bios():
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-    # SQL Statement: Drop old table
-    sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
+    sql_drop_table = "TRUNCATE TABLE IF EXISTS store_player_bios"
 
-    # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
-                       "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
-                       "dob_day int, dob_mon int, dob_year int," \
-                       "dob date, age int, height int," \
-                       "nationality VARCHAR(255), int_caps int, int_goals int, injury_risk int);"
+    # # SQL Statement: Drop old table
+    # sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
+
+    # # SQL Statement: Create new table
+    # sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
+    #                    "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
+    #                    "dob_day int, dob_mon int, dob_year int," \
+    #                    "dob date, age int, height int," \
+    #                    "nationality VARCHAR(255), int_caps int, int_goals int, injury_risk int);"
 
     # Drop and create table
     cursor_2.execute(sql_drop_table)
-    cursor_2.execute(sql_create_table)
+    #cursor_2.execute(sql_create_table)
     pg_conn_2.commit()
 
     # Create a list of tuples representing the rows in the dataframe
