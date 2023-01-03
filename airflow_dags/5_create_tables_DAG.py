@@ -192,9 +192,6 @@ def bios():
     # Drop unwanted columns
     df = df.drop(['games_missed', 'games_missed_per_season'], axis=1)
 
-    # Remove duplicate rows
-    #df = df.drop_duplicates()
-
     # Change columns to numeric type
     change_type = ['code','dob_day','dob_mon','dob_year','height','int_caps','int_goals']
     df[change_type] = df[change_type].apply(pd.to_numeric)
@@ -203,8 +200,8 @@ def bios():
 
     # Data warehouse credentials for loading
     pg_hook_2 = PostgresHook(
-        postgres_conn_id='datawarehouse_airflow',
-        schema='datawarehouse'
+        postgres_conn_id='dw_injuries',
+        schema='dw_injuries'
     )
     # Connect to data warehouse
     pg_conn_2 = pg_hook_2.get_conn()
