@@ -217,7 +217,7 @@ def bios():
                        "dob date, age int, height int," \
                        "nationality VARCHAR(255), int_caps int, int_goals int, injury_risk int);"
 
-    sql_truncate_table = "TRUNCATE TABLE IF EXISTS store_player_bios"
+    sql_truncate_table = "TRUNCATE TABLE store_player_bios"
 
     # Drop and create table
     #cursor_2.execute(sql_drop_table)
