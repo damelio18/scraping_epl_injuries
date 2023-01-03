@@ -41,7 +41,7 @@ def stg_table():
     tuples_list = cursor_1.fetchall()
 
     #REMOVE
-    tuples_list = tuples_list[:10]
+    tuples_list = tuples_list[:100]
 
     # Data warehouse: injuries credentials
     pg_hook_2 = PostgresHook(
