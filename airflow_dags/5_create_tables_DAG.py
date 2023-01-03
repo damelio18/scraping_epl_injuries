@@ -329,12 +329,12 @@ bios_task = PythonOperator(
     dag = dag
 )
 
-# 4. Historical Injuries Table
-create_injuries_task = PythonOperator(
-    task_id = "create_injuries_task",
-    python_callable = injuries,
-    dag = dag
-)
+# # 4. Historical Injuries Table
+# create_injuries_task = PythonOperator(
+#     task_id = "create_injuries_task",
+#     python_callable = injuries,
+#     dag = dag
+# )
 
 # 5. End Task
 end_task = PythonOperator(
