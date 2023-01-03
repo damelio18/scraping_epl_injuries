@@ -40,6 +40,9 @@ def stg_table():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
+    #REMOVE
+    tuples_list = tuples_list[:10]
+
     # Data warehouse: injuries credentials
     pg_hook_2 = PostgresHook(
         postgres_conn_id='injuries',
