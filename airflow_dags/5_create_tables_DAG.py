@@ -236,8 +236,8 @@ def injuries():
 
     # Data warehouse: injuries credentials
     pg_hook_1 = PostgresHook(
-        postgres_conn_id='dw_injuries',
-        schema='dw_injuries'
+        postgres_conn_id='injuries',
+        schema='injuries'
     )
     # Connect to data warehouse: injuries
     pg_conn_1 = pg_hook_1.get_conn()
@@ -277,8 +277,8 @@ def injuries():
 
     # Data warehouse credentials for loading
     pg_hook_2 = PostgresHook(
-        postgres_conn_id='datawarehouse_airflow',
-        schema='datawarehouse'
+        postgres_conn_id='dw_injuries',
+        schema='dw_injuries'
     )
     # Connect to data warehouse for loading
     pg_conn_2 = pg_hook_2.get_conn()
