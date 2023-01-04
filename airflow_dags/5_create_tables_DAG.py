@@ -173,6 +173,8 @@ def bios():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
+    print(tuples_list)
+
     # Create DataFrame
     column_names = ['code', 'first_name', 'second_name', 'team',
                     'dob_day', 'dob_mon','dob_year', 'dob', 'age', 'height',
@@ -184,6 +186,7 @@ def bios():
 
     # Change columns to numeric type
     df['games_missed'] = df['games_missed'].replace(['NaN'], 0.0)
+    #df = df.replace(['NaN'], np.nan)
     change_type = ['age', 'games_missed']
     df[change_type] = df[change_type].apply(pd.to_numeric)
 
