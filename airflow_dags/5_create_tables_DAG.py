@@ -41,7 +41,7 @@ def assign_ids():
     tuples_list_1 = cursor_1.fetchall()
 
     #REMOVE
-    #tuples_list_1 = tuples_list_1[:100]
+    tuples_list_1 = tuples_list_1[:300]
 
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps', 'int_goals',
@@ -119,8 +119,9 @@ def assign_ids():
     # Add new successful joins to master
     assigned = pd.concat([assigned, missing[missing['code'].notnull()]])
 
-    # Change Traore's for Wolves
+    # Change duplicate matched players
     assigned.loc[assigned['first_name'].str[:] == 'Adama', 'code'] = '159533'
+    assigned.loc[assigned['second_name'].str[:] == 'Santos Carneiro Da Cunha', 'code'] = '430871'
 
     ################ Load data to staging table
 
@@ -215,7 +216,7 @@ def bios():
     cursor_2 = pg_conn_2.cursor()
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int," \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
                        "dob date, age int, height int," \
