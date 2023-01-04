@@ -222,7 +222,7 @@ def bios():
     sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
                        "dob date, age int, height int," \
@@ -347,12 +347,12 @@ start_task = PythonOperator(
     dag = dag
 )
 
-# 2. Assign ID's
-assign_ids_task = PythonOperator(
-    task_id = "assign_ids_task",
-    python_callable = assign_ids,
-    dag = dag
-)
+# # 2. Assign ID's
+# assign_ids_task = PythonOperator(
+#     task_id = "assign_ids_task",
+#     python_callable = assign_ids,
+#     dag = dag
+# )
 
 # 3. Bios Table
 bios_task = PythonOperator(
@@ -376,5 +376,5 @@ end_task = PythonOperator(
 )
 
 # ----------------------------- Trigger Tasks -----------------------------
-start_task >> assign_ids_task >> bios_task >> create_injuries_task >> end_task
-
+#start_task >> assign_ids_task >> bios_task >> create_injuries_task >> end_task
+start_task >> bios_task >> create_injuries_task >> end_task
