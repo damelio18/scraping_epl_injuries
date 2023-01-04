@@ -292,7 +292,7 @@ def injuries():
     cursor_2 = pg_conn_2.cursor()
 
     # # SQL Statement: Drop old table
-    # sql_drop_table = "DROP TABLE IF EXISTS store_historical_injuries"
+    sql_drop_table = "DROP TABLE IF EXISTS store_historical_injuries"
 
     # SQL Statement: Create new table
     sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (" \
@@ -301,12 +301,12 @@ def injuries():
                        "date_until_day int, date_until_mon int, date_until_year int," \
                        "date_until date, days_injured int, games_missed int, injury_id SERIAL NOT NULL PRIMARY KEY);"
 
-    sql_truncate_table = "TRUNCATE TABLE store_player_bios"
+    #sql_truncate_table = "TRUNCATE TABLE store_player_bios"
 
     # Drop and create table
-    #cursor_2.execute(sql_drop_table)
+    cursor_2.execute(sql_drop_table)
     cursor_2.execute(sql_create_table)
-    cursor_2.execute(sql_truncate_table)
+    #cursor_2.execute(sql_truncate_table)
     pg_conn_2.commit()
 
     # Create a list of tuples representing the rows in the dataframe
