@@ -203,7 +203,7 @@ def bios():
     df = df.drop(['games_missed', 'games_missed_per_season'], axis=1)
 
     # Change columns to numeric type
-    change_type = ['code','dob_day','dob_mon','dob_year','height','int_caps','int_goals']
+    change_type = ['code','dob_day','dob_mon','dob_year','height','int_caps','int_goals','injury_risk']
     df[change_type] = df[change_type].apply(pd.to_numeric)
 
     ################ Load data to dw_injuries
