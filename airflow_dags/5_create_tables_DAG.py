@@ -222,7 +222,7 @@ def bios():
     cursor_2 = pg_conn_2.cursor()
 
     # SQL Statement: Drop old table
-    sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
+    #sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
 
     # SQL Statement: Create new table
     sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
@@ -231,12 +231,12 @@ def bios():
                        "dob date, age int, height int," \
                        "nationality VARCHAR(255), int_caps int, int_goals int, injury_risk int);"
 
-    #sql_truncate_table = "TRUNCATE TABLE store_player_bios"
+    sql_truncate_table = "TRUNCATE TABLE store_player_bios"
 
     # Drop and create table
-    cursor_2.execute(sql_drop_table)
+    #cursor_2.execute(sql_drop_table)
     cursor_2.execute(sql_create_table)
-    #cursor_2.execute(sql_truncate_table)
+    cursor_2.execute(sql_truncate_table)
     pg_conn_2.commit()
 
     # Create a list of tuples representing the rows in the dataframe
@@ -364,12 +364,12 @@ bios_task = PythonOperator(
     dag = dag
 )
 
-# 4. Historical Injuries Table
-create_injuries_task = PythonOperator(
-    task_id = "create_injuries_task",
-    python_callable = injuries,
-    dag = dag
-)
+# # 4. Historical Injuries Table
+# create_injuries_task = PythonOperator(
+#     task_id = "create_injuries_task",
+#     python_callable = injuries,
+#     dag = dag
+# )
 
 # 5. End Task
 end_task = PythonOperator(
@@ -380,4 +380,4 @@ end_task = PythonOperator(
 
 # ----------------------------- Trigger Tasks -----------------------------
 #start_task >> assign_ids_task >> bios_task >> create_injuries_task >> end_task
-start_task >> bios_task >> create_injuries_task >> end_task
+start_task >> bios_task >> end_task
