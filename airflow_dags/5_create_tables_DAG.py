@@ -228,7 +228,7 @@ def bios():
 
     # Drop and create table
     cursor_2.execute(sql_create_table)
-    cursor_2.execute(sql_truncate_table)
+    #cursor_2.execute(sql_truncate_table)
     pg_conn_2.commit()
 
     # Create a list of tuples representing the rows in the dataframe
