@@ -193,7 +193,7 @@ def bios():
 
     # Sum games missed for each player in their career
     column_names = column_names[:-1]
-    df = df.groupby(column_names, as_index=True)["games_missed"].sum()
+    df = df.groupby(column_names, as_index=False)["games_missed"].sum()
 
     rows = [tuple(x) for x in df.values]
     print(rows)
