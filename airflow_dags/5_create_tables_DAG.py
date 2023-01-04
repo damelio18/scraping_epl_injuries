@@ -173,8 +173,6 @@ def bios():
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
-    print(tuples_list)
-
     # Create DataFrame
     column_names = ['code', 'first_name', 'second_name', 'team',
                     'dob_day', 'dob_mon','dob_year', 'dob', 'age', 'height',
@@ -196,6 +194,9 @@ def bios():
     # Sum games missed for each player in their career
     column_names = column_names[:-1]
     df = df.groupby(column_names, as_index=False)["games_missed"].sum()
+
+    rows = [tuple(x) for x in df.values]
+    print(rows)
 
     # Calculate games missed per season
     df['games_missed_per_season'] = round(df['games_missed'] / (df['age'] - 18), 0)
@@ -244,7 +245,6 @@ def bios():
 
     # Insert the rows into the database
     pg_hook_2.insert_rows(table="store_player_bios", rows=rows)
-    print(rows)
 
 
 # 4. Create historical injuries table
