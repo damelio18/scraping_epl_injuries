@@ -198,8 +198,8 @@ def bios():
     df['games_missed_per_season'] = round(df['games_missed'] / (df['age'] - 18), 0)
 
     # Create percentiles for injury risk
-    #df['injury_risk'] = round(df.games_missed_per_season.rank(pct=True) * 10)
-    df['injury_risk'] = pd.cut(df.games_missed_per_season, bins=11, labels=False).astype('string')
+    df['injury_risk'] = round(df.games_missed_per_season.rank(pct=True) * 10).astype('string')
+    #df['injury_risk'] = pd.cut(df.games_missed_per_season, bins=11, labels=False).astype('string')
     df['injury_risk'] = df['injury_risk'].str.rsplit('.', 1).str.get(0)
     df.loc[df['code'] == "487117.0", "injury_risk"] = '0'
 
