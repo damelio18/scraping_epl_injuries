@@ -198,7 +198,7 @@ def bios():
     df['games_missed_per_season'] = round(df['games_missed'] / (df['age'] - 18), 0)
 
     # Create percentiles for injury risk
-    df['injury_risk'] = round(df.games_missed_per_season.rank(pct=True) * 10,0)
+    df['injury_risk'] = round(df.games_missed_per_season.rank(pct=True) * 10)
 
     # Drop unwanted columns
     df = df.drop(['games_missed', 'games_missed_per_season'], axis=1)
@@ -226,7 +226,7 @@ def bios():
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
                        "dob date, age int, height int," \
-                       "nationality VARCHAR(255), int_caps int, int_goals int, injury_risk int);"
+                       "nationality VARCHAR(255), int_caps int, int_goals int, injury_risk bigint);"
 
     #sql_truncate_table = "TRUNCATE TABLE store_player_bios"
 
