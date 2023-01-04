@@ -41,7 +41,7 @@ def assign_ids():
     tuples_list_1 = cursor_1.fetchall()
 
     #REMOVE
-    tuples_list_1 = tuples_list_1[:10]
+    tuples_list_1 = tuples_list_1[:30]
 
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps', 'int_goals',
@@ -182,22 +182,17 @@ def bios():
 
     ################ Create injury KPI
 
-    # Change columns to numeric type
+    # Deal with missing values
     df['games_missed'] = df['games_missed'].replace(['NaN'], 0.0)
     df = df.fillna("")
 
+    # Change columns to numeric type
     change_type = ['age', 'games_missed']
     df[change_type] = df[change_type].apply(pd.to_numeric)
-
-    rows = [tuple(x) for x in df.values]
-    print(rows)
 
     # Sum games missed for each player in their career
     column_names = column_names[:-1]
     df = df.groupby(column_names, as_index=False)["games_missed"].sum()
-
-    rows = [tuple(x) for x in df.values]
-    print(rows)
 
     # Calculate games missed per season
     df['games_missed_per_season'] = round(df['games_missed'] / (df['age'] - 18), 0)
