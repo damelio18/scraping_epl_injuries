@@ -311,7 +311,7 @@ def injuries():
                        "date_until_day int, date_until_mon int, date_until_year int," \
                        "date_until date, days_injured int, games_missed int, injury_id SERIAL NOT NULL PRIMARY KEY);"
 
-    sql_truncate_table = "TRUNCATE TABLE store_player_bios"
+    sql_truncate_table = "TRUNCATE TABLE store_historical_injuries"
 
     # Drop and create table
     #cursor_2.execute(sql_drop_table)
@@ -350,12 +350,12 @@ start_task = PythonOperator(
     dag = dag
 )
 
-# # 2. Assign ID's
-# assign_ids_task = PythonOperator(
-#     task_id = "assign_ids_task",
-#     python_callable = assign_ids,
-#     dag = dag
-# )
+# 2. Assign ID's
+assign_ids_task = PythonOperator(
+    task_id = "assign_ids_task",
+    python_callable = assign_ids,
+    dag = dag
+)
 
 # 3. Bios Table
 bios_task = PythonOperator(
@@ -379,5 +379,5 @@ end_task = PythonOperator(
 )
 
 # ----------------------------- Trigger Tasks -----------------------------
-#start_task >> assign_ids_task >> bios_task >> create_injuries_task >> end_task
-start_task >> bios_task >> create_injuries_task >> end_task
+start_task >> assign_ids_task >> bios_task >> create_injuries_task >> end_task
+
