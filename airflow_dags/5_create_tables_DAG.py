@@ -54,7 +54,7 @@ def assign_ids():
 
     # Data warehouse: fpl
     pg_hook_2 = PostgresHook(
-        postgres_conn_id = 'dw_fpl',
+        postgres_conn_id = 'fantasypl',
         schema='fantasypl'
     )
     # Connect to data warehouse: fpl
@@ -63,7 +63,7 @@ def assign_ids():
 
     # SQL Statement: Get data
     sql_statement_get_data = "SELECT first_name, second_name, web_name, " \
-                             "team, code FROM elements;"
+                             "team, code FROM gameweeks;"
 
     # Fetch data
     cursor_2.execute(sql_statement_get_data)
