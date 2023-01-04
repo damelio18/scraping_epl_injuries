@@ -194,6 +194,9 @@ def bios():
     column_names = column_names[:-1]
     df = df.groupby(column_names, as_index=False)["games_missed"].sum()
 
+    rows = [tuple(x) for x in df.values]
+    print(rows)
+
     # Calculate games missed per season
     df['games_missed_per_season'] = round(df['games_missed'] / (df['age'] - 18), 0)
 
