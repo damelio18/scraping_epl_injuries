@@ -238,6 +238,7 @@ def bios():
 
     # Insert the rows into the database
     pg_hook_2.insert_rows(table="store_player_bios", rows=rows)
+    print(rows)
 
 
 # 4. Create historical injuries table
