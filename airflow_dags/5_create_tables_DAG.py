@@ -40,6 +40,9 @@ def assign_ids():
     cursor_1.execute(sql_statement_get_data)
     tuples_list_1 = cursor_1.fetchall()
 
+    #REMOVE
+    tuples_list_1 = tuples_list_1[:20]
+
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps', 'int_goals',
                     'team', 'season', 'injury', 'date_from','date_until',
