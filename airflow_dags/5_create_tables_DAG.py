@@ -183,8 +183,9 @@ def bios():
     ################ Create injury KPI
 
     # Change columns to numeric type
-    #df['games_missed'] = df['games_missed'].replace(['NaN'], 0.0)
-    #df = df.replace(['NaN'], np.nan)
+    df['games_missed'] = df['games_missed'].replace(['NaN'], 0.0)
+    df = df.fillna("")
+
     change_type = ['age', 'games_missed']
     df[change_type] = df[change_type].apply(pd.to_numeric)
 
