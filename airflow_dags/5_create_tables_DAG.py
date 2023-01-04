@@ -198,7 +198,7 @@ def bios():
     df['games_missed_per_season'] = round(df['games_missed'] / (df['age'] - 18), 0)
 
     # Create percentiles for injury risk
-    df['injury_risk'] = round(df.games_missed_per_season.rank(pct=True) * 10)
+    df['injury_risk'] = round(df.games_missed_per_season.rank(pct=True) * 10,0)
 
     # Drop unwanted columns
     df = df.drop(['games_missed', 'games_missed_per_season'], axis=1)
