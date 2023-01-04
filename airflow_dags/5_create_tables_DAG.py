@@ -198,7 +198,10 @@ def bios():
     df['games_missed_per_season'] = round(df['games_missed'] / (df['age'] - 18), 0)
 
     # Create percentiles for injury risk
-    df['injury_risk'] = round(df.games_missed_per_season.rank(pct=True) * 10)
+    #df['injury_risk'] = round(df.games_missed_per_season.rank(pct=True) * 10)
+    df['injury_risk'] = pd.cut(df.games_missed_per_season, bins=11, labels=False).astype('string')
+    df['injury_risk'] = df['injury_risk'].str.rsplit('.', 1).str.get(0)
+    df.loc[df['code'] == "487117.0", "injury_risk"] = '0'
 
     # Drop unwanted columns
     df = df.drop(['games_missed', 'games_missed_per_season'], axis=1)
@@ -222,11 +225,11 @@ def bios():
     sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int," \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
                        "dob date, age int, height int," \
-                       "nationality VARCHAR(255), int_caps int, int_goals int, injury_risk bigint);"
+                       "nationality VARCHAR(255), int_caps int, int_goals int, injury_risk int);"
 
     #sql_truncate_table = "TRUNCATE TABLE store_player_bios"
 
