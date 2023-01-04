@@ -74,6 +74,9 @@ def assign_ids():
 
     df2 = pd.DataFrame(tuples_list_2, columns = column_names)
 
+    # Remove duplicate rows
+    df2 = df2.drop_duplicates()
+
     ################ Join datasets
 
     # Join 1 - based on first and second name
