@@ -215,7 +215,7 @@ def bios():
     cursor_2 = pg_conn_2.cursor()
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
                        "dob date, age int, height int," \
@@ -233,8 +233,6 @@ def bios():
 
     # Insert the rows into the database
     pg_hook_2.insert_rows(table="store_player_bios", rows=rows)
-
-    print(rows)
 
 
 # 4. Create historical injuries table
