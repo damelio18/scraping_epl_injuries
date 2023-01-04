@@ -40,9 +40,6 @@ def assign_ids():
     cursor_1.execute(sql_statement_get_data)
     tuples_list_1 = cursor_1.fetchall()
 
-    #REMOVE
-    #tuples_list_1 = tuples_list_1[:400]
-
     # Create DataFrame
     column_names = ['dob', 'height', 'nationality', 'int_caps', 'int_goals',
                     'team', 'season', 'injury', 'date_from','date_until',
@@ -199,7 +196,6 @@ def bios():
 
     # Create percentiles for injury risk
     df['injury_risk'] = round(df.games_missed_per_season.rank(pct=True) * 10).astype('string')
-    #df['injury_risk'] = pd.cut(df.games_missed_per_season, bins=11, labels=False).astype('string')
     df['injury_risk'] = df['injury_risk'].str.rsplit('.', 1).str.get(0)
     df.loc[df['code'] == "487117.0", "injury_risk"] = '0'
 
@@ -221,9 +217,6 @@ def bios():
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-    # SQL Statement: Drop old table
-    #sql_drop_table = "DROP TABLE IF EXISTS store_player_bios"
-
     # SQL Statement: Create new table
     sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
@@ -234,7 +227,6 @@ def bios():
     sql_truncate_table = "TRUNCATE TABLE store_player_bios"
 
     # Drop and create table
-    #cursor_2.execute(sql_drop_table)
     cursor_2.execute(sql_create_table)
     cursor_2.execute(sql_truncate_table)
     pg_conn_2.commit()
@@ -301,9 +293,6 @@ def injuries():
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-    # SQL Statement: Drop old table
-    #sql_drop_table = "DROP TABLE IF EXISTS store_historical_injuries"
-
     # SQL Statement: Create new table
     sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (" \
                        "code int , season VARCHAR(255), injury VARCHAR(255), date_from_day int," \
@@ -314,7 +303,6 @@ def injuries():
     sql_truncate_table = "TRUNCATE TABLE store_historical_injuries"
 
     # Drop and create table
-    #cursor_2.execute(sql_drop_table)
     cursor_2.execute(sql_create_table)
     cursor_2.execute(sql_truncate_table)
     pg_conn_2.commit()
