@@ -228,7 +228,7 @@ def bios():
 
     # Drop and create table
     cursor_2.execute(sql_create_table)
-    #cursor_2.execute(sql_truncate_table)
+    cursor_2.execute(sql_truncate_table)
     pg_conn_2.commit()
 
     # Create a list of tuples representing the rows in the dataframe
@@ -236,6 +236,8 @@ def bios():
 
     # Insert the rows into the database
     pg_hook_2.insert_rows(table="store_player_bios", rows=rows)
+
+    print(rows)
 
 
 # 4. Create historical injuries table
