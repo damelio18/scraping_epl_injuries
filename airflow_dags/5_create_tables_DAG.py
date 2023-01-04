@@ -178,6 +178,7 @@ def bios():
                     'nationality', 'int_caps','int_goals','games_missed']
 
     df = pd.DataFrame(tuples_list, columns = column_names)
+    print("WORKINGGGGGG")
 
     ################ Create injury KPI
 
@@ -186,6 +187,7 @@ def bios():
     change_type = ['age', 'games_missed']
     df[change_type] = df[change_type].apply(pd.to_numeric)
 
+    print("NOTWORKINGGGGGG")
     # Sum games missed for each player in their career
     column_names = column_names[:-1]
     df = df.groupby(column_names, as_index=False)["games_missed"].sum()
