@@ -176,11 +176,31 @@ def join_data():
     # Drop unwanted columns
     df.drop(['fixture', 'opponent_team', 'was_home', 'kickoff_time'], axis=1, inplace=True)
 
+    ################ Push through xcoms
+    # Column_names
+    df_cols = []
+    column_names = [desc[0] for desc in cursor_2.description]
+    for i in column_names:
+        df_cols.append(i)
+
     # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in df.values]
-    print(len(rows))
-    print(rows[:2])
 
+    return df_cols, rows
+
+
+# 3. Creare star schema
+def create_schema(ti):
+    # get data returned from 'scrape_team_urls_task'
+    data = ti.xcom_pull(task_ids = ['join_data_task'])
+    if not data:
+        raise ValueError('No value currently stored in XComs')
+
+    # Separate team name and team url
+    df_cols = data[0][0]
+    df_data = data[0][1]
+
+    print(df_cols)
 
 # .... Log the end of the DAG
 def finish_DAG():
@@ -211,6 +231,14 @@ start_task = PythonOperator(
 join_data_task = PythonOperator(
     task_id = "join_data_task",
     python_callable = join_data,
+    do_xcom_push = True,
+    dag = dag
+)
+
+# 3. Create schema
+create_schema_task = PythonOperator(
+    task_id = "create_schema_task",
+    python_callable = create_schema,
     dag = dag
 )
 
@@ -222,4 +250,4 @@ end_task = PythonOperator(
 )
 
 # ----------------------------- Trigger Tasks -----------------------------
-start_task >> join_data_task >> end_task
+start_task >> join_data_task >> create_schema_task >> end_task
