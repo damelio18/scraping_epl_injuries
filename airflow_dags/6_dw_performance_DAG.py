@@ -399,9 +399,9 @@ default_args = {
     'start_date': datetime.datetime(2022,12,2)
 }
 
-# Schedule for 8am daily
+# Schedule for 05:00 daily
 dag = DAG('6_dw_performance_DAG',
-          schedule_interval = '0 06 * * *',
+          schedule_interval = '0 05 * * *',
           catchup = False,
           default_args = default_args)
 
