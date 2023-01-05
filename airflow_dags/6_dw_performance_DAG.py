@@ -23,20 +23,22 @@ def join_data():
 
     ################ Get bios data from DW
 
-    # Data warehouse: injuries
+    # Data warehouse credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='dw_injuries',
         schema='dw_injuries'
     )
-    # Connect to data warehouse: injuries
+    # Connect to data warehouse
     pg_conn_1 = pg_hook_1.get_conn()
     cursor_1 = pg_conn_1.cursor()
 
-    # SQL Statement: Get data
+    # SQL Statement
     sql_statement_get_data = "SELECT * FROM store_player_bios;"
 
-    # Fetch data
+    # Execute SQL Statement
     cursor_1.execute(sql_statement_get_data)
+
+    # Fetch data
     tuples_list_1 = cursor_1.fetchall()
 
     # Create DataFrame
@@ -48,23 +50,25 @@ def join_data():
 
     ################ Get fpl data from DW
 
-    # Data warehouse: fpl
+    # Data warehouse credentials
     pg_hook_2 = PostgresHook(
         postgres_conn_id='fantasypl',
         schema='fantasypl'
     )
-    # Connect to data warehouse: fpl
+    # Connect to data warehouse
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-    # SQL Statement: Get data
+    # SQL Statement
     sql_statement_get_data = "SELECT * FROM store_gameweeks;"
 
-    # Fetch data
+    # Execute SQL Statement
     cursor_2.execute(sql_statement_get_data)
+
+    # Fetch data
     tuples_list_2 = cursor_2.fetchall()
 
-    # Column_names
+    # Create DataFrame
     df_cols = []
     column_names = [desc[0] for desc in cursor_2.description]
     for i in column_names:
@@ -74,20 +78,22 @@ def join_data():
 
     ################ Get current values data from DL
 
-    # Data lake: fpl
+    # Data lake credentials
     pg_hook_3 = PostgresHook(
         postgres_conn_id='dl_fpl',
         schema='fpl_api'
     )
-    # Connect to data lake: fpl
+    # Connect to data lake
     pg_conn_3 = pg_hook_3.get_conn()
     cursor_3 = pg_conn_3.cursor()
 
-    # SQL Statement: Get data
+    # SQL Statement
     sql_statement_get_data = "SELECT code, now_cost FROM elements;"
 
-    # Fetch data
+    # Execute SQL Statement
     cursor_3.execute(sql_statement_get_data)
+
+    # Fetch data
     tuples_list_3 = cursor_3.fetchall()
 
     # Create DataFrame
@@ -328,7 +334,7 @@ def create_dims(ti):
 
 # 4. Create fct_table
 def create_fct(ti):
-    # get data returned from 'scrape_team_urls_task'
+    # Get data
     data = ti.xcom_pull(task_ids = ['create_dims_task'])
     if not data:
         raise ValueError('No value currently stored in XComs')
@@ -342,12 +348,12 @@ def create_fct(ti):
 
     ################ Connect to dw_performance
 
-    # Data warehouse: injuries
+    # Data warehouse credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='dw_performance',
         schema='dw_performance'
     )
-    # Connect to data warehouse: injuries
+    # Connect to data warehouse
     pg_conn_1 = pg_hook_1.get_conn()
     cursor_1 = pg_conn_1.cursor()
 
@@ -382,7 +388,7 @@ def create_fct(ti):
                       "ADD CONSTRAINT team_id_fk FOREIGN KEY (team_id) REFERENCES dim_teams (team_id)," \
                       "ADD CONSTRAINT fixture_id_fk FOREIGN KEY (fixture_id) REFERENCES dim_fixtures (fixture_id);"
 
-    # Create, truncate and alter table
+    # Execute SQL Statements
     cursor_1.execute(sql_create_table)
     cursor_1.execute(sql_truncate_table)
     cursor_1.execute(sql_alter_table)
