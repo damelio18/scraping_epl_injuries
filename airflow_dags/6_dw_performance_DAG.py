@@ -183,7 +183,6 @@ def join_data():
     df_cols = df.columns.tolist()
 
     # Create a list of tuples representing the rows in the dataframe
-    #rows = [tuple(x) for x in df.values]
     rows = df.values.tolist()
 
     return df_cols, rows
@@ -384,7 +383,6 @@ def create_fct(ti):
 
     # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in performance.values]
-    rows = rows[:10]
 
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="fct_performance", rows=rows)
