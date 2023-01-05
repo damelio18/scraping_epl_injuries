@@ -185,8 +185,11 @@ def join_data():
 
     # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in df.values]
+    rows = [rows]
+    print("--------")
+    print(rows[:3])
 
-    #return df_cols, rows
+    return df_cols, rows
 
 
 # 3. Creare star schema
