@@ -191,7 +191,7 @@ def join_data():
     print("--------")
     print(rows[:3])
 
-    return df_cols
+    return df_cols, rows
 
 
 # 3. Creare star schema
