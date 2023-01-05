@@ -215,11 +215,10 @@ def create_dims(ti):
     cursor_1 = pg_conn_1.cursor()
 
     #SQL Statement:
-    sql_alter_table = "ALTER TABLE fct_performance" \
-                      "DROP CONSTRAINT date_id_fk," \
+    sql_alter_table = "ALTER TABLE fct_performance DROP CONSTRAINT date_id_fk," \
                       "DROP CONSTRAINT player_id_fk," \
                       "DROP CONSTRAINT team_id_fk," \
-                      "DROP CONSTRAINT fixture_id_fk,;"
+                      "DROP CONSTRAINT fixture_id_fk;"
 
     # Alter table
     cursor_1.execute(sql_alter_table)
