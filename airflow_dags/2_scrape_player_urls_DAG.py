@@ -47,7 +47,7 @@ def team_urls():
 
 # 3. Start the scraping
 def player_urls(ti):
-    # get data returned from 'get_team_urls_task'
+    # Get data
     team_urls_xcom = ti.xcom_pull(task_ids = ['get_team_urls_task'])
     if not team_urls_xcom:
         raise ValueError('No value currently stored in XComs')
@@ -91,13 +91,11 @@ def player_urls(ti):
 
     print("Scraping Completed: " + str(len(player_url)) + " Player URLs obtained")
 
-
-    #print(team_urls_xcom)
     return player_name, player_url
 
 # 4. Load scraping data to the data lake
 def load(ti):
-    # get data returned from 'scrape_player_urls_task'
+    # Get data
     data = ti.xcom_pull(task_ids=['scrape_player_urls_task'])
     if not data:
         raise ValueError('No value currently stored in XComs')
@@ -112,7 +110,7 @@ def load(ti):
         schema='datalake1'
     )
 
-    # SQL statements: Drop, create and insert into table
+    # SQL statements
     sql_drop_table = "DROP TABLE player_URLs;"
     sql_create_table = "CREATE TABLE IF NOT EXISTS player_urls (player_url_id SERIAL NOT NULL, " \
                        "player_name VARCHAR(255), player_url VARCHAR(255), " \
@@ -146,9 +144,9 @@ default_args = {
     'start_date': datetime.datetime(2022,12,2)
 }
 
-# Schedule for 5am daily
+# Schedule for 03:05 daily
 dag = DAG('2_scrape_player_urls_DAG',
-          schedule_interval = '05 04 * * *',
+          schedule_interval = '05 03 * * *',
           catchup = False,
           default_args = default_args)
 

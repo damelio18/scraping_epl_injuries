@@ -110,9 +110,9 @@ default_args = {
     'start_date': datetime.datetime(2022,11,20)
 }
 
-# Schedule for 4am every Monday
+# Schedule for 3am every Monday
 dag = DAG('1_scrape_team_urls_DAG',
-          schedule_interval = '0 04 * * 1',
+          schedule_interval = '0 03 * * 1',
           catchup = False,
           default_args = default_args)
 

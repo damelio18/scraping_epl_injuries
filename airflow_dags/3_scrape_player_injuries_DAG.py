@@ -49,7 +49,7 @@ def player_urls():
 
 # 3. Start the scraping
 def scrape_injuries(ti):
-    # get data returned from 'get_player_urls_task'
+    # Get data
     player_urls_xcom = ti.xcom_pull(task_ids = ['get_player_urls_task'])
     if not player_urls_xcom:
         raise ValueError('No value currently stored in XComs')
@@ -72,7 +72,8 @@ def scrape_injuries(ti):
     # Loop through each player url
     for url in player_urls_xcom:
 
-        # ----------------------------- Obtain html data -----------------------------
+        ################ Obtain data
+
         # Get content of url
         source = requests.get(url, headers=headers)
 
@@ -82,7 +83,8 @@ def scrape_injuries(ti):
         # Search for number of injury pages
         test_pages = soup.find_all('ul', attrs={'class': "tm-pagination"})
 
-        # ----------------------------- Scrape players with x1 injury page -----------------------------
+        ################ Scrape players with x1 injury page
+
         # If player has one injury page
         if len(test_pages) == 0:
 
@@ -101,7 +103,7 @@ def scrape_injuries(ti):
             # Extend table data with previous players in the loop
             stats1.extend(dataframe_stats_1)
 
-        # ----------------------------- Scrape players with multiple injury pages -----------------------------
+        ################ Scrape players with multiple injury pages
 
         # If player has multiple injury pages
         else:
@@ -154,7 +156,7 @@ def scrape_injuries(ti):
 
 # 4. Load scraping data to the data lake
 def load(ti):
-    # get data returned from 'scrape_player_injuries_task'
+    # Get data
     data = ti.xcom_pull(task_ids=['scrape_player_injuries_task'])
     if not data:
         raise ValueError('No value currently stored in XComs')
@@ -168,9 +170,8 @@ def load(ti):
         schema='datalake1'
     )
 
-    # SQL statements: Drop, create and insert into table
+    # SQL statements
     sql_drop_table = "DROP TABLE historical_injuries;"
-
     sql_create_table = "CREATE TABLE IF NOT EXISTS historical_injuries (injury_id SERIAL NOT NULL, " \
                        "transfermarkt_id VARCHAR(255), player VARCHAR(255), dob VARCHAR(255), " \
                        "height VARCHAR(255), nationality VARCHAR(255), int_caps VARCHAR(255)," \
@@ -178,7 +179,6 @@ def load(ti):
                        "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
                        "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255), " \
                        "upload_time timestamp DEFAULT CURRENT_TIMESTAMP);"
-
     sql_add_data_to_table = """INSERT INTO historical_injuries (transfermarkt_id, player, dob, height, nationality, \n
                                                         int_caps, int_goals, current_club, shirt_number, season, \n
                                                         injury, date_from, date_until, days, games_missed) 
@@ -207,9 +207,9 @@ default_args = {
     'start_date': datetime.datetime(2022,12,2)
 }
 
-# Schedule for 6am daily
+# Schedule for 03:15 daily
 dag = DAG('3_scrape_player_injuries_DAG',
-          schedule_interval = '15 04 * * *',
+          schedule_interval = '15 03 * * *',
           catchup = False,
           default_args = default_args)
 

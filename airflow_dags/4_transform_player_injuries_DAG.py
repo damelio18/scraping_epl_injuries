@@ -20,6 +20,7 @@ from airflow.hooks.postgres_hook import PostgresHook
 def start_DAG():
     logging.info('STARTING THE DAG,OBTAINING EPL PLAYER INJURIES')
 
+
 # 2. Create staging table
 def stg_table():
     # Data lake credentials
@@ -31,40 +32,39 @@ def stg_table():
     pg_conn_1 = pg_hook_1.get_conn()
     cursor_1 = pg_conn_1.cursor()
 
-    # SQL Statement: Get data from data lake
+    # SQL Statement
     sql_statement_get_data = "SELECT player, dob, height, nationality, int_caps," \
                              "int_goals, current_club, season, injury, date_from," \
                              "date_until, days, games_missed FROM historical_injuries;"
 
-    # Fetch all data from table in data lake
+    # Fetch data
     cursor_1.execute(sql_statement_get_data)
     tuples_list = cursor_1.fetchall()
 
-    # Data warehouse: injuries credentials
+    # Data warehouse credentials
     pg_hook_2 = PostgresHook(
         postgres_conn_id='injuries',
         schema='injuries'
     )
-    # Connect to data warehouse: injuries
+    # Connect to data warehouse
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-    # SQL Statement: Drop staging table
+    # SQL Statements
     sql_statement_drop = "DROP TABLE IF EXISTS stg_historical_injuries"
-
-    # SQL Statement: Create staging table
     sql_statement_create_table = "CREATE TABLE IF NOT EXISTS stg_historical_injuries (player VARCHAR(255)," \
                                  "dob VARCHAR(255), height VARCHAR(255), nationality VARCHAR(255), " \
                                  "int_caps VARCHAR(255), int_goals VARCHAR(255), current_club VARCHAR(255)," \
                                  "season VARCHAR(255), injury VARCHAR(255),date_from VARCHAR(255), " \
                                  "date_until VARCHAR(255), days VARCHAR(255), games_missed VARCHAR(255));"
 
-    # Create and insert data into data warehouse staging table
+    # Execute SQL statements
     cursor_2.execute(sql_statement_drop)
     cursor_2.execute(sql_statement_create_table)
     for row in tuples_list:
         cursor_2.execute('INSERT INTO stg_historical_injuries VALUES %s', (row,))
     pg_conn_2.commit()
+
 
 # 3. Missing Values
 def missing_values():
@@ -77,13 +77,13 @@ def missing_values():
     dw_pg_conn = dw_pg_hook.get_conn()
     dw_cursor = dw_pg_conn.cursor()
 
-    # SQL Statement: Get data from staging data
+    # SQL Statement
     sql_statement = "SELECT * FROM stg_historical_injuries;"
 
     # Execute SQL statements
     dw_cursor.execute(sql_statement)
 
-    # Fetch all data from table
+    # Fetch data
     tuples_list = dw_cursor.fetchall()
 
     # Create DataFrame
@@ -99,10 +99,10 @@ def missing_values():
     df['games_missed'] = df['games_missed'].replace(['?', '-'], "0").astype('float')
     df[['int_caps', 'int_goals']] = df[['int_caps', 'int_goals']].fillna('0')
 
-    # SQL Statement: Truncate staging table
+    # SQL Statement
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
-    # Truncate staging table
+    # Execute SQL statement
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
 
@@ -111,6 +111,7 @@ def missing_values():
 
     # Insert the rows into the database
     dw_pg_hook.insert_rows(table="stg_historical_injuries", rows=rows)
+
 
 # 4. Player names
 def player_names():
@@ -123,13 +124,13 @@ def player_names():
     dw_pg_conn = dw_pg_hook.get_conn()
     dw_cursor = dw_pg_conn.cursor()
 
-    # SQL Statement: Get data from staging data
+    # SQL Statement
     sql_statement = "SELECT * FROM stg_historical_injuries;"
 
     # Execute SQL statements
     dw_cursor.execute(sql_statement)
 
-    # Fetch all data from table
+    # Fetch data
     tuples_list = dw_cursor.fetchall()
 
     # Create DataFrame
@@ -151,14 +152,12 @@ def player_names():
     # Drop player column
     df = df.drop(['player'], axis=1)
 
-    # SQL Statement: Alter staging table
+    # SQL Statements
     sql_alter = "ALTER TABLE stg_historical_injuries ADD first_name VARCHAR(255)," \
                   "ADD second_name VARCHAR(255), DROP COLUMN player;"
-
-    # SQL Statement: Truncate staging table
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
-    # Alter and truncate staging table
+    # Execute SQL statements
     dw_cursor.execute(sql_alter)
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
@@ -181,7 +180,7 @@ def date_columns():
     dw_pg_conn = dw_pg_hook.get_conn()
     dw_cursor = dw_pg_conn.cursor()
 
-    # SQL Statement: Get data from staging data
+    # SQL Statement
     sql_statement = "SELECT * FROM stg_historical_injuries;"
 
     # Execute SQL statements
@@ -220,17 +219,15 @@ def date_columns():
     # Replace NaT type with np.nan
     df = df.where(pd.notnull(df), None)
 
-    # SQL Statement: Alter staging table
+    # SQL Statement
     sql_alter = "ALTER TABLE stg_historical_injuries ADD dob_day VARCHAR(255)," \
                 "ADD dob_mon VARCHAR(255), ADD dob_year VARCHAR(255), ADD age VARCHAR(255)," \
                 "ADD date_from_day VARCHAR(255), ADD date_from_mon VARCHAR(255)," \
                 "ADD date_from_year VARCHAR(255), ADD date_until_day VARCHAR(255)," \
                 "ADD date_until_mon VARCHAR(255), ADD date_until_year VARCHAR(255)"
-
-    # SQL Statement: Truncate staging table
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
-    # Alter and truncate staging table
+    # Execute SQL statements
     dw_cursor.execute(sql_alter)
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
@@ -252,13 +249,13 @@ def current_club():
     dw_pg_conn = dw_pg_hook.get_conn()
     dw_cursor = dw_pg_conn.cursor()
 
-    # SQL Statement: Get data from staging data
+    # SQL Statement
     sql_statement = "SELECT * FROM stg_historical_injuries;"
 
     # Execute SQL statements
     dw_cursor.execute(sql_statement)
 
-    # Fetch all data from table
+    # Fetch data
     tuples_list = dw_cursor.fetchall()
 
     # Create DataFrame
@@ -288,10 +285,10 @@ def current_club():
     # Change names of clubs
     df['current_club'] = df['current_club'].map(club_dict)
 
-    # SQL Statement: Truncate staging table
+    # SQL Statement
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
-    # Truncate staging table
+    # Execute SQL statements
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
 
@@ -313,13 +310,13 @@ def seasons():
     dw_pg_conn = dw_pg_hook.get_conn()
     dw_cursor = dw_pg_conn.cursor()
 
-    # SQL Statement: Get data from staging data
+    # SQL Statement
     sql_statement = "SELECT * FROM stg_historical_injuries;"
 
     # Execute SQL statements
     dw_cursor.execute(sql_statement)
 
-    # Fetch all data from table
+    # Fetch data
     tuples_list = dw_cursor.fetchall()
 
     # Create DataFrame
@@ -345,10 +342,10 @@ def seasons():
     # Change names of seasons
     df['season'] = df['season'].map(season_dict)
 
-    # SQL Statement: Truncate staging table
+    # SQL Statement
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
-    # Truncate staging table
+    # Execute SQL statements
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
 
@@ -370,13 +367,13 @@ def days_injured():
     dw_pg_conn = dw_pg_hook.get_conn()
     dw_cursor = dw_pg_conn.cursor()
 
-    # SQL Statement: Get data from staging data
+    # SQL Statement
     sql_statement = "SELECT * FROM stg_historical_injuries;"
 
     # Execute SQL statements
     dw_cursor.execute(sql_statement)
 
-    # Fetch all data from table
+    # Fetch data
     tuples_list = dw_cursor.fetchall()
 
     # Create DataFrame
@@ -393,11 +390,11 @@ def days_injured():
     # Clean days injured
     df['days'] = df['days'].str.rstrip(' days').astype('float')
 
-    # SQL Statement: Alter and truncate staging table
+    # SQL Statement
     sql_alter = "ALTER TABLE stg_historical_injuries RENAME COLUMN days TO days_injured"
     sql_truncate_table = "TRUNCATE TABLE stg_historical_injuries"
 
-    # Alter and truncate staging table
+    # Execute SQL statements
     dw_cursor.execute(sql_alter)
     dw_cursor.execute(sql_truncate_table)
     dw_pg_conn.commit()
@@ -420,12 +417,12 @@ def store_table():
     dw_pg_conn = dw_pg_hook.get_conn()
     dw_cursor = dw_pg_conn.cursor()
 
-    # SQL Statement: Create and drop tables
+    # SQL Statements
     sql_drop_store = "DROP TABLE IF EXISTS store_clean_historical_injuries;"
     sql_store_table = "CREATE TABLE store_clean_historical_injuries AS TABLE stg_historical_injuries;"
     sql_drop_staging = "DROP TABLE stg_historical_injuries"
 
-    # Create and drop table
+    # Execute SQL statements
     dw_cursor.execute(sql_drop_store)
     dw_cursor.execute(sql_store_table)
     dw_cursor.execute(sql_drop_staging)
@@ -443,9 +440,9 @@ default_args = {
     'start_date': datetime.datetime(2022,12,2)
 }
 
-# Schedule for 7am daily
+# Schedule for 03:30 daily
 dag = DAG('4_transform_player_injuries_DAG',
-          schedule_interval = '30 04 * * *',
+          schedule_interval = '30 03 * * *',
           catchup = False,
           default_args = default_args)
 
