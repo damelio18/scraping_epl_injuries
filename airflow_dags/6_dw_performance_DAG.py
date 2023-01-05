@@ -21,7 +21,7 @@ def start_DAG():
 # 2. Join fpl and transfermarkt data
 def join_data():
 
-    ################ Get injuries data from DW
+    ################ Get bios data from DW
 
     # Data warehouse: injuries
     pg_hook_1 = PostgresHook(
@@ -46,9 +46,36 @@ def join_data():
 
     df1 = pd.DataFrame(tuples_list_1, columns = column_names)
 
-    print(tuples_list_1)
+    ################ Get fpl data from DW
 
+    # Data warehouse: fpl
+    pg_hook_2 = PostgresHook(
+        postgres_conn_id='fantasypl',
+        schema='fantasypl'
+    )
+    # Connect to data warehouse: fpl
+    pg_conn_2 = pg_hook_2.get_conn()
+    cursor_2 = pg_conn_2.cursor()
 
+    # SQL Statement: Get data
+    sql_statement_get_data = "SELECT * FROM store_gameweeks;"
+
+    # Fetch data
+    cursor_2.execute(sql_statement_get_data)
+    tuples_list_2 = cursor_2.fetchall()
+
+    # Column_names
+    df_cols = []
+    column_names = [desc[0] for desc in cursor_2.description]
+    for i in column_names:
+        df_cols.append(i)
+
+    # Create DataFrame
+    #column_names = ['first_name', 'second_name', 'web_name', 'team', 'code']
+
+    df2 = pd.DataFrame(tuples_list_2, columns=df_cols)
+
+    print(df_cols)
 
 # .... Log the end of the DAG
 def finish_DAG():
