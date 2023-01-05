@@ -227,11 +227,14 @@ def create_dims(ti):
 
     # Select columns
     players = df[['player_id', 'name', 'age', 'height', 'nationality',
-                  'int_caps', 'int_goals', 'injury_risk', 'position', 'current_value']]
+                  'int_caps', 'int_goals', 'injury_risk', 'position', 'now_cost']]
 
     # Drop unwanted columns
     df.drop(['name', 'age', 'height', 'nationality','int_caps', 'int_goals',
              'injury_risk', 'position', 'now_cost'], axis=1, inplace=True)
+
+    # Change name of column
+    players = players.rename(columns={"now_cost": "current_value"})
 
     # Drop duplicates
     players = players.drop_duplicates()
