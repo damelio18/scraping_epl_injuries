@@ -1,19 +1,19 @@
-# English Premier League Fantasy Premier LEague Project
+# English Premier League Fantasy Premier League Project
 
-#### Overview:
-The aim of this project is to create an interactive dashboard to assist players of Fantasy Premier League (FPL) to make informed decsions and increase their performance in the game.
+#### Objective:
+The aim of this project is to create an interactive dashboard to assist players of Fantasy Premier League (FPL) to make informed decsions and increase their performance in the game. The project will use an ETL data pipeline to automatically update the dashboard daily with the latest statistics for the EPL.
 
-The porject is being undertaken by three different students, each student has a different task:
+#### Tasks:
+The project is being undertaken by three different students, each student has a different task:
 
-Student 1 = Obtain FPL data from the FPL API avialable at 
-Student 2 = Scrape injury history for players currently playing in the English Premier League (EPL) from Transfermarkt.com
-Student 3 = Obtain all the latest injury updates for players playing in the EPL available at 
+- Student 1 = Obtain FPL data from the FPL API avialable at 
+- Student 2 = Scrape injury history for players currently playing in the English Premier League (EPL) from Transfermarkt.com
+- Student 3 = Obtain all the latest injury updates for players playing in the EPL available at 
 
-Create a data pipeline using Airflow that perform ETL jobs to extract data and put into a storage of your choice.
-
-
-
+#### Student 2 - Repository:
+This repository contains the scripts used for Student 2 in order to scrape the injury history data for EPL players from Transfermarkt.com. The programming language used is Python VERSION?, the data lake and data warehouse use Amazon RDS PostgreSQL databases, Apache Airflow is used as the scheduler to move the data through the pipeline and Tableau is used to make the dashboards which can be found at the following links:
 
 
-This repository provides scripts to scrape injury histories for EPL 
-football players from transfermarkt.com.
+
+
+
