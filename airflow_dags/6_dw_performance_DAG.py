@@ -303,8 +303,45 @@ def create_dims(ti):
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_fixtures", rows=rows)
 
+    ################ Push through xcoms
 
-# .... Log the end of the DAG
+    # Column_names
+    df_cols = df.columns.tolist()
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = df.values.tolist()
+
+    return df_cols, rows
+
+# 4. Create fct_table
+def create_fct(ti):
+    # get data returned from 'scrape_team_urls_task'
+    data = ti.xcom_pull(task_ids = ['create_dims_task'])
+    if not data:
+        raise ValueError('No value currently stored in XComs')
+
+    # Separate team name and team url
+    df_cols = data[0][0]
+    df_data = data[0][1]
+
+    # Create Data Frame
+    df = pd.DataFrame(df_data, columns=df_cols)
+
+    ################ Connect to dw_performance
+
+    # Data warehouse: injuries
+    pg_hook_1 = PostgresHook(
+        postgres_conn_id='dw_performance',
+        schema='dw_performance'
+    )
+    # Connect to data warehouse: injuries
+    pg_conn_1 = pg_hook_1.get_conn()
+    cursor_1 = pg_conn_1.cursor()
+
+    print(df_cols)
+
+
+# 5. Log the end of the DAG
 def finish_DAG():
     logging.info('DAG HAS FINISHED, LOADED TO DW')
 
@@ -317,7 +354,7 @@ default_args = {
 
 # Schedule for 8am daily
 dag = DAG('6_dw_performance_DAG',
-          schedule_interval = '0 08 * * *',
+          schedule_interval = '0 06 * * *',
           catchup = False,
           default_args = default_args)
 
@@ -341,13 +378,18 @@ join_data_task = PythonOperator(
 create_dims_task = PythonOperator(
     task_id = "create_dims_task",
     python_callable = create_dims,
+    do_xcom_push=True,
     dag = dag
 )
 
+# 4. Create fct_table
+create_fct_task = PythonOperator(
+    task_id = "create_fct_task",
+    python_callable = create_fct,
+    dag = dag
+)
 
-
-
-# .... End Task
+# 5. End Task
 end_task = PythonOperator(
     task_id = "end_task",
     python_callable = finish_DAG,
@@ -355,4 +397,4 @@ end_task = PythonOperator(
 )
 
 # ----------------------------- Trigger Tasks -----------------------------
-start_task >> join_data_task >> create_dims_task >> end_task
+start_task >> join_data_task >> create_dims_task >> create_fct_task >> end_task
