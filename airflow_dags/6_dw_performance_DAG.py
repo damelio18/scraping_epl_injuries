@@ -215,7 +215,7 @@ def create_dims(ti):
     cursor_1 = pg_conn_1.cursor()
 
     #SQL Statement:
-    sql_alter_table = "ALTER TABLE fct_performance DROP CONSTRAINT IF EXISTS date_id_fk," \
+    sql_alter_table = "ALTER TABLE IF EXISTS fct_performance DROP CONSTRAINT IF EXISTS date_id_fk," \
                       "DROP CONSTRAINT IF EXISTS player_id_fk," \
                       "DROP CONSTRAINT IF EXISTS team_id_fk," \
                       "DROP CONSTRAINT IF EXISTS fixture_id_fk;"
