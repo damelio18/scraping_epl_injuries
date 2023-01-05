@@ -184,8 +184,8 @@ def join_data():
         df_cols.append(i)
 
     # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in df.values]
-    rows = [rows]
+    #rows = [tuple(x) for x in df.values]
+    rows = df.values.tolist()
     print("--------")
     print(rows[:3])
 
