@@ -190,7 +190,7 @@ def join_data():
 
 
 # 3. Create star schema
-def create_schema(ti):
+def create_dims(ti):
     # get data returned from 'scrape_team_urls_task'
     data = ti.xcom_pull(task_ids = ['join_data_task'])
     if not data:
@@ -246,6 +246,36 @@ def create_schema(ti):
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_players", rows=rows)
 
+    ################ dim_teams
+
+    # Select columns
+    team = df[['team_id', 'team']]
+
+    # Drop unwanted columns
+    df.drop('team', axis=1, inplace=True)
+
+    # Drop duplicates
+    team = team.drop_duplicates()
+
+    # SQL Statement: Create new table
+    sql_create_table = "CREATE TABLE IF NOT EXISTS dim_teams (team_id int PRIMARY KEY, team VARCHAR(255)););"
+
+    sql_truncate_table = "TRUNCATE TABLE dim_teams;"
+
+    # Drop and create table
+    cursor_1.execute(sql_create_table)
+    cursor_1.execute(sql_truncate_table)
+    pg_conn_1.commit()
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in team.values]
+
+    # Insert the rows into the database
+    pg_hook_1.insert_rows(table="dim_teams", rows=rows)
+
+
+
+
 
 
 
@@ -282,12 +312,15 @@ join_data_task = PythonOperator(
     dag = dag
 )
 
-# 3. Create schema
-create_schema_task = PythonOperator(
-    task_id = "create_schema_task",
-    python_callable = create_schema,
+# 3. Create dim_players
+create_dims_task = PythonOperator(
+    task_id = "create_dims_task",
+    python_callable = create_dims,
     dag = dag
 )
+
+
+
 
 # .... End Task
 end_task = PythonOperator(
@@ -297,4 +330,4 @@ end_task = PythonOperator(
 )
 
 # ----------------------------- Trigger Tasks -----------------------------
-start_task >> join_data_task >> create_schema_task >> end_task
+start_task >> join_data_task >> create_dims >> end_task
