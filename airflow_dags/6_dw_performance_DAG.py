@@ -70,9 +70,6 @@ def join_data():
     for i in column_names:
         df_cols.append(i)
 
-    # Create DataFrame
-    #column_names = ['first_name', 'second_name', 'web_name', 'team', 'code']
-
     df2 = pd.DataFrame(tuples_list_2, columns=df_cols)
 
     ################ Get current values data from DL
@@ -97,6 +94,22 @@ def join_data():
     column_names = ['code', 'now_cost']
 
     df3 = pd.DataFrame(tuples_list_3, columns=column_names)
+
+    ################ Get current values data from DL
+
+    # Merge 1
+    df = pd.merge(df2, df1[['code', 'age', 'height', 'nationality', 'int_caps', 'int_goals', 'injury_risk']],
+                  on=['code'], how='left')
+
+    # Merge 2
+    df = pd.merge(df, df3[['code', 'now_cost']], on=['code'], how='left')
+
+    # Create performance_id
+    df.index = np.arange(1, len(df) + 1)
+    df.reset_index(inplace=True)
+    df = df.rename(columns={"index": "performance_id", "date": "date_id"})
+    print(df.columns)
+
 
 
 # .... Log the end of the DAG
