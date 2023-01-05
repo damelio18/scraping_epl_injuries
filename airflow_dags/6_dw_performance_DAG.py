@@ -345,6 +345,7 @@ def create_fct(ti):
                        'transfers_balance', 'selected', 'transfers_in', 'transfers_out']]
 
     # Change unit for value
+    performance['value'] = performance['value'].astype(int)
     performance['value'] = performance['value'] / 10
 
     # Change name of column
