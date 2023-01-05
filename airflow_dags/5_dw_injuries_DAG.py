@@ -24,20 +24,22 @@ def assign_ids():
 
     ################ Get injuries data from DW
 
-    # Data warehouse: injuries
+    # Data warehouse credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='injuries',
         schema='injuries'
     )
-    # Connect to data warehouse: injuries
+    # Connect to data warehouse
     pg_conn_1 = pg_hook_1.get_conn()
     cursor_1 = pg_conn_1.cursor()
 
-    # SQL Statement: Get data
+    # SQL Statement
     sql_statement_get_data = "SELECT * FROM store_clean_historical_injuries;"
 
-    # Fetch data
+    # Execute SQL statement
     cursor_1.execute(sql_statement_get_data)
+
+    # Fetch data
     tuples_list_1 = cursor_1.fetchall()
 
     # Create DataFrame
@@ -52,21 +54,23 @@ def assign_ids():
 
     ################ Get fpl data from DW
 
-    # Data warehouse: fpl
+    # Data warehouse credentials
     pg_hook_2 = PostgresHook(
         postgres_conn_id = 'fantasypl',
         schema='fantasypl'
     )
-    # Connect to data warehouse: fpl
+    # Connect to data warehouse
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-    # SQL Statement: Get data
+    # SQL Statement
     sql_statement_get_data = "SELECT first_name, second_name, web_name, " \
                              "team, code FROM store_gameweeks;"
 
-    # Fetch data
+    # Execute SQL statement
     cursor_2.execute(sql_statement_get_data)
+
+    # Fetch data
     tuples_list_2 = cursor_2.fetchall()
 
     # Create DataFrame
@@ -122,7 +126,7 @@ def assign_ids():
 
     ################ Load data to staging table
 
-    # SQL Statements: Drop and create staging table
+    # SQL Statements
     sql_drop_stage = "DROP TABLE IF EXISTS stage_clean_historical_injuries;"
     sql_statement_create_table = "CREATE TABLE IF NOT EXISTS stage_clean_historical_injuries (dob VARCHAR(255)," \
                                  "height VARCHAR(255), nationality VARCHAR(255), int_caps VARCHAR(255), " \
@@ -134,7 +138,7 @@ def assign_ids():
                                  "date_from_mon VARCHAR(255), date_from_year VARCHAR(255), date_until_day VARCHAR(255)," \
                                  "date_until_mon VARCHAR(255), date_until_year VARCHAR(255), code VARCHAR(255));"
 
-    # Drop and Create staging table
+    # Execute SQL statements
     cursor_1.execute(sql_drop_stage)
     cursor_1.execute(sql_statement_create_table)
     pg_conn_1.commit()
@@ -151,23 +155,25 @@ def bios():
 
     ################ Get data from staging table
 
-    # Data warehouse: injuries
+    # Data warehouse credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='injuries',
         schema='injuries'
     )
-    # Connect to data warehouse: injuries
+    # Connect to data warehouse
     pg_conn_1 = pg_hook_1.get_conn()
     cursor_1 = pg_conn_1.cursor()
 
-    # SQL Statement: Get data
+    # SQL Statement
     sql_statement_get_data = "SELECT code, first_name, second_name, " \
                              "team, dob_day, dob_mon, dob_year," \
                              "dob, age, height, nationality, int_caps, " \
                              "int_goals, games_missed FROM stage_clean_historical_injuries;"
 
-    # Fetch data
+    # Execute SQL statement
     cursor_1.execute(sql_statement_get_data)
+
+    # Fetch data
     tuples_list = cursor_1.fetchall()
 
     # Create DataFrame
@@ -217,16 +223,15 @@ def bios():
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-    # SQL Statement: Create new table
+    # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS store_player_bios (code int PRIMARY KEY," \
                        "first_name VARCHAR(255), second_name VARCHAR(255), current_club VARCHAR(255)," \
                        "dob_day int, dob_mon int, dob_year int," \
                        "dob date, age int, height int," \
                        "nationality VARCHAR(255), int_caps int, int_goals int, injury_risk int);"
-
     sql_truncate_table = "TRUNCATE TABLE store_player_bios"
 
-    # Drop and create table
+    # Execute SQL statements
     cursor_2.execute(sql_create_table)
     cursor_2.execute(sql_truncate_table)
     pg_conn_2.commit()
@@ -243,24 +248,26 @@ def injuries():
 
     ################ Get data from staging table
 
-    # Data warehouse: injuries credentials
+    # Data warehouse credentials
     pg_hook_1 = PostgresHook(
         postgres_conn_id='injuries',
         schema='injuries'
     )
-    # Connect to data warehouse: injuries
+    # Connect to data warehouse
     pg_conn_1 = pg_hook_1.get_conn()
     cursor_1 = pg_conn_1.cursor()
 
-    # SQL Statement: Get data data warehouse: injuries
+    # SQL Statement
     sql_statement_get_data = "SELECT code, season, injury, date_from_day," \
                              "date_from_mon, date_from_year, date_from, " \
                              "date_until_day, date_until_mon, date_until_year," \
                              "date_until, days_injured, games_missed " \
                              "FROM stage_clean_historical_injuries;"
 
-    # Fetch data from table in data warehouse: injuries
+    # Execute SQL statement
     cursor_1.execute(sql_statement_get_data)
+
+    # Fetch data
     tuples_list = cursor_1.fetchall()
 
     # Create DataFrame
@@ -293,16 +300,15 @@ def injuries():
     pg_conn_2 = pg_hook_2.get_conn()
     cursor_2 = pg_conn_2.cursor()
 
-    # SQL Statement: Create new table
+    # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS store_historical_injuries (" \
                        "code int , season VARCHAR(255), injury VARCHAR(255), date_from_day int," \
                        "date_from_mon int, date_from_year int, date_from date," \
                        "date_until_day int, date_until_mon int, date_until_year int," \
                        "date_until date, days_injured int, games_missed int, injury_id SERIAL NOT NULL PRIMARY KEY);"
-
     sql_truncate_table = "TRUNCATE TABLE store_historical_injuries"
 
-    # Drop and create table
+    # Execute SQL statement
     cursor_2.execute(sql_create_table)
     cursor_2.execute(sql_truncate_table)
     pg_conn_2.commit()
@@ -324,9 +330,9 @@ default_args = {
     'start_date': datetime.datetime(2022,12,2)
 }
 
-# Schedule for 8am daily
+# Schedule for 04:30 daily
 dag = DAG('5_dw_injuries_DAG',
-          schedule_interval = '30 05 * * *',
+          schedule_interval = '30 04 * * *',
           catchup = False,
           default_args = default_args)
 
