@@ -189,7 +189,7 @@ def join_data():
     return df_cols, rows
 
 
-# 3. Create star schema
+# 3. Create dim_tables
 def create_dims(ti):
     # get data returned from 'scrape_team_urls_task'
     data = ti.xcom_pull(task_ids = ['join_data_task'])
@@ -258,7 +258,7 @@ def create_dims(ti):
     team = team.drop_duplicates()
 
     # SQL Statement: Create new table
-    sql_create_table = "CREATE TABLE IF NOT EXISTS dim_teams (team_id int PRIMARY KEY, team VARCHAR(255)););"
+    sql_create_table = "CREATE TABLE IF NOT EXISTS dim_teams (team_id int PRIMARY KEY, team VARCHAR(255));"
 
     sql_truncate_table = "TRUNCATE TABLE dim_teams;"
 
@@ -312,7 +312,7 @@ join_data_task = PythonOperator(
     dag = dag
 )
 
-# 3. Create dim_players
+# 3. Create dim_tables
 create_dims_task = PythonOperator(
     task_id = "create_dims_task",
     python_callable = create_dims,
