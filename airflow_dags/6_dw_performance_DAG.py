@@ -46,13 +46,13 @@ def join_data():
 
     #df1 = pd.DataFrame(tuples_list_1, columns = column_names)
 
-    return tuples_list_1
+    #return tuples_list_1
 
 
 
 # .... Log the end of the DAG
 def finish_DAG():
-    logging.info('DAG HAS FINISHED,EPL PLAYER INJURIES & BIOS LOADED TO DW')
+    logging.info('DAG HAS FINISHED, LOADED TO DW')
 
 
 # ----------------------------- Create DAG -----------------------------
