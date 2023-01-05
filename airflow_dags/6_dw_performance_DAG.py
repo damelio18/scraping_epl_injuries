@@ -44,9 +44,9 @@ def join_data():
                     'dob_day', 'dob_mon', 'dob_year', 'dob', 'age', 'height',
                     'nationality', 'int_caps', 'int_goals', 'injury_risk']
 
-    #df1 = pd.DataFrame(tuples_list_1, columns = column_names)
+    df1 = pd.DataFrame(tuples_list_1, columns = column_names)
 
-    #return tuples_list_1
+    print(tuples_list_1)
 
 
 
