@@ -95,7 +95,7 @@ def join_data():
 
     df3 = pd.DataFrame(tuples_list_3, columns=column_names)
 
-    ################ Get current values data from DL
+    ################ Merge
 
     # Merge 1
     df = pd.merge(df2, df1[['code', 'age', 'height', 'nationality', 'int_caps', 'int_goals', 'injury_risk']],
@@ -110,6 +110,50 @@ def join_data():
     df = df.rename(columns={"index": "performance_id", "date": "date_id"})
     print(df.columns)
 
+    # Players
+    # Change name of column
+    df = df.rename(columns={"id": "player_id"})
+
+    # Move column
+    column_to_move = df.pop("player_id")
+    df.insert(1, "player_id", column_to_move)
+
+    # Create new column
+    df.insert(2, "name", "")
+
+    # Get full name
+    df['name'] = df['first_name'].str.cat(df['second_name'], sep=" ")
+
+    # Drop unwanted columns
+    df.drop(['first_name', 'second_name', 'web_name', 'code'], axis=1, inplace=True)
+
+    # Move column
+    column_to_move = df.pop("age")
+    df.insert(3, "age", column_to_move)
+
+    # Move column
+    column_to_move = df.pop("height")
+    df.insert(4, "height", column_to_move)
+
+    # Move column
+    column_to_move = df.pop("nationality")
+    df.insert(5, "nationality", column_to_move)
+
+    # Move column
+    column_to_move = df.pop("int_caps")
+    df.insert(6, "int_caps", column_to_move)
+
+    # Move column
+    column_to_move = df.pop("int_goals")
+    df.insert(7, "int_goals", column_to_move)
+
+    # Move column
+    column_to_move = df.pop("injury_risk")
+    df.insert(8, "injury_risk", column_to_move)
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in df.values]
+    print(len(rows))
 
 
 # .... Log the end of the DAG
