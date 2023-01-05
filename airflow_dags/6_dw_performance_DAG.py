@@ -330,4 +330,4 @@ end_task = PythonOperator(
 )
 
 # ----------------------------- Trigger Tasks -----------------------------
-start_task >> join_data_task >> create_dims >> end_task
+start_task >> join_data_task >> create_dims_task >> end_task
