@@ -189,7 +189,7 @@ def join_data():
     print("--------")
     print(rows[:3])
 
-    return df_cols, rows
+    return df_cols
 
 
 # 3. Creare star schema
@@ -201,7 +201,7 @@ def create_schema(ti):
 
     # Separate team name and team url
     df_cols = data[0][0]
-    df_data = data[0][1]
+    #df_data = data[0][1]
 
     print(df_cols)
 
