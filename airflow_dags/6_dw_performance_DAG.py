@@ -115,10 +115,6 @@ def join_data():
     # Change name of column
     df = df.rename(columns={"id": "player_id"})
 
-    # # Move column
-    # column_to_move = df.pop("player_id")
-    # df.insert(1, "player_id", column_to_move)
-
     # Create new column
     df.insert(2, "name", "")
 
@@ -128,32 +124,25 @@ def join_data():
     # Drop unwanted columns
     df.drop(['first_name', 'second_name', 'web_name', 'code'], axis=1, inplace=True)
 
-    # # Move column
-    # column_to_move = df.pop("age")
-    # df.insert(3, "age", column_to_move)
-    #
-    # # Move column
-    # column_to_move = df.pop("height")
-    # df.insert(4, "height", column_to_move)
-    #
-    # # Move column
-    # column_to_move = df.pop("nationality")
-    # df.insert(5, "nationality", column_to_move)
-    #
-    # # Move column
-    # column_to_move = df.pop("int_caps")
-    # df.insert(6, "int_caps", column_to_move)
-    #
-    # # Move column
-    # column_to_move = df.pop("int_goals")
-    # df.insert(7, "int_goals", column_to_move)
-    #
-    # # Move column
-    # column_to_move = df.pop("injury_risk")
-    # df.insert(8, "injury_risk", column_to_move)
+    # Team
+    # Dictionary Value
+    key = df['team'].unique().tolist()
 
+    # Dictionary Key
+    value = []
+    counter = 1
+    for i in key:
+        value.append(str(counter))
+        counter = counter + 1
 
+    # Create Dictionary
+    res = dict(zip(key, value))
 
+    # Create new column
+    df.insert(10, "team_id", "")
+
+    # Change values in column
+    df['team_id'] = df['team'].map(res)
 
 
 
