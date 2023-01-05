@@ -362,7 +362,6 @@ def create_fct(ti):
     performance = performance.rename(columns={"value": "value_at_time"})
 
     # SQL Statements
-    sql_drop_table = "DROP TABLE IF NOT EXISTS fct_performance;"
     sql_create_table = "CREATE TABLE IF NOT EXISTS fct_performance (performance_id int PRIMARY KEY," \
                        "date_id date, player_id int, team_id int, fixture_id int , total_points int," \
                        "minutes int, goals_scored int, assists int, clean_sheets int, goals_conceded int," \
@@ -371,15 +370,16 @@ def create_fct(ti):
                        "threat float, ict_index float, starts int, expected_goals float, expected_assists float," \
                        "expected_goal_involvements float, expected_goals_conceded float, value_at_time float," \
                        "transfers_balance int, selected float, transfers_in int, transfers_out int);"
+    sql_truncate_table = "TRUNCATE TABLE fct_performance;"
     sql_alter_table = "ALTER TABLE fct_performance" \
                       "ADD CONSTRAINT date_id_fk FOREIGN KEY (date_id) REFERENCES dim_date (date_actual)," \
                       "ADD CONSTRAINT player_id_fk FOREIGN KEY (player_id) REFERENCES dim_players (player_id)," \
                       "ADD CONSTRAINT team_id_fk FOREIGN KEY (team_id) REFERENCES dim_teams (team_id)," \
                       "ADD CONSTRAINT fixture_id_fk FOREIGN KEY (fixture_id) REFERENCES dim_fixtures (fixture_id);"
 
-    # Drop, create and alter table
-    cursor_1.execute(sql_drop_table)
+    # Create, truncate and alter table
     cursor_1.execute(sql_create_table)
+    cursor_1.execute(sql_truncate_table)
     cursor_1.execute(sql_alter_table)
     pg_conn_1.commit()
 
