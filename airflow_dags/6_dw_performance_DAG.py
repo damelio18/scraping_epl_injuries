@@ -151,6 +151,38 @@ def join_data():
     print(len(rows))
     print(rows[:2])
 
+    # Fixtures
+    # Dictionary Value
+    key = df['fixture'].unique().tolist()
+
+    # Dictionary Key
+    value = []
+    counter = 1
+    for i in key:
+        value.append(str(counter))
+        counter = counter + 1
+
+    # Create Dictionary
+    res = dict(zip(key, value))
+
+    # Create new column
+    df.insert(12, "fixture_id", "")
+
+    # Change values in column
+    df['fixture_id'] = df['fixture'].map(res)
+
+    # Create new column
+    df.insert(14, "home_team", "")
+
+    # Create new column
+    df.insert(15, "away_team", "")
+
+    # Create home and away column
+    df[['home_team', 'away_team']] = df.fixture.str.split("-", expand=True)
+
+    # Drop unwanted columns
+    df.drop(['fixture', 'opponent_team', 'was_home', 'kickoff_time'], axis=1, inplace=True)
+
 
 # .... Log the end of the DAG
 def finish_DAG():
