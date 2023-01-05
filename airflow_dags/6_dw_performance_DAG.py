@@ -188,8 +188,6 @@ def join_data():
     # Create a list of tuples representing the rows in the dataframe
     #rows = [tuple(x) for x in df.values]
     rows = df.values.tolist()
-    print("--------")
-    print(rows[:3])
 
     return df_cols, rows
 
@@ -202,10 +200,14 @@ def create_schema(ti):
         raise ValueError('No value currently stored in XComs')
 
     # Separate team name and team url
-    df_cols = data
-    #df_data = data[0][1]
+    df_cols = data[0][1]
+    df_data = data[0][1]
 
     print(df_cols)
+    print("--------")
+    print(df_data)
+
+
 
 # .... Log the end of the DAG
 def finish_DAG():
