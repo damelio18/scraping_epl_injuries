@@ -227,12 +227,11 @@ def create_dims(ti):
     # Drop duplicates
     players = players.drop_duplicates()
 
-    # SQL Statement: Create new table
+    # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int PRIMARY KEY, " \
                        "player_name VARCHAR(255), age float, height float, nationality VARCHAR(255)," \
                        "int_caps float, int_goals float, injury_risk float, player_position VARCHAR(255)," \
                        "now_cost float);"
-
     sql_truncate_table = "TRUNCATE TABLE dim_players;"
 
     # Drop and create table
@@ -257,9 +256,8 @@ def create_dims(ti):
     # Drop duplicates
     team = team.drop_duplicates()
 
-    # SQL Statement: Create new table
+    # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS dim_teams (team_id int PRIMARY KEY, team VARCHAR(255));"
-
     sql_truncate_table = "TRUNCATE TABLE dim_teams;"
 
     # Drop and create table
@@ -285,11 +283,10 @@ def create_dims(ti):
     # # Drop duplicates
     fixture = fixture.drop_duplicates(subset=['fixture_id'])
 
-    # SQL Statement: Create new table
+    # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS dim_fixtures (fixture_id int PRIMARY KEY," \
                        "home_team VARCHAR(255), away_team VARCHAR(255), team_h_score int," \
                        "team_a_score int ,round int);"
-
     sql_truncate_table = "TRUNCATE TABLE dim_fixtures;"
 
     # Drop and create table
@@ -338,7 +335,43 @@ def create_fct(ti):
     pg_conn_1 = pg_hook_1.get_conn()
     cursor_1 = pg_conn_1.cursor()
 
-    print(df_cols)
+    ################ Create fct_table
+
+    performance = df[['performance_id', 'date_id', 'player_id', 'team_id', 'fixture_id', 'total_points',
+                       'minutes', 'goals_scored', 'assists', 'clean_sheets', 'goals_conceded', 'own_goals',
+                       'penalties_saved', 'penalties_missed', 'yellow_cards', 'red_cards', 'saves', 'bonus',
+                       'bps', 'influence', 'creativity', 'threat', 'ict_index', 'starts', 'expected_goals',
+                       'expected_assists', 'expected_goal_involvements', 'expected_goals_conceded', 'value',
+                       'transfers_balance', 'selected', 'transfers_in', 'transfers_out']]
+
+    # Change unit for value
+    performance['value'] = performance['value'] / 10
+
+    # Change name of column
+    performance = performance.rename(columns={"value": "value_at_time"})
+
+    # SQL Statements
+    sql_create_table = "CREATE TABLE IF NOT EXISTS fct_performance (performance_id int PRIMARY KEY," \
+                       "date_id date, player_id int, team_id int, fixture_id int , total_points int," \
+                       "minutes int, goals_scored int, assists int, clean_sheets int, goals_conceded int," \
+                       "own_goals int, penalties_saved int, penalties_missed int, yellow_cards int," \
+                       "red_cards int, saves int, bonus int, bps int, influence float, creativity float," \
+                       "threat float, ict_index float, starts int, expected_goals float, expected_assists float," \
+                       "expected_goal_involvements float, expected_goals_conceded float, value_at_time float," \
+                       "transfers_balance int, selected float, transfers_in int, transfers_out int);"
+    sql_truncate_table = "TRUNCATE TABLE fct_performance;"
+
+    # Drop and create table
+    cursor_1.execute(sql_create_table)
+    cursor_1.execute(sql_truncate_table)
+    pg_conn_1.commit()
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in performance.values]
+    rows = rows[:10]
+
+    # Insert the rows into the database
+    pg_hook_1.insert_rows(table="fct_performance", rows=rows)
 
 
 # 5. Log the end of the DAG
