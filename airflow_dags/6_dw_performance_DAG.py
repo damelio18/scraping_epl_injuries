@@ -200,7 +200,7 @@ def create_schema(ti):
         raise ValueError('No value currently stored in XComs')
 
     # Separate team name and team url
-    df_cols = data[0][1]
+    df_cols = data[0][0]
     df_data = data[0][1]
 
     print(df_cols)
