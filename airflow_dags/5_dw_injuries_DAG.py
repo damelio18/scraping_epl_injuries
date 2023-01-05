@@ -326,7 +326,7 @@ default_args = {
 
 # Schedule for 8am daily
 dag = DAG('5_dw_injuries_DAG',
-          schedule_interval = '0 08 * * *',
+          schedule_interval = '30 05 * * *',
           catchup = False,
           default_args = default_args)
 
