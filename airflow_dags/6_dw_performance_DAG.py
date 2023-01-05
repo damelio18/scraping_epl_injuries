@@ -75,7 +75,29 @@ def join_data():
 
     df2 = pd.DataFrame(tuples_list_2, columns=df_cols)
 
-    print(df_cols)
+    ################ Get current values data from DL
+
+    # Data lake: fpl
+    pg_hook_3 = PostgresHook(
+        postgres_conn_id='dl_fpl',
+        schema='dl_fpl'
+    )
+    # Connect to data lake: fpl
+    pg_conn_3 = pg_hook_3.get_conn()
+    cursor_3 = pg_conn_3.cursor()
+
+    # SQL Statement: Get data
+    sql_statement_get_data = "SELECT code, now_cost FROM elements;"
+
+    # Fetch data
+    cursor_3.execute(sql_statement_get_data)
+    tuples_list_3 = cursor_3.fetchall()
+
+    # Create DataFrame
+    column_names = ['code', 'now_cost']
+
+    df3 = pd.DataFrame(tuples_list_3, columns=column_names)
+
 
 # .... Log the end of the DAG
 def finish_DAG():
