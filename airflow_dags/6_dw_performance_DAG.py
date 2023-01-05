@@ -227,7 +227,7 @@ def create_dims(ti):
 
     # Select columns
     players = df[['player_id', 'name', 'age', 'height', 'nationality',
-                  'int_caps', 'int_goals', 'injury_risk', 'position', 'now_cost']]
+                  'int_caps', 'int_goals', 'injury_risk', 'position', 'current_value']]
 
     # Drop unwanted columns
     df.drop(['name', 'age', 'height', 'nationality','int_caps', 'int_goals',
@@ -236,11 +236,15 @@ def create_dims(ti):
     # Drop duplicates
     players = players.drop_duplicates()
 
+    # Change unit for value
+    players['current_value'] = players['current_value'].astype(int)
+    players['current_value'] = players['current_value'] / 10
+
     # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int PRIMARY KEY, " \
                        "player_name VARCHAR(255), age float, height float, nationality VARCHAR(255)," \
                        "int_caps float, int_goals float, injury_risk float, player_position VARCHAR(255)," \
-                       "now_cost float);"
+                       "current_value float);"
     sql_truncate_table = "TRUNCATE TABLE dim_players;"
 
     # Drop and create table
