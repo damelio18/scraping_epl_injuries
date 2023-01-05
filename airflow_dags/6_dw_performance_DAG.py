@@ -180,7 +180,7 @@ def join_data():
     df = df.astype(str)
 
     # # Column_names
-    df_cols = [df.columns]
+    df_cols = df.columns.tolist()
     # column_names = [desc[0] for desc in cursor_2.description]
     # for i in column_names:
     #     df_cols.append(i)
