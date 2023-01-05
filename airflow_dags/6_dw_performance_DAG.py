@@ -215,10 +215,10 @@ def create_dims(ti):
     cursor_1 = pg_conn_1.cursor()
 
     #SQL Statement:
-    sql_alter_table = "ALTER TABLE fct_performance DROP CONSTRAINT date_id_fk," \
-                      "DROP CONSTRAINT player_id_fk," \
-                      "DROP CONSTRAINT team_id_fk," \
-                      "DROP CONSTRAINT fixture_id_fk;"
+    sql_alter_table = "ALTER TABLE fct_performance DROP CONSTRAINT IF EXISTS date_id_fk," \
+                      "DROP CONSTRAINT IF EXISTS player_id_fk," \
+                      "DROP CONSTRAINT IF EXISTS team_id_fk," \
+                      "DROP CONSTRAINT IF EXISTS fixture_id_fk;"
 
     # Alter table
     cursor_1.execute(sql_alter_table)
@@ -371,7 +371,7 @@ def create_fct(ti):
                        "expected_goal_involvements float, expected_goals_conceded float, value_at_time float," \
                        "transfers_balance int, selected float, transfers_in int, transfers_out int);"
     sql_truncate_table = "TRUNCATE TABLE fct_performance;"
-    sql_alter_table = "ALTER TABLE fct_performance" \
+    sql_alter_table = "ALTER TABLE fct_performance," \
                       "ADD CONSTRAINT date_id_fk FOREIGN KEY (date_id) REFERENCES dim_date (date_actual)," \
                       "ADD CONSTRAINT player_id_fk FOREIGN KEY (player_id) REFERENCES dim_players (player_id)," \
                       "ADD CONSTRAINT team_id_fk FOREIGN KEY (team_id) REFERENCES dim_teams (team_id)," \
