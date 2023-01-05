@@ -148,7 +148,7 @@ default_args = {
 
 # Schedule for 5am daily
 dag = DAG('2_scrape_player_urls_DAG',
-          schedule_interval = '00 05 * * *',
+          schedule_interval = '05 04 * * *',
           catchup = False,
           default_args = default_args)
 
