@@ -144,13 +144,6 @@ def join_data():
     # Change values in column
     df['team_id'] = df['team'].map(res)
 
-
-
-    # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in df.values]
-    print(len(rows))
-    print(rows[:2])
-
     # Fixtures
     # Dictionary Value
     key = df['fixture'].unique().tolist()
@@ -182,6 +175,11 @@ def join_data():
 
     # Drop unwanted columns
     df.drop(['fixture', 'opponent_team', 'was_home', 'kickoff_time'], axis=1, inplace=True)
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in df.values]
+    print(len(rows))
+    print(rows[:2])
 
 
 # .... Log the end of the DAG
