@@ -179,11 +179,11 @@ def join_data():
     ################ Push through xcoms
     df = df.astype(str)
 
-    # Column_names
-    df_cols = []
-    column_names = [desc[0] for desc in cursor_2.description]
-    for i in column_names:
-        df_cols.append(i)
+    # # Column_names
+    df_cols = [df.columns]
+    # column_names = [desc[0] for desc in cursor_2.description]
+    # for i in column_names:
+    #     df_cols.append(i)
 
     # Create a list of tuples representing the rows in the dataframe
     #rows = [tuple(x) for x in df.values]
