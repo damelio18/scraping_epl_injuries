@@ -108,7 +108,6 @@ def join_data():
     df.index = np.arange(1, len(df) + 1)
     df.reset_index(inplace=True)
     df = df.rename(columns={"index": "performance_id", "date": "date_id"})
-    print(df.columns)
 
     # Players
     # Change name of column
@@ -151,9 +150,15 @@ def join_data():
     column_to_move = df.pop("injury_risk")
     df.insert(8, "injury_risk", column_to_move)
 
+
+
+
+
+
     # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in df.values]
     print(len(rows))
+    print(rows[:2])
 
 
 # .... Log the end of the DAG
