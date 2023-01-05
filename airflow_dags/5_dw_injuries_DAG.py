@@ -282,7 +282,7 @@ def injuries():
                   'date_until_mon','date_until_year','days_injured', 'games_missed']
     df[change_int] = df[change_int].apply(pd.to_numeric)
 
-    ################ Load data to DW
+    ################ Load data to dw_injuries
 
     # Data warehouse credentials for loading
     pg_hook_2 = PostgresHook(
@@ -325,7 +325,7 @@ default_args = {
 }
 
 # Schedule for 8am daily
-dag = DAG('5_create_tables_DAG',
+dag = DAG('5_dw_injuries_DAG',
           schedule_interval = '0 08 * * *',
           catchup = False,
           default_args = default_args)
