@@ -273,10 +273,35 @@ def create_dims(ti):
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_teams", rows=rows)
 
+    ################ dim_fixtures
 
+    # Select columns
+    fixture = df[['fixture_id', 'home_team', 'away_team', 'team_h_score', 'team_a_score','round']]
 
+    # Drop unwanted columns
+    df.drop(['home_team', 'away_team', 'team_h_score', 'team_a_score',
+              'round'], axis=1, inplace=True)
 
+    # # Drop duplicates
+    fixture = fixture.drop_duplicates(subset=['fixture_id'])
 
+    # SQL Statement: Create new table
+    sql_create_table = "CREATE TABLE IF NOT EXISTS dim_fixtures (fixture_id int PRIMARY KEY," \
+                       "home_team VARCHAR(255), away_team VARCHAR(255), team_h_score int," \
+                       "team_a_score int ,round int);"
+
+    sql_truncate_table = "TRUNCATE TABLE dim_fixtures;"
+
+    # Drop and create table
+    cursor_1.execute(sql_create_table)
+    cursor_1.execute(sql_truncate_table)
+    pg_conn_1.commit()
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in fixture.values]
+
+    # Insert the rows into the database
+    pg_hook_1.insert_rows(table="dim_fixtures", rows=rows)
 
 
 # .... Log the end of the DAG
