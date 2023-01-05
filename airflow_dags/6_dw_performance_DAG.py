@@ -80,7 +80,7 @@ def join_data():
     # Data lake: fpl
     pg_hook_3 = PostgresHook(
         postgres_conn_id='dl_fpl',
-        schema='dl_fpl'
+        schema='fpl_api'
     )
     # Connect to data lake: fpl
     pg_conn_3 = pg_hook_3.get_conn()
