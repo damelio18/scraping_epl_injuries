@@ -181,9 +181,6 @@ def join_data():
 
     # # Column_names
     df_cols = df.columns.tolist()
-    # column_names = [desc[0] for desc in cursor_2.description]
-    # for i in column_names:
-    #     df_cols.append(i)
 
     # Create a list of tuples representing the rows in the dataframe
     #rows = [tuple(x) for x in df.values]
@@ -192,7 +189,7 @@ def join_data():
     return df_cols, rows
 
 
-# 3. Creare star schema
+# 3. Create star schema
 def create_schema(ti):
     # get data returned from 'scrape_team_urls_task'
     data = ti.xcom_pull(task_ids = ['join_data_task'])
@@ -203,9 +200,52 @@ def create_schema(ti):
     df_cols = data[0][0]
     df_data = data[0][1]
 
-    print(df_cols)
-    print("--------")
-    print(df_data)
+    # Create Data Frame
+    df = pd.DataFrame(df_data, columns=df_cols)
+
+    ################ Connect to dw_performance
+
+    # Data warehouse: injuries
+    pg_hook_1 = PostgresHook(
+        postgres_conn_id='dw_performance',
+        schema='dw_performance'
+    )
+    # Connect to data warehouse: injuries
+    pg_conn_1 = pg_hook_1.get_conn()
+    cursor_1 = pg_conn_1.cursor()
+
+    ################ dim_players
+
+    # Select columns
+    players = df[['player_id', 'name', 'age', 'height', 'nationality',
+                  'int_caps', 'int_goals', 'injury_risk', 'position', 'now_cost']]
+
+    # Drop unwanted columns
+    df.drop(['name', 'age', 'height', 'nationality','int_caps', 'int_goals',
+             'injury_risk', 'position', 'now_cost'], axis=1, inplace=True)
+
+    # Drop duplicates
+    players = players.drop_duplicates()
+
+    # SQL Statement: Create new table
+    sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int PRIMARY KEY, " \
+                       "player_name VARCHAR(255), age float, height float, nationality VARCHAR(255)," \
+                       "int_caps float, int_goals float, injury_risk float, player_position VARCHAR(255)," \
+                       "now_cost float);"
+
+    sql_truncate_table = "TRUNCATE TABLE dim_players;"
+
+    # Drop and create table
+    cursor_1.execute(sql_create_table)
+    cursor_1.execute(sql_truncate_table)
+    pg_conn_1.commit()
+
+    # Create a list of tuples representing the rows in the dataframe
+    rows = [tuple(x) for x in players.values]
+
+    # Insert the rows into the database
+    pg_hook_1.insert_rows(table="dim_players", rows=rows)
+
 
 
 
