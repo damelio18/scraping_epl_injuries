@@ -371,8 +371,7 @@ def create_fct(ti):
                        "expected_goal_involvements float, expected_goals_conceded float, value_at_time float," \
                        "transfers_balance int, selected float, transfers_in int, transfers_out int);"
     sql_truncate_table = "TRUNCATE TABLE fct_performance;"
-    sql_alter_table = "ALTER TABLE fct_performance," \
-                      "ADD CONSTRAINT date_id_fk FOREIGN KEY (date_id) REFERENCES dim_date (date_actual)," \
+    sql_alter_table = "ALTER TABLE fct_performance ADD CONSTRAINT date_id_fk FOREIGN KEY (date_id) REFERENCES dim_date (date_actual)," \
                       "ADD CONSTRAINT player_id_fk FOREIGN KEY (player_id) REFERENCES dim_players (player_id)," \
                       "ADD CONSTRAINT team_id_fk FOREIGN KEY (team_id) REFERENCES dim_teams (team_id)," \
                       "ADD CONSTRAINT fixture_id_fk FOREIGN KEY (fixture_id) REFERENCES dim_fixtures (fixture_id);"
