@@ -177,6 +177,8 @@ def join_data():
     df.drop(['fixture', 'opponent_team', 'was_home', 'kickoff_time'], axis=1, inplace=True)
 
     ################ Push through xcoms
+    df = df.astype(str)
+
     # Column_names
     df_cols = []
     column_names = [desc[0] for desc in cursor_2.description]
