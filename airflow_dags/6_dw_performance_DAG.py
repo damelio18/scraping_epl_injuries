@@ -276,8 +276,8 @@ def create_dims(ti):
 
     print("HHHHLLLLLLL")
     print(df2.columns)
-    print(type(df2.['player_id'])
-    print(type(players.['player_id'])
+    print(type(df2['player_id']))
+    print(type(players['player_id']))
 
     # Merge predicted points to dim_players
     players2 = pd.merge(players, df2,
