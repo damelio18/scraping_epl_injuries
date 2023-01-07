@@ -288,7 +288,7 @@ def create_dims(ti):
 
     #players = players.merge(df2, on='player_id')
 
-    df3 = pd.merge(players, df2[['player_id', 'predicted_points']],
+    players = pd.merge(players, df2[['player_id', 'predicted_points']],
                             on=['player_id'], how='left')
 
     # SQL Statements
@@ -304,7 +304,7 @@ def create_dims(ti):
     pg_conn_1.commit()
 
     # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in df3.values]
+    rows = [tuple(x) for x in players.values]
 
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_players", rows=rows)
