@@ -254,7 +254,7 @@ def create_dims(ti):
     # Create DataFrame
     column_names = ['player_id', 'predicted_points']
 
-    df2 = pd.DataFrame(tuples_list_2, columns=column_names)
+    players2 = pd.DataFrame(tuples_list_2, columns=column_names)
 
     ################ dim_players
 
