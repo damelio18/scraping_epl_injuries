@@ -248,6 +248,8 @@ def create_dims(ti):
 
     # Fetch data
     tuples_list_2 = cursor_2.fetchall()
+    print("----------")
+    print(tuples_list_2)
 
     # Create DataFrame
     column_names = ['player_id', 'predicted_points']
@@ -273,11 +275,6 @@ def create_dims(ti):
     # Change unit for value
     players['current_value'] = players['current_value'].astype(int)
     players['current_value'] = players['current_value'] / 10
-
-    print("HHHHLLLLLLL")
-    print(df2.columns)
-    print(type(df2['player_id']))
-    print(type(players['player_id']))
 
     # # Change type
     df2['player_id'] = df['player_id'].astype(int)
@@ -308,21 +305,6 @@ def create_dims(ti):
 
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_players", rows=rows)
-
-
-
-    # # Change type
-    # df2['player_id'] = df['player_id'].astype(str)
-
-    # Change type
-    # players['player_id'] = players['player_id'].astype(str)
-
-    # # Merge predicted points to dim_players
-    # players2 = pd.merge(players, df2,
-    #                     on=['player_id'], how='left')
-
-    # # Drop duplicates
-    # players2 = players2.drop_duplicates()
 
     ################ dim_teams.
 
