@@ -296,7 +296,7 @@ def create_dims(ti):
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_players", rows=rows)
 
-    ################ dim_teams
+    ################ dim_teams.
 
     # Select columns
     team = df[['team_id', 'team']]
