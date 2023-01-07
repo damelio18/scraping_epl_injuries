@@ -476,12 +476,12 @@ create_dims_task = PythonOperator(
     dag = dag
 )
 
-# # 4. Create fct_table
-# create_fct_task = PythonOperator(
-#     task_id = "create_fct_task",
-#     python_callable = create_fct,
-#     dag = dag
-# )
+# 4. Create fct_table
+create_fct_task = PythonOperator(
+    task_id = "create_fct_task",
+    python_callable = create_fct,
+    dag = dag
+)
 
 # 5. End Task
 end_task = PythonOperator(
@@ -491,5 +491,4 @@ end_task = PythonOperator(
 )
 
 # ----------------------------- Trigger Tasks -----------------------------
-start_task >> join_data_task >> create_dims_task >> end_task
-#start_task >> join_data_task >> create_dims_task >> create_fct_task >> end_task
+start_task >> join_data_task >> create_dims_task >> create_fct_task >> end_task
