@@ -285,7 +285,7 @@ def create_dims(ti):
                         on=['player_id'], how='left')
 
     # Drop duplicates
-    players = players.drop_duplicates()
+    players2 = players2.drop_duplicates()
 
     # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int, " \
