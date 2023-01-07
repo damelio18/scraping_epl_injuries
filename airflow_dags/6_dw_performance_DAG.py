@@ -279,6 +279,12 @@ def create_dims(ti):
     print(type(df2['player_id']))
     print(type(players['player_id']))
 
+    # # Change type
+    df2['player_id'] = df['player_id'].astype(int)
+
+    # Change type
+    players['player_id'] = players['player_id'].astype(int)
+
     # Merge predicted points to dim_players
     players2 = pd.merge(players, df2,
                         on=['player_id'], how='left')
