@@ -276,11 +276,11 @@ def create_dims(ti):
     players['current_value'] = players['current_value'].astype(int)
     players['current_value'] = players['current_value'] / 10
 
-    # # # Change type
-    # df2['player_id'] = df['player_id'].astype(int)
-    #
-    # # Change type
-    # players['player_id'] = players['player_id'].astype(int)
+    # Change type
+    players2['player_id'] = players2['player_id'].astype(int)
+
+    # Change type
+    players['player_id'] = players['player_id'].astype(int)
 
     # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int PRIMARY KEY, " \
