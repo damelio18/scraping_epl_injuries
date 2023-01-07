@@ -295,8 +295,9 @@ def create_dims(ti):
     pg_conn_1.commit()
 
     #REMOVE
-    df444 = pd.merge(players, players2,
-                     on=['player_id'], how='left')
+    # df444 = pd.merge(players, players2,
+    #                  on=['player_id'], how='left')
+    df444 = players.merge(players2, on='player_id', how='left')
 
     # Create a list of tuples representing the rows in the dataframe
     rows = [tuple(x) for x in df444.values]
