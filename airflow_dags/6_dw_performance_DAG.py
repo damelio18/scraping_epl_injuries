@@ -285,9 +285,11 @@ def create_dims(ti):
     # Change type
     players['player_id'] = players['player_id'].astype(int)
 
-    # Merge predicted points to dim_players
-    players2 = pd.merge(players, df2,
-                        on=['player_id'], how='left')
+    # # Merge predicted points to dim_players
+    # players2 = pd.merge(players, df2,
+    #                     on=['player_id'], how='left')
+
+    players = players.merge(df2, on='player_id')
 
     # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int PRIMARY KEY, " \
@@ -302,7 +304,7 @@ def create_dims(ti):
     pg_conn_1.commit()
 
     # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in players2.values]
+    rows = [tuple(x) for x in players.values]
 
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_players", rows=rows)
