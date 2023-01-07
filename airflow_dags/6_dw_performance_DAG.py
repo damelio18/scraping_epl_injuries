@@ -229,33 +229,33 @@ def create_dims(ti):
     cursor_1.execute(sql_alter_table)
     pg_conn_1.commit()
 
-    ################ Get predicted points from data warehouse
-
-    # Data warehouse credentials
-    pg_hook_2 = PostgresHook(
-        postgres_conn_id='fantasypl',
-        schema='fantasypl'
-    )
-    # Connect to data warehouse
-    pg_conn_2 = pg_hook_2.get_conn()
-    cursor_2 = pg_conn_2.cursor()
-
-    # SQL Statement
-    sql_statement_get_data = "SELECT * FROM stage_predictions;"
-
-    # Execute SQL statement
-    cursor_2.execute(sql_statement_get_data)
-
-    # Fetch data
-    tuples_list_2 = cursor_2.fetchall()
-
-    # Create DataFrame
-    column_names = ['player_id', 'predicted_points']
-
-    df2 = pd.DataFrame(tuples_list_2, columns=column_names)
-
-    # Change type
-    df2['player_id'] = df['player_id'].astype(str)
+    # ################ Get predicted points from data warehouse
+    #
+    # # Data warehouse credentials
+    # pg_hook_2 = PostgresHook(
+    #     postgres_conn_id='fantasypl',
+    #     schema='fantasypl'
+    # )
+    # # Connect to data warehouse
+    # pg_conn_2 = pg_hook_2.get_conn()
+    # cursor_2 = pg_conn_2.cursor()
+    #
+    # # SQL Statement
+    # sql_statement_get_data = "SELECT * FROM stage_predictions;"
+    #
+    # # Execute SQL statement
+    # cursor_2.execute(sql_statement_get_data)
+    #
+    # # Fetch data
+    # tuples_list_2 = cursor_2.fetchall()
+    #
+    # # Create DataFrame
+    # column_names = ['player_id', 'predicted_points']
+    #
+    # df2 = pd.DataFrame(tuples_list_2, columns=column_names)
+    #
+    # # Change type
+    # df2['player_id'] = df['player_id'].astype(str)
 
     ################ dim_players
 
@@ -270,28 +270,28 @@ def create_dims(ti):
     # Change name of column
     players = players.rename(columns={"now_cost": "current_value"})
 
-    # # Drop duplicates
-    # players = players.drop_duplicates()
+    # Drop duplicates
+    players = players.drop_duplicates()
 
     # Change unit for value
     players['current_value'] = players['current_value'].astype(int)
     players['current_value'] = players['current_value'] / 10
 
     # Change type
-    players['player_id'] = players['player_id'].astype(str)
+    # players['player_id'] = players['player_id'].astype(str)
 
-    # Merge predicted points to dim_players
-    players2 = pd.merge(players, df2,
-                        on=['player_id'], how='left')
+    # # Merge predicted points to dim_players
+    # players2 = pd.merge(players, df2,
+    #                     on=['player_id'], how='left')
 
-    # Drop duplicates
-    players2 = players2.drop_duplicates()
+    # # Drop duplicates
+    # players2 = players2.drop_duplicates()
 
     # SQL Statements
-    sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int, " \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int PRIMARY KEY, " \
                        "player_name VARCHAR(255), age float, height float, nationality VARCHAR(255)," \
                        "int_caps float, int_goals float, injury_risk float, player_position VARCHAR(255)," \
-                       "current_value float, predicted_points float);"
+                       "current_value float);"
     sql_truncate_table = "TRUNCATE TABLE dim_players;"
 
     # Drop and create table
@@ -300,7 +300,7 @@ def create_dims(ti):
     pg_conn_1.commit()
 
     # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in players2.values]
+    rows = [tuple(x) for x in players.values]
 
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_players", rows=rows)
