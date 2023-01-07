@@ -255,7 +255,7 @@ def create_dims(ti):
     df2 = pd.DataFrame(tuples_list_2, columns=column_names)
 
     # Change type
-    df2['player_id'] = df['player_id'].astype(int)
+    df2['player_id'] = df['player_id'].astype(str)
 
     ################ dim_players
 
@@ -278,7 +278,7 @@ def create_dims(ti):
     players['current_value'] = players['current_value'] / 10
 
     # Change type
-    players['player_id'] = players['player_id'].astype(int)
+    players['player_id'] = players['player_id'].astype(str)
 
     # Merge predicted points to dim_players
     players2 = pd.merge(players, df2,
