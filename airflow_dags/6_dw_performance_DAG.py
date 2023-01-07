@@ -229,33 +229,30 @@ def create_dims(ti):
     cursor_1.execute(sql_alter_table)
     pg_conn_1.commit()
 
-    # ################ Get predicted points from data warehouse
-    #
-    # # Data warehouse credentials
-    # pg_hook_2 = PostgresHook(
-    #     postgres_conn_id='fantasypl',
-    #     schema='fantasypl'
-    # )
-    # # Connect to data warehouse
-    # pg_conn_2 = pg_hook_2.get_conn()
-    # cursor_2 = pg_conn_2.cursor()
-    #
-    # # SQL Statement
-    # sql_statement_get_data = "SELECT * FROM stage_predictions;"
-    #
-    # # Execute SQL statement
-    # cursor_2.execute(sql_statement_get_data)
-    #
-    # # Fetch data
-    # tuples_list_2 = cursor_2.fetchall()
-    #
-    # # Create DataFrame
-    # column_names = ['player_id', 'predicted_points']
-    #
-    # df2 = pd.DataFrame(tuples_list_2, columns=column_names)
-    #
-    # # Change type
-    # df2['player_id'] = df['player_id'].astype(str)
+    ################ Add predicted points from data warehouse
+
+    # Data warehouse credentials
+    pg_hook_2 = PostgresHook(
+        postgres_conn_id='fantasypl',
+        schema='fantasypl'
+    )
+    # Connect to data warehouse
+    pg_conn_2 = pg_hook_2.get_conn()
+    cursor_2 = pg_conn_2.cursor()
+
+    # SQL Statement
+    sql_statement_get_data = "SELECT * FROM stage_predictions;"
+
+    # Execute SQL statement
+    cursor_2.execute(sql_statement_get_data)
+
+    # Fetch data
+    tuples_list_2 = cursor_2.fetchall()
+
+    # Create DataFrame
+    column_names = ['player_id', 'predicted_points']
+
+    df2 = pd.DataFrame(tuples_list_2, columns=column_names)
 
     ################ dim_players
 
@@ -277,15 +274,14 @@ def create_dims(ti):
     players['current_value'] = players['current_value'].astype(int)
     players['current_value'] = players['current_value'] / 10
 
-    # Change type
-    # players['player_id'] = players['player_id'].astype(str)
+    print("HHHHLLLLLLL")
+    print(df2.columns)
+    print(type(df2.['player_id'])
+    print(type(players.['player_id'])
 
-    # # Merge predicted points to dim_players
-    # players2 = pd.merge(players, df2,
-    #                     on=['player_id'], how='left')
-
-    # # Drop duplicates
-    # players2 = players2.drop_duplicates()
+    # Merge predicted points to dim_players
+    players2 = pd.merge(players, df2,
+                        on=['player_id'], how='left')
 
     # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int PRIMARY KEY, " \
@@ -304,6 +300,21 @@ def create_dims(ti):
 
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_players", rows=rows)
+
+
+
+    # # Change type
+    # df2['player_id'] = df['player_id'].astype(str)
+
+    # Change type
+    # players['player_id'] = players['player_id'].astype(str)
+
+    # # Merge predicted points to dim_players
+    # players2 = pd.merge(players, df2,
+    #                     on=['player_id'], how='left')
+
+    # # Drop duplicates
+    # players2 = players2.drop_duplicates()
 
     ################ dim_teams.
 
