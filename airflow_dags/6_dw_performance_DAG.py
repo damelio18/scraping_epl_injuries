@@ -285,7 +285,7 @@ def create_dims(ti):
                         on=['player_id'], how='left')
 
     # SQL Statements
-    sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int PRIMARY KEY, " \
+    sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int, " \
                        "player_name VARCHAR(255), age float, height float, nationality VARCHAR(255)," \
                        "int_caps float, int_goals float, injury_risk float, player_position VARCHAR(255)," \
                        "current_value float, predicted_points float);"
