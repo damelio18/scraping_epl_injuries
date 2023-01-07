@@ -248,13 +248,11 @@ def create_dims(ti):
 
     # Fetch data
     tuples_list_2 = cursor_2.fetchall()
-    print("----------")
-    print(tuples_list_2)
 
     # Create DataFrame
     column_names = ['player_id', 'predicted_points']
 
-    players2 = pd.DataFrame(tuples_list_2, columns=column_names)
+    df2 = pd.DataFrame(tuples_list_2, columns=column_names)
 
     ################ dim_players
 
@@ -277,7 +275,7 @@ def create_dims(ti):
     players['current_value'] = players['current_value'] / 10
 
     # Change type
-    players2['player_id'] = players2['player_id'].astype(int)
+    df2['player_id'] = df2['player_id'].astype(int)
 
     # Change type
     players['player_id'] = players['player_id'].astype(int)
@@ -294,13 +292,11 @@ def create_dims(ti):
     cursor_1.execute(sql_truncate_table)
     pg_conn_1.commit()
 
-    #REMOVE
-    # df444 = pd.merge(players, players2,
-    #                  on=['player_id'], how='left')
-    df444 = players.merge(players2, on='player_id', how='left')
+    # Join predicted points to dim_players
+    players = players.merge(df2, on='player_id', how='left')
 
     # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in df444.values]
+    rows = [tuple(x) for x in players.values]
 
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_players", rows=rows)
