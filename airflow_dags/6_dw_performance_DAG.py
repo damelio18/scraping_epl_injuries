@@ -270,8 +270,8 @@ def create_dims(ti):
     # Change name of column
     players = players.rename(columns={"now_cost": "current_value"})
 
-    # Drop duplicates
-    players = players.drop_duplicates()
+    # # Drop duplicates
+    # players = players.drop_duplicates()
 
     # Change unit for value
     players['current_value'] = players['current_value'].astype(int)
@@ -283,6 +283,9 @@ def create_dims(ti):
     # Merge predicted points to dim_players
     players2 = pd.merge(players, df2,
                         on=['player_id'], how='left')
+
+    # Drop duplicates
+    players = players.drop_duplicates()
 
     # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int, " \
