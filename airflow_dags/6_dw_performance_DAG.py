@@ -293,7 +293,7 @@ def create_dims(ti):
     sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int PRIMARY KEY, " \
                        "player_name VARCHAR(255), age float, height float, nationality VARCHAR(255)," \
                        "int_caps float, int_goals float, injury_risk float, player_position VARCHAR(255)," \
-                       "current_value float);"
+                       "current_value float, predicted_points float);"
     sql_truncate_table = "TRUNCATE TABLE dim_players;"
 
     # Drop and create table
@@ -302,7 +302,7 @@ def create_dims(ti):
     pg_conn_1.commit()
 
     # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in players.values]
+    rows = [tuple(x) for x in players2.values]
 
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_players", rows=rows)
