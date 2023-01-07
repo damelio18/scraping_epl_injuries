@@ -286,7 +286,7 @@ def create_dims(ti):
     # players2 = pd.merge(players, df2,
     #                     on=['player_id'], how='left')
 
-    players.merge(df2, on='player_id')
+    players = players.merge(df2, on='player_id')
 
     # SQL Statements
     sql_create_table = "CREATE TABLE IF NOT EXISTS dim_players (player_id int PRIMARY KEY, " \
