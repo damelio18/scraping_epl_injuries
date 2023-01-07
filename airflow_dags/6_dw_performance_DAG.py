@@ -229,32 +229,32 @@ def create_dims(ti):
     cursor_1.execute(sql_alter_table)
     pg_conn_1.commit()
 
-    # ################ Add predicted points from data warehouse
-    #
-    # # Data warehouse credentials
-    # pg_hook_2 = PostgresHook(
-    #     postgres_conn_id='fantasypl',
-    #     schema='fantasypl'
-    # )
-    # # Connect to data warehouse
-    # pg_conn_2 = pg_hook_2.get_conn()
-    # cursor_2 = pg_conn_2.cursor()
-    #
-    # # SQL Statement
-    # sql_statement_get_data = "SELECT * FROM stage_predictions;"
-    #
-    # # Execute SQL statement
-    # cursor_2.execute(sql_statement_get_data)
-    #
-    # # Fetch data
-    # tuples_list_2 = cursor_2.fetchall()
-    # print("----------")
-    # print(tuples_list_2)
-    #
-    # # Create DataFrame
-    # column_names = ['player_id', 'predicted_points']
-    #
-    # df2 = pd.DataFrame(tuples_list_2, columns=column_names)
+    ################ Add predicted points from data warehouse
+
+    # Data warehouse credentials
+    pg_hook_2 = PostgresHook(
+        postgres_conn_id='fantasypl',
+        schema='fantasypl'
+    )
+    # Connect to data warehouse
+    pg_conn_2 = pg_hook_2.get_conn()
+    cursor_2 = pg_conn_2.cursor()
+
+    # SQL Statement
+    sql_statement_get_data = "SELECT * FROM stage_predictions;"
+
+    # Execute SQL statement
+    cursor_2.execute(sql_statement_get_data)
+
+    # Fetch data
+    tuples_list_2 = cursor_2.fetchall()
+    print("----------")
+    print(tuples_list_2)
+
+    # Create DataFrame
+    column_names = ['player_id', 'predicted_points']
+
+    df2 = pd.DataFrame(tuples_list_2, columns=column_names)
 
     ################ dim_players
 
@@ -294,8 +294,12 @@ def create_dims(ti):
     cursor_1.execute(sql_truncate_table)
     pg_conn_1.commit()
 
+    #REMOVE
+    df444 = pd.merge(players, players2,
+                     on=['player_id'], how='left')
+
     # Create a list of tuples representing the rows in the dataframe
-    rows = [tuple(x) for x in players.values]
+    rows = [tuple(x) for x in df444.values]
 
     # Insert the rows into the database
     pg_hook_1.insert_rows(table="dim_players", rows=rows)
@@ -475,12 +479,12 @@ create_dims_task = PythonOperator(
     dag = dag
 )
 
-# 4. Create fct_table
-create_fct_task = PythonOperator(
-    task_id = "create_fct_task",
-    python_callable = create_fct,
-    dag = dag
-)
+# # 4. Create fct_table
+# create_fct_task = PythonOperator(
+#     task_id = "create_fct_task",
+#     python_callable = create_fct,
+#     dag = dag
+# )
 
 # 5. End Task
 end_task = PythonOperator(
@@ -490,4 +494,5 @@ end_task = PythonOperator(
 )
 
 # ----------------------------- Trigger Tasks -----------------------------
-start_task >> join_data_task >> create_dims_task >> create_fct_task >> end_task
+start_task >> join_data_task >> create_dims_task >> end_task
+#start_task >> join_data_task >> create_dims_task >> create_fct_task >> end_task
