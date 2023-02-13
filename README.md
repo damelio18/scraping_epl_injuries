@@ -1,4 +1,4 @@
-# English Premier League Fantasy Premier League Project
+# Fantasy Premier League Project
 
 #### Objective:
 The aim of this project is to create an interactive dashboard to assist players of Fantasy Premier League (FPL) to make informed decsions and increase their performance in the game. The project will use an ETL data pipeline to automatically update the dashboard daily with the latest statistics for the EPL.
