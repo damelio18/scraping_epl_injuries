@@ -30,7 +30,7 @@ except psycopg2.Error as e:
     print("Error: Could not get curser to the Database")
     print(e)
 
-# Auto commit is very important
+# Auto commit
 conn.set_session(autocommit=True)
 
 # Find team URLs in Data Lake
